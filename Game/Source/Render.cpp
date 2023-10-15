@@ -110,8 +110,8 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, const SDL_Rect* sec
 	uint scale = app->win->GetScale();
 
 	SDL_Rect rect;
-	rect.x = (int)(camera.x * speed) + x * scale;
-	rect.y = (int)(camera.y * speed) + y * scale;
+	rect.x = ((int)(camera.x * speed) + x) * scale;
+	rect.y = ((int)(camera.y * speed) + y) * scale;
 
 	if(section != NULL)
 	{
@@ -156,8 +156,8 @@ bool Render::DrawRectangle(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint
 	SDL_Rect rec(rect);
 	if(use_camera)
 	{
-		rec.x = (int)(camera.x + rect.x * scale);
-		rec.y = (int)(camera.y + rect.y * scale);
+		rec.x = ((int)(camera.x + rect.x) * scale);
+		rec.y = ((int)(camera.y + rect.y) * scale);
 		rec.w *= scale;
 		rec.h *= scale;
 	}
@@ -184,7 +184,7 @@ bool Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b,
 	int result = -1;
 
 	if(use_camera)
-		result = SDL_RenderDrawLine(renderer, camera.x + x1 * scale, camera.y + y1 * scale, camera.x + x2 * scale, camera.y + y2 * scale);
+		result = SDL_RenderDrawLine(renderer, (camera.x + x1) * scale, (camera.y + y1) * scale, (camera.x + x2) * scale, (camera.y + y2) * scale);
 	else
 		result = SDL_RenderDrawLine(renderer, x1 * scale, y1 * scale, x2 * scale, y2 * scale);
 
@@ -212,8 +212,8 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 
 	for(uint i = 0; i < 360; ++i)
 	{
-		points[i].x = (int)(x + camera.x + radius * cos(i * factor));
-		points[i].y = (int)(y + camera.y + radius * sin(i * factor));
+		points[i].x = ((int)(x + camera.x) * scale + radius * cos(i * factor) * scale);
+		points[i].y = ((int)(y + camera.y) * scale + radius * sin(i * factor) * scale);
 	}
 
 	result = SDL_RenderDrawPoints(renderer, points, 360);
