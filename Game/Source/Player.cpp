@@ -9,6 +9,11 @@
 #include "Point.h"
 #include "Physics.h"
 
+#include "Window.h"
+#include <cassert>
+#include <cmath>
+#include <iostream>
+
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name.Create("Player");
@@ -68,6 +73,13 @@ bool Player::Update(float dt)
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	app->render->DrawTexture(texture, position.x, position.y);
+
+
+	//Esto esta aqui temporalmente don't worry :)
+	app->render->camera.x = -position.x + app->render->camera.w / app->win->GetScale() / 2;
+	app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
+
+	/*std::lerp()*/
 
 	return true;
 }
