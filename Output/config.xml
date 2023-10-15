@@ -9,7 +9,7 @@
   </renderer>
 
   <window>
-    <resolution width="1024" height="768" scale="1"/>
+    <resolution width="1024" height="768" scale="4"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>
@@ -23,7 +23,7 @@
 
   <scene>
     <map path="Assets/Maps/Debug-Map/" name="debug-map.tmx"/>
-    <player x="400" y="352" texturepath="Assets/Textures/player1.png"/>
+    <player x="0" y="500" texturepath="Assets/Textures/player1.png"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
     <item x="416" y="512" texturepath="Assets/Textures/goldCoin.png"/>
     <item x="384" y="352" texturepath="Assets/Textures/goldCoin.png"/>
