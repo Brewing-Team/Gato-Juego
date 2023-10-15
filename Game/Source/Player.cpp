@@ -42,6 +42,8 @@ bool Player::Start() {
 
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
 
+	startCamPos = { (float)app->render->camera.x,  (float)app->render->camera.y};
+
 	return true;
 }
 
@@ -75,8 +77,28 @@ bool Player::Update(float dt)
 
 
 	//Esto esta aqui temporalmente don't worry :)
-	app->render->camera.x = -position.x + app->render->camera.w / app->win->GetScale() / 2;
+	//app->render->camera.x = -position.x + app->render->camera.w / app->win->GetScale() / 2;
 	app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
+
+	targetPos.x = (app->render->camera.w / app->win->GetScale() / 2) - position.x; //esto se hace 4834859347895 por algun motivo
+
+	if (app->render->camera.x == targetPos.x)
+	{
+		startCamPos.x = app->render->camera.x;
+		lerpT = 0.0;
+	}
+	else if (startCamPos.x != targetPos.x && lerpT < 1.0)
+	{
+		app->render->camera.x = std::lerp(startCamPos.x, targetPos.x, lerpT);
+		lerpT += 0.01;
+	}
+
+	if (app->render->camera.x <= -2000 || targetPos.x <= -2000)
+	{
+		__debugbreak();
+	}
+
+	LOG("%d" , (app->render->camera.w / app->win->GetScale() / 2) - position.x);
 
 	return true;
 }
