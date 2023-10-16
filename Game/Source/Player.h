@@ -31,11 +31,6 @@ public:
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
 	int pickCoinFxId;
-
-	//temporal camera interpolation variables
-	fPoint startCamPos = { 0.0, 0.0 };
-	fPoint targetPos;
-	float lerpT = 0;
 };
 
 #endif // __PLAYER_H__
