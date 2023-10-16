@@ -16,6 +16,7 @@ enum class EntityType
 };
 
 enum class EntityState {
+	NONE,
 	IDLE,
 	MOVE,
 	JUMP,
@@ -59,11 +60,11 @@ public:
 		return true;
 	}
 
-	virtual EntityState StateMachine();
+	virtual EntityState StateMachine() { return EntityState::NONE; };
 
-	virtual void Move();
-	virtual void Jump();
-	virtual void Climb();
+	virtual void Move() {};
+	virtual void Jump() {};
+	virtual void Climb() {};
 
 	void Enable()
 	{

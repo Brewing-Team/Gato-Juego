@@ -13,19 +13,19 @@
 #include <cmath>
 #include <iostream>
 
-void Entity::Move() {
+void Player::Move() {
 
 }
 
-void Entity::Jump() {
+void Player::Jump() {
 
 }
 
-void Entity::Climb() {
+void Player::Climb() {
 
 }
 
-EntityState Entity::StateMachine() {
+EntityState Player::StateMachine() {
 	switch (this->state) {
 		case EntityState::IDLE:
 			LOG("Player is IDLE.\n");

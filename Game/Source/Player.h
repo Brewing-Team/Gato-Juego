@@ -11,6 +11,11 @@ class Player : public Entity
 {
 public:
 
+	EntityState StateMachine() override;
+	void Move() override;
+	void Jump() override;
+	void Climb() override;
+
 	Player();
 	
 	virtual ~Player();
