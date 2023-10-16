@@ -5,7 +5,11 @@
 #include "Defs.h"
 #include "Log.h"
 
+#ifdef __linux__
+#include <SDL.h>
+#elif _WIN32
 #include "SDL/include/SDL.h"
+#endif
 
 #define MAX_KEYS 300
 

@@ -9,7 +9,12 @@
 #include "Log.h"
 
 #include <math.h>
+
+#ifdef __linux__
+#include <SDL_image.h>
+#elif _WIN32
 #include "SDL_image/include/SDL_image.h"
+#endif
 
 Map::Map() : Module(), mapLoaded(false)
 {

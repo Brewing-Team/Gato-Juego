@@ -3,7 +3,12 @@
 // ----------------------------------------------------
 
 #include "PerfTimer.h"
+
+#ifdef __linux__
+#include <SDL_timer.h>
+#elif _WIN32
 #include "SDL\include\SDL_timer.h"
+#endif
 
 uint64 PerfTimer::frequency = 0;
 

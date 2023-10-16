@@ -3,7 +3,14 @@
 
 #include "SString.h"
 
+
+#ifdef __linux__
+#include <pugixml.hpp>
+#elif _WIN32
 #include "PugiXml/src/pugixml.hpp"
+#endif
+
+
 
 class App;
 

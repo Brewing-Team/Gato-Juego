@@ -3,6 +3,13 @@
 
 #include <stdio.h>
 
+#ifdef __linux__
+#define sprintf_s(buffer, size, format, ...) sprintf(buffer, format, __VA_ARGS__)
+#include <cstdint>
+#elif _WIN32
+
+#endif
+
 //  NULL just in case ----------------------
 
 #ifdef NULL
@@ -38,8 +45,13 @@
 
 typedef unsigned int uint;
 typedef unsigned char uchar;
+#ifdef __linux__
+#define uint32 Uint32
+#define uint64 Uint64
+#elif _WIN32
 typedef unsigned __int32 uint32;
 typedef unsigned __int64 uint64;
+#endif
 
 template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)
 {
