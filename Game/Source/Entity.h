@@ -15,6 +15,14 @@ enum class EntityType
 	UNKNOWN
 };
 
+enum class EntityState {
+	IDLE,
+	MOVE,
+	JUMP,
+	CLIMB,
+	DEAD
+};
+
 class Entity
 {
 public:
@@ -51,6 +59,12 @@ public:
 		return true;
 	}
 
+	virtual EntityState StateMachine();
+
+	virtual void Move();
+	virtual void Jump();
+	virtual void Climb();
+
 	void Enable()
 	{
 		if (!active)
@@ -77,6 +91,7 @@ public:
 
 	SString name;
 	EntityType type;
+	EntityState state;
 	bool active = true;
 	pugi::xml_node parameters; 
 

@@ -13,9 +13,59 @@
 #include <cmath>
 #include <iostream>
 
+void Entity::Move() {
+
+}
+
+void Entity::Jump() {
+
+}
+
+void Entity::Climb() {
+
+}
+
+EntityState Entity::StateMachine() {
+	switch (this->state) {
+		case EntityState::IDLE:
+			LOG("Player is IDLE.\n");
+			break;
+
+		case EntityState::MOVE:
+
+			Move();
+
+			LOG("Player is MOVING.\n");
+			break;
+
+		case EntityState::JUMP:
+
+			Jump();
+
+			LOG("Player is JUMPING.\n");
+			break;
+
+		case EntityState::CLIMB:
+
+			Climb();
+
+			LOG("Player is CLIMBING.\n");
+			break;
+
+		case EntityState::DEAD:
+			LOG("Player is DEAD.\n");
+			break;
+
+	}
+
+	return this->state;
+
+}
+
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name.Create("Player");
+	state = EntityState::IDLE;
 }
 
 Player::~Player() {
@@ -69,7 +119,6 @@ bool Player::Update(float dt)
 		// TODO debug
 	}
 	
-
 	// View colliders / logic
 	if (app->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
 		debug = !debug;
@@ -88,6 +137,8 @@ bool Player::Update(float dt)
 	}
 
 	// END OF DEBUG TOOLS -----------------------------------------
+
+	StateMachine();
 
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		//
