@@ -217,6 +217,13 @@ bool App::PreUpdate()
 {
 	bool ret = true;
 
+	// Activate FPS limiter if Debug mode is ON
+	if (fpsLimiter) {
+		maxFrameDuration = 1000 * (1 / maxFps);
+	} else {
+		maxFrameDuration = configFile.child("config").child("app").child("maxFrameDuration").attribute("value").as_int();
+	}
+
 	ListItem<Module*>* item;
 	Module* pModule = NULL;
 

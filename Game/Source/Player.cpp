@@ -84,8 +84,7 @@ bool Player::Update(float dt)
 
 	// Activate or deactivate FPS cap
 	if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
+		fpsLimiter = !fpsLimiter;
 	}
 
 	// END OF DEBUG TOOLS -----------------------------------------

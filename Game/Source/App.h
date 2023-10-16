@@ -115,10 +115,13 @@ private:
 
 	uint32 maxFrameDuration = 16;
 
+	float maxFps = 30; // TODO hacer esto variable
+
 };
 
 extern App* app;
 
 extern bool debug;
+extern bool fpsLimiter;
 
 #endif	// __APP_H__
