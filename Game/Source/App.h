@@ -119,4 +119,6 @@ private:
 
 extern App* app;
 
+extern bool debug;
+
 #endif	// __APP_H__

@@ -21,6 +21,9 @@ enum MainState
 
 App* app = NULL;
 
+// debug mode
+bool debug = false;
+
 int main(int argc, char* args[])
 {
 	LOG("Engine starting ...");
