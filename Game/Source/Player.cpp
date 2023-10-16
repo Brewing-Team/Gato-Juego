@@ -49,9 +49,46 @@ bool Player::Update(float dt)
 {
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 
-	// Activate or deactivate debug mode
-	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	// DEBUG TOOLS ------------------------------------------------
+
+	// Resetart Level 1
+	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		debug = !debug;
+		// TODO debug
+	}
+
+	// Resetart Level 2
+	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+		debug = !debug;
+		// TODO debug
+	}
+
+	// Restart current level
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+		debug = !debug;
+		// TODO debug
+	}
+	
+
+	// View colliders / logic
+	if (app->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
+		debug = !debug;
+		// TODO debug
+	}
+
+	// Activate or deactivate GOD mode
+	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
+		debug = !debug;
+		// TODO debug
+	}
+
+	// Activate or deactivate FPS cap
+	if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
+		debug = !debug;
+		// TODO debug
+	}
+
+	// END OF DEBUG TOOLS -----------------------------------------
 
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		//
