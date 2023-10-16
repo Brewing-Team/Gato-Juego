@@ -86,10 +86,16 @@ bool Player::Start() {
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 
-	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
+	//pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
+	pbody = app->physics->CreateRectangle(position.x + 16, position.y + 16, 15, 25, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
 
+	//si quieres dar vueltos como la helice de un helicoptero Boeing AH-64 Apache pon en false la siguiente funcion
+	pbody->body->SetFixedRotation(true);
+	pbody->body->GetFixtureList()->SetFriction(20.0f);
+	//pbody->body->SetLinearDamping(2);
+	
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
 
 	return true;
@@ -97,7 +103,6 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
-	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
 
 	// DEBUG TOOLS ------------------------------------------------
 
@@ -143,27 +148,40 @@ bool Player::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		//
 	}
-	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-		//
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
+		if(pbody->body->GetLinearVelocity().y == 0)
+		{
+			float impulse = pbody->body->GetMass() * 5;
+			pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
+		}
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		vel = b2Vec2(-speed*dt, -GRAVITY_Y);
+		if (pbody->body->GetLinearVelocity().x >= -5)
+		{
+			float impulse = pbody->body->GetMass() / 2;
+			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
+		}
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		vel = b2Vec2(speed*dt, -GRAVITY_Y);
+		if(pbody->body->GetLinearVelocity().x <= 5)
+		{
+			float impulse = pbody->body->GetMass() / 2;
+			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
+		}
 	}
 
-	//Set the velocity of the pbody of the player
-	pbody->body->SetLinearVelocity(vel);
+	LOG("%f", pbody->body->GetLinearVelocity().x);
+
+	//si quieres dar putivueltas descomenta la linea de abajo y comenta la de arriba
+	//app->render->DrawTexture(texture, position.x, position.y,0,1.0f,pbody->body->GetAngle()*RADTODEG);
+	
+	app->render->DrawTexture(texture, position.x, position.y);//estoy hecho un lio, no se si esto va aqui o al final
 
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
-
-	app->render->DrawTexture(texture, position.x, position.y);
-
 
 	//Esto esta aqui temporalmente don't worry :)
 	app->render->camera.x = -position.x + app->render->camera.w / app->win->GetScale() / 2;
