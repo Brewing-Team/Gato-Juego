@@ -7,33 +7,6 @@
     <ClCompile Include="Source\External\PugiXml\src\pugixml.cpp">
       <Filter>External\PugiXml</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Render.cpp">
-      <Filter>Game\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Audio.cpp">
-      <Filter>Game\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Input.cpp">
-      <Filter>Game\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene.cpp">
-      <Filter>Game\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Textures.cpp">
-      <Filter>Game\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Window.cpp">
-      <Filter>Game\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EntityManager.cpp">
-      <Filter>Game\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Map.cpp">
-      <Filter>Game\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics.cpp">
-      <Filter>Game\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Timer.cpp">
       <Filter>Game\Utils</Filter>
     </ClCompile>
@@ -51,6 +24,33 @@
     </ClCompile>
     <ClCompile Include="Source\Player.cpp">
       <Filter>Game\Entities\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio.cpp">
+      <Filter>Game\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EntityManager.cpp">
+      <Filter>Game\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input.cpp">
+      <Filter>Game\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Map.cpp">
+      <Filter>Game\Modules\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics.cpp">
+      <Filter>Game\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Render.cpp">
+      <Filter>Game\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene.cpp">
+      <Filter>Game\Modules\GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Textures.cpp">
+      <Filter>Game\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Window.cpp">
+      <Filter>Game\Modules\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,44 +81,14 @@
     <ClInclude Include="Source\Queue.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Render.h">
-      <Filter>Game\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Audio.h">
-      <Filter>Game\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Input.h">
-      <Filter>Game\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene.h">
-      <Filter>Game\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Textures.h">
-      <Filter>Game\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Window.h">
-      <Filter>Game\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EntityManager.h">
-      <Filter>Game\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Map.h">
-      <Filter>Game\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Entity.h">
       <Filter>Game\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics.h">
-      <Filter>Game\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\Timer.h">
       <Filter>Game\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\PerfTimer.h">
       <Filter>Game\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Module.h">
-      <Filter>Game\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\App.h">
       <Filter>Game</Filter>
@@ -128,6 +98,36 @@
     </ClInclude>
     <ClInclude Include="Source\Player.h">
       <Filter>Game\Entities\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EntityManager.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Map.h">
+      <Filter>Game\Modules\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Module.h">
+      <Filter>Game\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Render.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene.h">
+      <Filter>Game\Modules\GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Textures.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Window.h">
+      <Filter>Game\Modules\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +160,12 @@
     </Filter>
     <Filter Include="Game\Entities\Items">
       <UniqueIdentifier>{1c826e1e-a6a0-473b-aee4-06654b025b76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Modules\GamePlay">
+      <UniqueIdentifier>{3c7811ec-e181-4d18-a18a-4f7482af3f09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Modules\Core">
+      <UniqueIdentifier>{ec1b0eb5-db07-471e-ba76-05b273de391a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
