@@ -26,7 +26,7 @@ bool Render::Awake(pugi::xml_node& config)
 	LOG("Create SDL rendering context");
 	bool ret = true;
 
-	Uint32 flags = SDL_RENDERER_ACCELERATED;
+	uint32_t flags = SDL_RENDERER_ACCELERATED;
 
 	if (config.child("vsync").attribute("value").as_bool(true) == true)
 	{
@@ -43,8 +43,10 @@ bool Render::Awake(pugi::xml_node& config)
 	}
 	else
 	{
-		camera.w = app->win->screenSurface->w;
-		camera.h = app->win->screenSurface->h;
+		// camera.w = app->win->screenSurface->w;
+		// camera.h = app->win->screenSurface->h;
+		camera.w = 1280;
+		camera.h = 720;
 		camera.x = 0;
 		camera.y = 0;
 	}

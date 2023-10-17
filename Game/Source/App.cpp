@@ -176,7 +176,7 @@ void App::FinishUpdate()
 	// This is a good place to call Load / Save functions
 	double currentDt = frameTime.ReadMs();
 	if (maxFrameDuration > 0 && currentDt < maxFrameDuration) {
-		uint32 delay = (uint32) (maxFrameDuration - currentDt);
+		uint32_t delay = (uint32_t) (maxFrameDuration - currentDt);
 
 		PerfTimer delayTimer = PerfTimer();
 		SDL_Delay(delay);
@@ -206,8 +206,13 @@ void App::FinishUpdate()
 
 	// Shows the time measurements in the window title
 	static char title[256];
+	#ifdef __linux__
+	sprintf_s(title, 256, "%s: Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Time since startup: %u Frame Count: %lu ",
+		gameTitle.GetString(), averageFps, framesPerSecond, dt, secondsSinceStartup, frameCount);
+	#elif _WIN32
 	sprintf_s(title, 256, "%s: Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Time since startup: %I32u Frame Count: %I64u ",
 		gameTitle.GetString(), averageFps, framesPerSecond, dt, secondsSinceStartup, frameCount);
+	#endif
 
 	app->win->SetTitle(title);
 }

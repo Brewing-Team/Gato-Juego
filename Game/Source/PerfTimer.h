@@ -12,11 +12,11 @@ public:
 
 	void Start();
 	double ReadMs() const;
-	uint64 ReadTicks() const;
+	uint64_t ReadTicks() const;
 
 private:
-	uint64 startTime;
-	static uint64 frequency;
+	uint64_t startTime;
+	static uint64_t frequency;
 };
 
 #endif //__PERFTIMER_H__

@@ -46,11 +46,12 @@
 typedef unsigned int uint;
 typedef unsigned char uchar;
 #ifdef __linux__
-#define uint32 Uint32
-#define uint64 Uint64
+//typedef uint32_t uint32;
+//#define uint32 Uint32
+//#define uint64 Uint64
 #elif _WIN32
-typedef unsigned __int32 uint32;
-typedef unsigned __int64 uint64;
+typedef unsigned __int32 uint32_t;
+typedef unsigned __int64 uint64_t;
 #endif
 
 template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)

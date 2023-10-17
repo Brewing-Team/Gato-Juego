@@ -19,7 +19,7 @@ void Timer::Start()
 	startTime = SDL_GetTicks();
 }
 
-uint32 Timer::ReadSec() const
+uint32_t Timer::ReadSec() const
 {
 	return (SDL_GetTicks() - startTime) / 1000;
 }

@@ -5,7 +5,13 @@
 #include "List.h"
 #include "Point.h"
 
+#ifdef __linux__
+#include <pugixml.hpp>
+#include <SDL.h>
+#elif _WIN32
 #include "PugiXml\src\pugixml.hpp"
+#endif
+
 
 // Ignore Terrain Types and Tile Types for now, but we want the image!
 struct TileSet
@@ -122,7 +128,7 @@ public:
 	bool Load(SString mapFileName);
 
 	iPoint MapToWorld(int x, int y) const;
-	iPoint Map::WorldToMap(int x, int y);
+	iPoint WorldToMap(int x, int y);
 
 private:
 

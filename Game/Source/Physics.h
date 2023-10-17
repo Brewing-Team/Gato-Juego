@@ -2,7 +2,15 @@
 #include "Module.h"
 #include "Entity.h"
 
+#ifdef __linux__
+//#include <box2d/box2d.h>
+#include <Box2D/Dynamics/b2WorldCallbacks.h>
+class b2Body;
+class b2Contact;
+class b2World;
+#elif _WIN32
 #include "Box2D/Box2D/Box2D.h"
+#endif
 
 #define GRAVITY_X 0.0f
 #define GRAVITY_Y -10.0f

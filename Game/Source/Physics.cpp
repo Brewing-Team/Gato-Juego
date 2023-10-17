@@ -1,6 +1,6 @@
 #include "Physics.h"
 #include "Input.h"
-#include "app.h"
+#include "App.h"
 #include "Log.h"
 #include "math.h"
 #include "Defs.h"
@@ -11,7 +11,7 @@
 
 #ifdef __linux__
 #include <SDL_keycode.h>
-#include <box2d/box2d.h>
+#include <Box2D/Box2D.h>
 #elif _WIN32
 #include "SDL/include/SDL_keycode.h"
 #include "Box2D/Box2D/Box2D.h"

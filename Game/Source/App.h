@@ -110,14 +110,14 @@ private:
 	PerfTimer frameTime;
 	PerfTimer lastSecFrameTime;
 
-	uint64 frameCount = 0;
-	uint32 framesPerSecond = 0;
-	uint32 lastSecFrameCount = 0;
+	uint64_t frameCount = 0;
+	uint32_t framesPerSecond = 0;
+	uint32_t lastSecFrameCount = 0;
 
 	float averageFps = 0.0f;
-	uint32 secondsSinceStartup = 0;
+	uint32_t secondsSinceStartup = 0;
 
-	uint32 maxFrameDuration = 16;
+	uint32_t maxFrameDuration = 16;
 
 };
 

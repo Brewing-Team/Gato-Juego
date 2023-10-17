@@ -10,7 +10,7 @@
 #include "SDL\include\SDL_timer.h"
 #endif
 
-uint64 PerfTimer::frequency = 0;
+uint64_t PerfTimer::frequency = 0;
 
 PerfTimer::PerfTimer()
 {
@@ -28,7 +28,7 @@ double PerfTimer::ReadMs() const
 	return ((double)(SDL_GetPerformanceCounter() - startTime) / frequency * 1000);
 }
 
-uint64 PerfTimer::ReadTicks() const
+uint64_t PerfTimer::ReadTicks() const
 {
 	return SDL_GetPerformanceCounter() - startTime;
 }

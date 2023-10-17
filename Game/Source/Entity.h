@@ -51,7 +51,7 @@ public:
 		return true;
 	}
 
-	void Entity::Enable()
+	void Enable()
 	{
 		if (!active)
 		{
@@ -60,7 +60,7 @@ public:
 		}
 	}
 
-	void Entity::Disable()
+	void Disable()
 	{
 		if (active)
 		{

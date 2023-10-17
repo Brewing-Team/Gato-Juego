@@ -11,11 +11,11 @@ public:
 	Timer();
 
 	void Start();
-	uint32 ReadSec() const;
+	uint32_t ReadSec() const;
 	float ReadMSec() const;
 
 private:
-	uint32 startTime;
+	uint32_t startTime;
 };
 
 #endif //__TIMER_H__

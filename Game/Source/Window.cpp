@@ -63,7 +63,7 @@ bool Window::Awake(pugi::xml_node& config)
 		else
 		{
 			// Get window surface
-			screenSurface = SDL_GetWindowSurface(window);
+			//screenSurface = SDL_GetWindowSurface(window);
 		}
 	}
 

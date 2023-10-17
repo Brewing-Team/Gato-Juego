@@ -7,6 +7,7 @@
 
 #ifdef __linux__
 #include <SDL.h>
+#include <limits.h>
 #elif _WIN32
 #include "SDL/include/SDL.h"
 #endif
