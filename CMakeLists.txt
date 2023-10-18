@@ -6,6 +6,10 @@ enable_testing()
 
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Game/Source")
 set(GAME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Game")
+set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/Game/Source/External/SDL/include")
+set(SDL2_MIXER_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/Game/Source/External/SDL_mixer/include")
+set(SDL2_IMAGE_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/Game/Source/External/SDL_image/include")
+set(PUGIXML_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/Game/Source/External/PugiXml/src")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -std=c++2a  -l Box2D")
 
@@ -37,10 +41,10 @@ file(GLOB SOURCES "${SOURCE_DIR}/*.cpp" "${SOURCE_DIR}/*.h")
 #)
 
 
-find_package(SDL2 REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(pugixml REQUIRED)
+#find_package(SDL2 REQUIRED)
+#find_package(SDL2_mixer REQUIRED)
+#find_package(SDL2_image REQUIRED)
+#find_package(pugixml REQUIRED)
 
 add_executable(Gato-Juego ${SOURCES})
 
@@ -50,7 +54,7 @@ target_include_directories(Gato-Juego PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2_MIXER_
 #target_compile_options(${PROJECT_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror>)
 
 #target_link_libraries(citm ${SDL2_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
-target_link_libraries(Gato-Juego /usr/lib/libSDL2main.a /usr/lib/libSDL2-2.0.so /usr/lib/libSDL2_mixer.so /usr/lib/libSDL2_image.so pugixml::pugixml)
+target_link_libraries(Gato-Juego ${CMAKE_CURRENT_SOURCE_DIR}/Game/Source/External/SDL/libx86/SDL2.lib ${CMAKE_CURRENT_SOURCE_DIR}/Output/SDL2.dll ${CMAKE_CURRENT_SOURCE_DIR}/Game/Source/External/SDL_mixer/libx86/SDL2.lib ${CMAKE_CURRENT_SOURCE_DIR}/Game/Source/External/SDL_image/libx86/SDL2.lib)
 
 #target_compile_definitions(Gato-Juego PRIVATE uint32=unsigned\ __int32 uint64=unsigned\ __int64)
 
