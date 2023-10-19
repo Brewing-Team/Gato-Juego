@@ -5,7 +5,13 @@
 #include "List.h"
 #include "Point.h"
 
+#ifdef __linux__
+#include <pugixml.hpp>
+#include <SDL.h>
+#elif _MSC_VER
 #include "PugiXml\src\pugixml.hpp"
+#endif
+
 
 // Ignore Terrain Types and Tile Types for now, but we want the image!
 struct TileSet

@@ -4,7 +4,11 @@
 #include "Defs.h"
 #include "Log.h"
 
+#ifdef __linux__
+#include <SDL.h>
+#elif _MSC_VER
 #include "SDL/include/SDL.h"
+#endif
 
 
 Window::Window() : Module()
@@ -59,7 +63,7 @@ bool Window::Awake(pugi::xml_node& config)
 		else
 		{
 			// Get window surface
-			screenSurface = SDL_GetWindowSurface(window);
+			//screenSurface = SDL_GetWindowSurface(window);
 		}
 	}
 

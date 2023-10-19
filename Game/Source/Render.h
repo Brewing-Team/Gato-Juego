@@ -5,7 +5,12 @@
 
 #include "Point.h"
 
+#ifdef __linux__
+#include <SDL.h>
+#include <limits.h>
+#elif _MSC_VER
 #include "SDL/include/SDL.h"
+#endif
 
 class Render : public Module
 {

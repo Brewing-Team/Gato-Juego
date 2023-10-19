@@ -13,6 +13,12 @@
 #include <cmath>
 #include <iostream>
 
+#ifdef __linux__
+#include <Box2D/Common/b2Math.h>
+#include <Box2D/Dynamics/b2Body.h>
+#endif
+
+
 void Player::Move() {
 
 }
