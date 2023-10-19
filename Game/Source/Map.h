@@ -29,6 +29,14 @@ struct TileSet
 	SDL_Rect GetTileRect(int gid) const;
 };
 
+struct Colliders
+{
+	int x;
+	int y;
+	int width;
+	int height;
+};
+
 //  We create an enum for map type, just for convenience,
 // NOTE: Platformer game will be of type ORTHOGONAL
 enum MapTypes
@@ -136,6 +144,7 @@ private:
 	bool LoadTileSet(pugi::xml_node mapFile);
 	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
 	bool LoadAllLayers(pugi::xml_node mapNode);
+	bool LoadColliders(pugi::xml_node mapFile);
 	TileSet* GetTilesetFromTileId(int gid) const;
 	bool LoadProperties(pugi::xml_node& node, Properties& properties);
 
