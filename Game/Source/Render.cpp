@@ -4,6 +4,7 @@
 
 #include "Defs.h"
 #include "Log.h"
+#include <SDL_render.h>
 
 #define VSYNC true
 
@@ -45,8 +46,8 @@ bool Render::Awake(pugi::xml_node& config)
 	{
 		// camera.w = app->win->screenSurface->w;
 		// camera.h = app->win->screenSurface->h;
-		camera.w = 1280;
-		camera.h = 720;
+		SDL_RendererInfo info;
+		SDL_GetRendererOutputSize(renderer, &camera.w, &camera.h);
 		camera.x = 0;
 		camera.y = 0;
 	}

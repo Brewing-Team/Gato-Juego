@@ -86,6 +86,11 @@ bool App::Awake()
 		win->SetTitle(gameTitle.GetString());
 		maxFrameDuration = configFile.child("config").child("app").child("maxFrameDuration").attribute("value").as_int();
 
+		//set camera size
+		render->camera.w = configNode.child("resolution").attribute("width").as_int();
+		render->camera.h = configNode.child("resolution").attribute("height").as_int();
+
+
 		ListItem<Module*>* item;
 		item = modules.start;
 
