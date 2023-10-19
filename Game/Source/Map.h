@@ -8,7 +8,7 @@
 #ifdef __linux__
 #include <pugixml.hpp>
 #include <SDL.h>
-#elif _WIN32
+#elif _MSC_VER
 #include "PugiXml\src\pugixml.hpp"
 #endif
 

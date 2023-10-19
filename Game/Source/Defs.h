@@ -6,7 +6,7 @@
 #ifdef __linux__
 #define sprintf_s(buffer, size, format, ...) sprintf(buffer, format, __VA_ARGS__)
 #include <cstdint>
-#elif _WIN32
+#elif _MSC_VER
 
 #endif
 
@@ -49,7 +49,7 @@ typedef unsigned char uchar;
 //typedef uint32_t uint32;
 //#define uint32 Uint32
 //#define uint64 Uint64
-#elif _WIN32
+#elif _MSC_VER
 typedef unsigned __int32 uint32_t;
 typedef unsigned __int64 uint64_t;
 #endif

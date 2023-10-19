@@ -268,7 +268,7 @@ private:
     }
 };
 
-#elif _WIN32
+#elif _MSC_VER
 #include "Defs.h"
 
 #include <stdlib.h>

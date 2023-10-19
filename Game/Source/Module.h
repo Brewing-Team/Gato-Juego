@@ -6,7 +6,7 @@
 
 #ifdef __linux__
 #include <pugixml.hpp>
-#elif _WIN32
+#elif _MSC_VER
 #include "PugiXml/src/pugixml.hpp"
 #endif
 

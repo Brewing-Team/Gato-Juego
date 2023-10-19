@@ -37,7 +37,7 @@ void Log(const char* file, int line, const char* format, ...) {
 //#endif
 
 
-#elif _WIN32
+#elif _MSC_VER
 
 #include <windows.h>
 #include <stdio.h>

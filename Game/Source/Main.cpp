@@ -6,7 +6,7 @@
 // NOTE: SDL redefines main function
 #ifdef __linux__
 #include <SDL.h>
-#elif _WIN32
+#elif _MSC_VER
 #include "SDL/include/SDL.h"
 #endif
 

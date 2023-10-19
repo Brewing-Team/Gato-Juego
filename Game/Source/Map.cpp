@@ -12,7 +12,7 @@
 
 #ifdef __linux__
 #include <SDL_image.h>
-#elif _WIN32
+#elif _MSC_VER
 #include "SDL_image/include/SDL_image.h"
 #endif
 

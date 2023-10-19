@@ -9,7 +9,7 @@
 #ifdef __linux__
 #include <SDL.h>
 #include <SDL_mixer.h>
-#elif _WIN32
+#elif _MSC_VER
 #include "SDL/include/SDL.h"
 #include "SDL_mixer/include/SDL_mixer.h"
 #endif

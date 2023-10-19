@@ -8,7 +8,7 @@
 class b2Body;
 class b2Contact;
 class b2World;
-#elif _WIN32
+#elif _MSC_VER
 #include "Box2D/Box2D/Box2D.h"
 #endif
 
