@@ -28,6 +28,7 @@ App* app = NULL;
 // debug mode
 bool debug = false;
 bool fpsLimiter = false;
+bool freeCam = false;
 
 int main(int argc, char* args[])
 {

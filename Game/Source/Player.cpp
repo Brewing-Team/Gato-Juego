@@ -130,6 +130,11 @@ bool Player::Update(float dt)
 		debug = !debug;
 		// TODO debug
 	}
+
+	// Toggle no clip
+	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+		debug = !debug;
+	}
 	
 	// View colliders / logic
 	if (app->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {

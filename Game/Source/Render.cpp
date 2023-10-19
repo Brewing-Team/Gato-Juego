@@ -115,7 +115,19 @@ void Render::ResetViewPort()
 /// @param offset position of the camera relative to the target. (0,0) is the center.
 /// @param dt delta time
 void Render::cameraInterpolation(Entity* target, float lerpSpeed, float dt, iPoint offset)
-{	if(target != nullptr)
+{	
+	//DEBUG
+	if(debug)
+	{
+		target = nullptr;
+		camera.useInterpolation = false;
+	}
+	else
+	{
+		camera.useInterpolation = true;
+	}
+
+	if(target != nullptr)
 	{
 		if(camera.useInterpolation)
 		{
