@@ -5,7 +5,7 @@ include(CTest)
 enable_testing()
 
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Game/Source")
-set(GAME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Game")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Output_linux")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -std=c++2a  -l Box2D")
 
@@ -53,6 +53,15 @@ target_link_libraries(Gato-Juego PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_
 #target_link_libraries(Gato-Juego /usr/lib/libSDL2main.a /usr/lib/libSDL2-2.0.so /usr/lib/libSDL2_mixer.so /usr/lib/libSDL2_image.so pugixml::pugixml)
 
 #target_compile_definitions(Gato-Juego PRIVATE uint32=unsigned\ __int32 uint64=unsigned\ __int64)
+
+configure_file("Output/config.xml" "${CMAKE_CURRENT_SOURCE_DIR}/Output_linux/config.xml" COPYONLY)
+configure_file("Output/save_game.xml" "${CMAKE_CURRENT_SOURCE_DIR}/Output_linux/save_game.xml" COPYONLY)
+
+add_custom_target(copy_assets
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Output/Assets ${EXECUTABLE_OUTPUT_PATH}/Assets
+)
+add_dependencies(Gato-Juego copy_assets)
+
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
