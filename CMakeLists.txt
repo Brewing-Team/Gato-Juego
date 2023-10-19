@@ -5,7 +5,7 @@ include(CTest)
 enable_testing()
 
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Game/Source")
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Output_linux")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Output_Linux")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -std=c++2a  -l Box2D")
 
@@ -54,8 +54,8 @@ target_link_libraries(Gato-Juego PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_
 
 #target_compile_definitions(Gato-Juego PRIVATE uint32=unsigned\ __int32 uint64=unsigned\ __int64)
 
-configure_file("Output/config.xml" "${CMAKE_CURRENT_SOURCE_DIR}/Output_linux/config.xml" COPYONLY)
-configure_file("Output/save_game.xml" "${CMAKE_CURRENT_SOURCE_DIR}/Output_linux/save_game.xml" COPYONLY)
+configure_file("Output/config.xml" "${CMAKE_CURRENT_SOURCE_DIR}/Output_Linux/config.xml" COPYONLY)
+configure_file("Output/save_game.xml" "${CMAKE_CURRENT_SOURCE_DIR}/Output_Linux/save_game.xml" COPYONLY)
 
 add_custom_target(copy_assets
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/Output/Assets ${EXECUTABLE_OUTPUT_PATH}/Assets
