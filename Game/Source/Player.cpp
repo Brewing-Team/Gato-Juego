@@ -196,15 +196,15 @@ bool Player::Update(float dt)
 	/* Info para el Hugo del futuro:
 	
 		1. el casteo de int es para que no se rompa al redondear
-		2. el "-16" es el offset del tamaï¿½o del player
+		2. el "-16" es el offset del tamaño del player
 		3. el "4" que multiplica al "dt" es la "followSpeed"
 	*/
 
-	app->render->camera.x = std::ceil(std::lerp(app->render->camera.x, (int)(app->render->camera.w / 2 / app->win->GetScale()) - 16 - position.x, dt * 4 / 1000));
+	//app->render->camera.x = std::ceil(std::lerp(app->render->camera.x, (int)(app->render->camera.w / 2 / app->win->GetScale()) - 16 - position.x, dt * 4 / 1000));
 	//app->render->camera.x = std::ceil(std::lerp(app->render->camera.x, -position.x + 200, dt * 4 / 1000)); // esta funciona en escala 4 pero esta hardcodeado
 
-	app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
-
+	//app->render->camera.y = std::ceil(std::lerp(app->render->camera.y, (int)(app->render->camera.h / 2 / app->win->GetScale()) - 16 - position.y, dt * 4 / 1000));
+	//app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
 
 	LOG("%d", -position.x);
 

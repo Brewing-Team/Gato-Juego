@@ -12,6 +12,8 @@
 #include "SDL/include/SDL.h"
 #endif
 
+class Entity;
+
 class Render : public Module
 {
 public:
@@ -38,6 +40,8 @@ public:
 	void SetViewPort(const SDL_Rect& rect);
 	void ResetViewPort();
 
+	void cameraInterpolation(Entity* target, float lerpSpeed, float dt, iPoint offset = { 0,0 });
+
 	// Drawing
 	bool DrawTexture(SDL_Texture* texture, int x, int y, const SDL_Rect* section = NULL, float speed = 1.0f, double angle = 0, int pivotX = INT_MAX, int pivotY = INT_MAX) const;
 	bool DrawRectangle(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool filled = true, bool useCamera = true) const;
@@ -49,8 +53,20 @@ public:
 
 public:
 
+	struct Camera
+	{
+		int x;
+		int y;
+		int w;
+		int h;
+
+		bool useInterpolation;
+		float lerpSpeed;
+		Entity* target;
+		iPoint offset;
+	}camera;
+
 	SDL_Renderer* renderer;
-	SDL_Rect camera;
 	SDL_Rect viewport;
 	SDL_Color background;
 };

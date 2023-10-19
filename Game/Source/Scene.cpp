@@ -43,6 +43,11 @@ bool Scene::Awake(pugi::xml_node& config)
 		app->map->name = config.child("map").attribute("name").as_string();
 		app->map->path = config.child("map").attribute("path").as_string();
 	}
+	
+	app->render->camera.target = player;
+	app->render->camera.useInterpolation = true;
+	app->render->camera.lerpSpeed = 4.0f;
+	app->render->camera.offset = { 0,0 };
 
 	return ret;
 }
