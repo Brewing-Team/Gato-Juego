@@ -1,0 +1,66 @@
+[
+    {
+        "type": "Group",
+        "name": "Game",
+        "parent_id": null,
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "Nqot0jWfv5muTSB4"
+    },
+    {
+        "type": "Group",
+        "name": "Modules",
+        "parent_id": "Nqot0jWfv5muTSB4",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "g5vOYs7dlo9twuhr"
+    },
+    {
+        "type": "Group",
+        "name": "Core",
+        "parent_id": "g5vOYs7dlo9twuhr",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "h6ZNwGvf9Wtkjzed"
+    },
+    {
+        "type": "Group",
+        "name": "Gameplay",
+        "parent_id": "g5vOYs7dlo9twuhr",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "lEfOQyjNb6uHcSZP"
+    },
+    {
+        "type": "Group",
+        "name": "Utils",
+        "parent_id": "Nqot0jWfv5muTSB4",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "rUbenhgv8idfMAEs"
+    },
+    {
+        "type": "Group",
+        "name": "Entities",
+        "parent_id": "Nqot0jWfv5muTSB4",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "k9gQ16o28NJZFxHY"
+    },
+    {
+        "type": "Group",
+        "name": "Items",
+        "parent_id": "k9gQ16o28NJZFxHY",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "mkvpDEi31dXJjQzR"
+    },
+    {
+        "type": "Group",
+        "name": "Player",
+        "parent_id": "k9gQ16o28NJZFxHY",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "HS17VW3pUIu9EAwf"
+    }
+]
