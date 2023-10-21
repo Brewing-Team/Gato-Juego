@@ -196,7 +196,7 @@ bool Map::Load(SString mapFileName)
         ret = LoadColliders(mapFileXML);
     }
 
-    PhysBody* c1 = app->physics->CreateRectangle(238, 632, 480, 16, STATIC);
+    PhysBody* c1 = app->physics->CreateRectangle(238, 632, 480 * 50, 16, STATIC);
     c1->ctype = ColliderType::PLATFORM;
 
    /* PhysBody* c2 = app->physics->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
@@ -346,6 +346,8 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
     //TODO!! check if the objectgroup's class is collider
     for(collider = mapFile.child("map").child("objectgroup").child("object"); collider && ret; collider = collider.next_sibling("object"))
     {
+        //if (SDL_strcmp(collider.attribute("type").as_string(), "rectangle"))
+        //{
         Colliders* c = new Colliders();
 
         c->x = collider.attribute("x").as_int();
@@ -353,8 +355,21 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
         c->width = collider.attribute("width").as_int();
         c->height = collider.attribute("height").as_int();
 
-        app->physics->CreateRectangle(c->x + c->width / 2, c->y + c->height / 2, c->width, c->height, STATIC);
-    }
+        PhysBody* c1 = app->physics->CreateRectangle(c->x + c->width / 2, c->y + c->height / 2, c->width, c->height, STATIC);
+        c1->ctype = ColliderType::PLATFORM;
+        
+        //}
+        /* else if(SDL_strcmp(collider.attribute("type").as_string(), "polygon"))
+        {
+            int* points = new int[collider.child("polygon").attribute("points").as_int() * sizeof(int)];
+
+            app->physics->CreateChain(collider.attribute("x").as_int(),
+                                      collider.attribute("y").as_int(),
+                                      points,
+                                      collider.child("polygon").attribute("points").as_int(),
+                                        STATIC);
+        }*/
+    } 
 
     return ret;
 }
