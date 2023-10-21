@@ -39,7 +39,13 @@ public:
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
+	PhysBody* groundSensor;
 	int pickCoinFxId;
+
+	//Movement
+	int direction = 0;
+	float moveForce = 1.0f;
+	bool isGrounded = false;
 };
 
 #endif // __PLAYER_H__
