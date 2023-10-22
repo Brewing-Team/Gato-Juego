@@ -43,6 +43,7 @@ public:
 	int pickCoinFxId;
 
 	//Movement
+	bool inAir = false;
 	int direction = 0;
 	float moveForce = 1.0f;
 	bool isGrounded = false;

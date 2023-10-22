@@ -22,15 +22,7 @@
 
 void Player::Move() {
 
-	if(!isGrounded)
-	{
-		moveForce = 0.05f;
-	}
-	else{
-		moveForce = 1.0f;
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+	if (direction == -1) {
 		if (pbody->body->GetLinearVelocity().x >= -5)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
@@ -38,7 +30,7 @@ void Player::Move() {
 		}
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+	if (direction == 1) {
 		if(pbody->body->GetLinearVelocity().x <= 5)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
@@ -48,11 +40,43 @@ void Player::Move() {
 }
 
 void Player::Jump() {
-	float impulse = pbody->body->GetMass() * 5;
-	pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
+	if(isGrounded)
+		{	
+			if(!inAir)
+			{
+				float impulse = pbody->body->GetMass() * 5;
+				pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
 
-	isGrounded = false;
-	state = EntityState::MOVE;
+				isGrounded = false;
+				inAir = true;
+			}
+			else{
+				moveForce = 1.0f;
+				state = EntityState::NONE;
+				inAir = false;
+			}
+		}
+		else{
+			moveForce = 0.05f;
+
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+				if (pbody->body->GetLinearVelocity().x >= -5)
+				{
+					float impulse = pbody->body->GetMass() * moveForce;
+					pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
+				}
+			}
+
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+				if(pbody->body->GetLinearVelocity().x <= 5)
+				{
+					float impulse = pbody->body->GetMass() * moveForce;
+					pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
+				}
+			}
+		}
+		
+	
 }
 
 void Player::Climb() {
@@ -100,7 +124,6 @@ Player::Player() : Entity(EntityType::PLAYER)
 {
 	name.Create("Player");
 	state = EntityState::IDLE;
-	state = EntityState::MOVE;
 }
 
 Player::~Player() {
@@ -188,15 +211,45 @@ bool Player::Update(float dt)
 
 	StateMachine();
 
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
-		//if(pbody->body->GetLinearVelocity().y == 0)
-		if(isGrounded)
-		{
-			state = EntityState::JUMP;
-		}
+	/* if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		direction = -1;
+		state = EntityState::MOVE;
+	}
+	else if(app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		direction = 1;
+		state = EntityState::MOVE;
+	}
+	else if(state != EntityState::JUMP){
+		state = EntityState::IDLE;
 	}
 
-	LOG("%d", state);
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
+		state = EntityState::JUMP;
+	} */
+
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		if (pbody->body->GetLinearVelocity().x >= -5)
+		{
+			float impulse = pbody->body->GetMass() * moveForce;
+			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
+		}
+	}
+	if(app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		if(pbody->body->GetLinearVelocity().x <= 5)
+		{
+			float impulse = pbody->body->GetMass() * moveForce;
+			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
+		}
+	}
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
+		if(isGrounded)
+		{
+			float impulse = pbody->body->GetMass() * 5;
+			pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
+
+			isGrounded = false;
+		}
+	}
 
 	//si quieres dar putivueltas descomenta la linea de abajo y comenta la de arriba
 	//app->render->DrawTexture(texture, position.x, position.y,0,1.0f,pbody->body->GetAngle()*RADTODEG);
@@ -216,7 +269,7 @@ bool Player::Update(float dt)
 	/* Info para el Hugo del futuro:
 	
 		1. el casteo de int es para que no se rompa al redondear
-		2. el "-16" es el offset del tamaño del player
+		2. el "-16" es el offset del tamaï¿½o del player
 		3. el "4" que multiplica al "dt" es la "followSpeed"
 	*/
 
