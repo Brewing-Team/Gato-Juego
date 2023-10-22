@@ -117,7 +117,7 @@ void Render::ResetViewPort()
 void Render::cameraInterpolation(Entity* target, float lerpSpeed, float dt, iPoint offset)
 {	
 	//DEBUG
-	if(debug)
+	if(freeCam)
 	{
 		target = nullptr;
 		camera.useInterpolation = false;

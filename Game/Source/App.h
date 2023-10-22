@@ -127,5 +127,6 @@ extern App* app;
 
 extern bool debug;
 extern bool fpsLimiter;
+extern bool freeCam;
 
 #endif	// __APP_H__

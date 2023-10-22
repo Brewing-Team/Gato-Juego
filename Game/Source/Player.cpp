@@ -187,7 +187,7 @@ bool Player::Update(float dt)
 
 	// Toggle no clip
 	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
-		debug = !debug;
+		freeCam = !freeCam;
 	}
 	
 	// View colliders / logic
