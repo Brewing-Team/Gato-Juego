@@ -64,13 +64,10 @@ void Player::Move() {
 }
 
 void Player::Jump() {
-	if(isGrounded) {
-
-		float impulse = pbody->body->GetMass() * 5;
-		pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
-		isGrounded = false;
-
-	}
+	
+	float impulse = pbody->body->GetMass() * 5;
+	pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
+	isGrounded = false;
 	
 }
 
@@ -94,10 +91,15 @@ EntityState Player::StateMachine() {
 				this->state = EntityState::WIN;
 			}
 
+			if (isGrounded && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+				Jump();
+			}
+
 			break;
 
 		case EntityState::MOVE:
 
+			setJumpAnimation();
 			setMoveAnimation();
 
 			if (!isAlive) {
@@ -108,27 +110,16 @@ EntityState Player::StateMachine() {
 				this->state = EntityState::WIN;
 			}
 
-			Move();
+			if (isGrounded && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 
-			break;
+				Jump();
+				Move();
 
-		case EntityState::JUMP:
+			} else {
 
-			setJumpAnimation();
+				Move();
 
-			if (!isAlive) {
-				this->state = EntityState::DEAD;
 			}
-
-			if (app->scene->winCondition) {
-				this->state = EntityState::WIN;
-			}
-
-			if (isGrounded) {
-				this->state = EntityState::IDLE;
-			}
-
-			Jump();
 
 			break;
 
@@ -270,10 +261,6 @@ bool Player::Update(float dt)
 	else if(state != EntityState::JUMP){
 		state = EntityState::IDLE;
 	}
-
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
-		state = EntityState::JUMP;
-	} 
 
 	/*
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
