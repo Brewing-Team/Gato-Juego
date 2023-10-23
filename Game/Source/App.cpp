@@ -86,6 +86,11 @@ bool App::Awake()
 		win->SetTitle(gameTitle.GetString());
 		maxFrameDuration = configFile.child("config").child("app").child("maxFrameDuration").attribute("value").as_int();
 
+		//set camera size
+		render->camera.w = configNode.child("resolution").attribute("width").as_int();
+		render->camera.h = configNode.child("resolution").attribute("height").as_int();
+
+
 		ListItem<Module*>* item;
 		item = modules.start;
 
@@ -176,7 +181,7 @@ void App::FinishUpdate()
 	// This is a good place to call Load / Save functions
 	double currentDt = frameTime.ReadMs();
 	if (maxFrameDuration > 0 && currentDt < maxFrameDuration) {
-		uint32 delay = (uint32) (maxFrameDuration - currentDt);
+		uint32_t delay = (uint32_t) (maxFrameDuration - currentDt);
 
 		PerfTimer delayTimer = PerfTimer();
 		SDL_Delay(delay);
@@ -206,8 +211,13 @@ void App::FinishUpdate()
 
 	// Shows the time measurements in the window title
 	static char title[256];
+	#ifdef __linux__
+	sprintf_s(title, 256, "%s: Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Time since startup: %u Frame Count: %lu ",
+		gameTitle.GetString(), averageFps, framesPerSecond, dt, secondsSinceStartup, frameCount);
+	#elif _MSC_VER
 	sprintf_s(title, 256, "%s: Av.FPS: %.2f Last sec frames: %i Last dt: %.3f Time since startup: %I32u Frame Count: %I64u ",
 		gameTitle.GetString(), averageFps, framesPerSecond, dt, secondsSinceStartup, frameCount);
+	#endif
 
 	app->win->SetTitle(title);
 }

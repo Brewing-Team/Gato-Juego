@@ -5,7 +5,13 @@
 #include "List.h"
 #include "Point.h"
 
+#ifdef __linux__
+#include <pugixml.hpp>
+#include <SDL.h>
+#elif _MSC_VER
 #include "PugiXml\src\pugixml.hpp"
+#endif
+
 
 // Ignore Terrain Types and Tile Types for now, but we want the image!
 struct TileSet
@@ -21,6 +27,14 @@ struct TileSet
 
 	SDL_Texture* texture;
 	SDL_Rect GetTileRect(int gid) const;
+};
+
+struct Colliders
+{
+	int x;
+	int y;
+	int width;
+	int height;
 };
 
 //  We create an enum for map type, just for convenience,
@@ -130,6 +144,7 @@ private:
 	bool LoadTileSet(pugi::xml_node mapFile);
 	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
 	bool LoadAllLayers(pugi::xml_node mapNode);
+	bool LoadColliders(pugi::xml_node mapFile);
 	TileSet* GetTilesetFromTileId(int gid) const;
 	bool LoadProperties(pugi::xml_node& node, Properties& properties);
 

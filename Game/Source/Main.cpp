@@ -4,7 +4,11 @@
 #include "Log.h"
 
 // NOTE: SDL redefines main function
+#ifdef __linux__
+#include <SDL.h>
+#elif _MSC_VER
 #include "SDL/include/SDL.h"
+#endif
 
 #include <stdlib.h>
 
@@ -24,6 +28,7 @@ App* app = NULL;
 // debug mode
 bool debug = false;
 bool fpsLimiter = false;
+bool freeCam = false;
 
 int main(int argc, char* args[])
 {

@@ -7,7 +7,11 @@
 #include "Timer.h"
 #include "EntityManager.h"
 
+#ifdef __linux__
+#include <pugixml.hpp>
+#elif _MSC_VER
 #include "PugiXml/src/pugixml.hpp"
+#endif
 
 // Modules
 class Window;
@@ -106,14 +110,14 @@ private:
 	PerfTimer frameTime;
 	PerfTimer lastSecFrameTime;
 
-	uint64 frameCount = 0;
-	uint32 framesPerSecond = 0;
-	uint32 lastSecFrameCount = 0;
+	uint64_t frameCount = 0;
+	uint32_t framesPerSecond = 0;
+	uint32_t lastSecFrameCount = 0;
 
 	float averageFps = 0.0f;
-	uint32 secondsSinceStartup = 0;
+	uint32_t secondsSinceStartup = 0;
 
-	uint32 maxFrameDuration = 16;
+	uint32_t maxFrameDuration = 16;
 
 	float maxFps = 30; // TODO hacer esto variable
 
@@ -123,5 +127,6 @@ extern App* app;
 
 extern bool debug;
 extern bool fpsLimiter;
+extern bool freeCam;
 
 #endif	// __APP_H__

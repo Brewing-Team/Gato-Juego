@@ -1,14 +1,19 @@
 #include "Physics.h"
 #include "Input.h"
-#include "app.h"
+#include "App.h"
 #include "Log.h"
 #include "math.h"
-#include "SDL/include/SDL_keycode.h"
 #include "Defs.h"
 #include "Log.h"
 #include "Render.h"
 #include "Player.h"
 #include "Window.h"
+
+#ifdef __linux__
+#include <SDL_keycode.h>
+#include <Box2D/Box2D.h>
+#elif _MSC_VER
+#include "SDL/include/SDL_keycode.h"
 #include "Box2D/Box2D/Box2D.h"
 
 // Tell the compiler to reference the compiled Box2D libraries
@@ -17,6 +22,8 @@
 #else
 #pragma comment( lib, "../Game/Source/External/Box2D/libx86/ReleaseLib/Box2D.lib" )
 #endif
+#endif
+
 
 Physics::Physics() : Module()
 {

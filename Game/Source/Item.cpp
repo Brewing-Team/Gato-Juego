@@ -9,6 +9,10 @@
 #include "Point.h"
 #include "Physics.h"
 
+#ifdef __linux__
+#include <Box2D/Dynamics/b2Body.h>
+#endif
+
 Item::Item() : Entity(EntityType::ITEM)
 {
 	name.Create("item");

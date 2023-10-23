@@ -46,6 +46,21 @@ void Player::setWinAnimation()
 
 void Player::Move() {
 
+	if (direction == -1) {
+		if (pbody->body->GetLinearVelocity().x >= -5)
+		{
+			float impulse = pbody->body->GetMass() * moveForce;
+			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
+		}
+	}
+
+	if (direction == 1) {
+		if(pbody->body->GetLinearVelocity().x <= 5)
+		{
+			float impulse = pbody->body->GetMass() * moveForce;
+			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
+		}
+	}
 }
 
 void Player::Jump() {
@@ -178,14 +193,17 @@ bool Player::Start() {
 	texture = app->tex->Load(texturePath);
 
 	//pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
-	pbody = app->physics->CreateRectangle(position.x + 16, position.y + 16, 15, 25, bodyType::DYNAMIC);
+	pbody = app->physics->CreateRectangle(position.x, position.y, 25, 15, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
 
 	//si quieres dar vueltos como la helice de un helicoptero Boeing AH-64 Apache pon en false la siguiente funcion
 	pbody->body->SetFixedRotation(true);
-	pbody->body->GetFixtureList()->SetFriction(20.0f);
-	//pbody->body->SetLinearDamping(2);
+	pbody->body->GetFixtureList()->SetFriction(25.0f);
+	pbody->body->SetLinearDamping(1);
+
+	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + 16, 15, 5, bodyType::DYNAMIC);
+	groundSensor->listener = this;
 	
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
 
@@ -214,6 +232,11 @@ bool Player::Update(float dt)
 		debug = !debug;
 		// TODO debug
 	}
+
+	// Toggle no clip
+	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+		freeCam = !freeCam;
+	}
 	
 	// View colliders / logic
 	if (app->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
@@ -240,6 +263,14 @@ bool Player::Update(float dt)
 		direction = -1;
 		state = EntityState::MOVE;
 	}
+	else if(app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		direction = 1;
+		state = EntityState::MOVE;
+	}
+	else if(state != EntityState::JUMP){
+		state = EntityState::IDLE;
+	}
+
 	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
 		state = EntityState::JUMP;
 	} 
@@ -248,18 +279,22 @@ bool Player::Update(float dt)
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		if (pbody->body->GetLinearVelocity().x >= -5)
 		{
-			float impulse = pbody->body->GetMass() / 2;
+			float impulse = pbody->body->GetMass() * moveForce;
 			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
 		}
 	}
-
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+	if(app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		if(pbody->body->GetLinearVelocity().x <= 5)
 		{
-			float impulse = pbody->body->GetMass() / 2;
+			float impulse = pbody->body->GetMass() * moveForce;
 			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
 		}
 	}
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
+		if(isGrounded)
+		{
+			float impulse = pbody->body->GetMass() * 5;
+			pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
 
 			isGrounded = false;
 		}
@@ -275,6 +310,9 @@ bool Player::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
+	groundSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x, pbody->body->GetTransform().p.y + 0.2f), 0);
+	
+
 	//Esto esta aqui temporalmente don't worry :)
 	//app->render->camera.x = -position.x + app->render->camera.w / app->win->GetScale() / 2;
 
@@ -285,17 +323,14 @@ bool Player::Update(float dt)
 		3. el "4" que multiplica al "dt" es la "followSpeed"
 	*/
 
-	app->render->camera.x = std::ceil(std::lerp(app->render->camera.x, (int)(app->render->camera.w / 2 / app->win->GetScale()) - 16 - position.x, dt * 4 / 1000));
+	//app->render->camera.x = std::ceil(std::lerp(app->render->camera.x, (int)(app->render->camera.w / 2 / app->win->GetScale()) - 16 - position.x, dt * 4 / 1000));
 	//app->render->camera.x = std::ceil(std::lerp(app->render->camera.x, -position.x + 200, dt * 4 / 1000)); // esta funciona en escala 4 pero esta hardcodeado
 
-	app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
-
-
-	LOG("%d", -position.x);
-
-	app->render->DrawTexture(texture, position.x, position.y);
-
-
+	//app->render->camera.y = std::ceil(std::lerp(app->render->camera.y, (int)(app->render->camera.h / 2 / app->win->GetScale()) - 16 - position.y, dt * 4 / 1000));
+	//app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
+	
+	SDL_Rect rect = { 0,0,50,50 };
+	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect);
 
 	return true;
 }
@@ -308,6 +343,15 @@ bool Player::CleanUp()
 
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
+	if(physA->body->GetFixtureList()->IsSensor())
+	{
+		if(physB->ctype == ColliderType::PLATFORM)
+		{
+			LOG("Grounded");
+			isGrounded = true;
+		}
+	}
+	
 	switch (physB->ctype)
 	{
 	case ColliderType::ITEM:

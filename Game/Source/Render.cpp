@@ -1,9 +1,15 @@
 #include "App.h"
 #include "Window.h"
 #include "Render.h"
+#include "Entity.h"
 
 #include "Defs.h"
 #include "Log.h"
+#include <iostream>
+
+#ifdef __linux__
+#include <SDL_render.h>
+#endif
 
 #define VSYNC true
 
@@ -26,7 +32,7 @@ bool Render::Awake(pugi::xml_node& config)
 	LOG("Create SDL rendering context");
 	bool ret = true;
 
-	Uint32 flags = SDL_RENDERER_ACCELERATED;
+	uint32_t flags = SDL_RENDERER_ACCELERATED;
 
 	if (config.child("vsync").attribute("value").as_bool(true) == true)
 	{
@@ -43,8 +49,10 @@ bool Render::Awake(pugi::xml_node& config)
 	}
 	else
 	{
-		camera.w = app->win->screenSurface->w;
-		camera.h = app->win->screenSurface->h;
+		// camera.w = app->win->screenSurface->w;
+		// camera.h = app->win->screenSurface->h;
+		SDL_RendererInfo info;
+		SDL_GetRendererOutputSize(renderer, &camera.w, &camera.h);
 		camera.x = 0;
 		camera.y = 0;
 	}
@@ -70,6 +78,7 @@ bool Render::PreUpdate()
 
 bool Render::Update(float dt)
 {
+	cameraInterpolation(camera.target, camera.lerpSpeed, dt, camera.offset);
 	return true;
 }
 
@@ -101,6 +110,40 @@ void Render::SetViewPort(const SDL_Rect& rect)
 void Render::ResetViewPort()
 {
 	SDL_RenderSetViewport(renderer, &viewport);
+}
+
+/// @brief Camera interpolation
+/// @return TODO remove hardcoded 16 and calculate the right offset
+/// @param target Entity to follow
+/// @param lerpSpeed the camera’s movement speed. Lower values result in a “lazier” camera.
+/// @param offset position of the camera relative to the target. (0,0) is the center.
+/// @param dt delta time
+void Render::cameraInterpolation(Entity* target, float lerpSpeed, float dt, iPoint offset)
+{	
+	//DEBUG
+	if(freeCam)
+	{
+		target = nullptr;
+		camera.useInterpolation = false;
+	}
+	else
+	{
+		camera.useInterpolation = true;
+	}
+
+	if(target != nullptr)
+	{
+		if(camera.useInterpolation)
+		{
+			camera.x = std::ceil(std::lerp(camera.x, (int)(camera.w / 2 / app->win->GetScale()) - 16 - target->position.x - offset.x, dt * lerpSpeed / 1000));
+			camera.y = std::ceil(std::lerp(camera.y, (int)(camera.h / 2 / app->win->GetScale()) - 16 - target->position.y - offset.y, dt * lerpSpeed / 1000));
+		}
+		else
+		{
+			camera.x = -target->position.x + camera.w / app->win->GetScale() / 2 - 16 - offset.x;
+			camera.y = -target->position.y + camera.h / app->win->GetScale() / 2 - 16 - offset.y;
+		}
+	}
 }
 
 // Blit to screen

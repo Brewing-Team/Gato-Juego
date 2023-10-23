@@ -4,12 +4,18 @@
 #include "Textures.h"
 #include "Map.h"
 #include "Physics.h"
+#include "Window.h"
 
 #include "Defs.h"
 #include "Log.h"
 
 #include <math.h>
+
+#ifdef __linux__
+#include <SDL_image.h>
+#elif _MSC_VER
 #include "SDL_image/include/SDL_image.h"
+#endif
 
 Map::Map() : Module(), mapLoaded(false)
 {
@@ -185,7 +191,12 @@ bool Map::Load(SString mapFileName)
     
     // NOTE: Later you have to create a function here to load and create the colliders from the map
 
-    PhysBody* c1 = app->physics->CreateRectangle(238, 632, 480, 16, STATIC);
+    if (ret == true)
+    {
+        ret = LoadColliders(mapFileXML);
+    }
+
+    PhysBody* c1 = app->physics->CreateRectangle(238, 632, 480 * 50, 16, STATIC);
     c1->ctype = ColliderType::PLATFORM;
 
    /* PhysBody* c2 = app->physics->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
@@ -322,6 +333,43 @@ bool Map::LoadAllLayers(pugi::xml_node mapNode) {
         //add the layer to the map
         mapData.maplayers.Add(mapLayer);
     }
+
+    return ret;
+}
+
+bool Map::LoadColliders(pugi::xml_node mapFile)
+{
+    bool ret = true; 
+    uint scale = app->win->GetScale();
+
+    pugi::xml_node collider;
+    //TODO!! check if the objectgroup's class is collider
+    for(collider = mapFile.child("map").child("objectgroup").child("object"); collider && ret; collider = collider.next_sibling("object"))
+    {
+        //if (SDL_strcmp(collider.attribute("type").as_string(), "rectangle"))
+        //{
+        Colliders* c = new Colliders();
+
+        c->x = collider.attribute("x").as_int();
+        c->y = collider.attribute("y").as_int();
+        c->width = collider.attribute("width").as_int();
+        c->height = collider.attribute("height").as_int();
+
+        PhysBody* c1 = app->physics->CreateRectangle(c->x + c->width / 2, c->y + c->height / 2, c->width, c->height, STATIC);
+        c1->ctype = ColliderType::PLATFORM;
+        
+        //}
+        /* else if(SDL_strcmp(collider.attribute("type").as_string(), "polygon"))
+        {
+            int* points = new int[collider.child("polygon").attribute("points").as_int() * sizeof(int)];
+
+            app->physics->CreateChain(collider.attribute("x").as_int(),
+                                      collider.attribute("y").as_int(),
+                                      points,
+                                      collider.child("polygon").attribute("points").as_int(),
+                                        STATIC);
+        }*/
+    } 
 
     return ret;
 }

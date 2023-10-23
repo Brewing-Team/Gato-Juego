@@ -3,7 +3,11 @@
 
 #include "Entity.h"
 #include "Point.h"
+#ifdef __linux__
+#include <SDL.h>
+#elif _MSC_VER
 #include "SDL/include/SDL.h"
+#endif
 
 struct SDL_Texture;
 
@@ -44,7 +48,14 @@ public:
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
+	PhysBody* groundSensor;
 	int pickCoinFxId;
+
+	//Movement
+	bool inAir = false;
+	int direction = 0;
+	float moveForce = 1.0f;
+	bool isGrounded = false;
 };
 
 #endif // __PLAYER_H__
