@@ -30,7 +30,16 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
+	// Set animations
+	void setIdleAnimation();
+	void setMoveAnimation();
+	void setJumpAnimation();
+	void setClimbAnimation();
+	void setWinAnimation();
+
 public:
+	int isAlive = true;
+
 	float speed = 0.2f;
 	const char* texturePath;
 	SDL_Texture* texture = NULL;

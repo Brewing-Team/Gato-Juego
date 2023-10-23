@@ -21,6 +21,7 @@ enum class EntityState {
 	MOVE,
 	JUMP,
 	CLIMB,
+	WIN,
 	DEAD
 };
 

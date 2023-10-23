@@ -13,12 +13,50 @@
 #include <cmath>
 #include <iostream>
 
+#ifdef __linux__
+#include <Box2D/Common/b2Math.h>
+#include <Box2D/Dynamics/b2Body.h>
+#include <Box2D/Dynamics/b2Fixture.h>
+#endif
+
+void Player::setIdleAnimation()
+{
+	// TODO set idle animation
+}
+
+void Player::setMoveAnimation()
+{
+	// TODO set move animation
+}
+
+void Player::setJumpAnimation()
+{
+	// TODO set jump animation
+}
+
+void Player::setClimbAnimation()
+{
+	// TODO set climb animation
+}
+
+void Player::setWinAnimation()
+{
+	// TODO set win animation
+}
+
 void Player::Move() {
 
 }
 
 void Player::Jump() {
+	if(isGrounded) {
 
+		float impulse = pbody->body->GetMass() * 5;
+		pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
+		isGrounded = false;
+
+	}
+	
 }
 
 void Player::Climb() {
@@ -26,34 +64,87 @@ void Player::Climb() {
 }
 
 EntityState Player::StateMachine() {
+
 	switch (this->state) {
+
 		case EntityState::IDLE:
-			LOG("Player is IDLE.\n");
+
+			setIdleAnimation();
+
+			if (!isAlive) {
+				this->state = EntityState::DEAD;
+			}
+
+			if (app->scene->winCondition) {
+				this->state = EntityState::WIN;
+			}
+
 			break;
 
 		case EntityState::MOVE:
 
+			setMoveAnimation();
+
+			if (!isAlive) {
+				this->state = EntityState::DEAD;
+			}
+
+			if (app->scene->winCondition) {
+				this->state = EntityState::WIN;
+			}
+
 			Move();
 
-			LOG("Player is MOVING.\n");
 			break;
 
 		case EntityState::JUMP:
 
+			setJumpAnimation();
+
+			if (!isAlive) {
+				this->state = EntityState::DEAD;
+			}
+
+			if (app->scene->winCondition) {
+				this->state = EntityState::WIN;
+			}
+
+			if (isGrounded) {
+				this->state = EntityState::IDLE;
+			}
+
 			Jump();
 
-			LOG("Player is JUMPING.\n");
 			break;
 
 		case EntityState::CLIMB:
 
+			setClimbAnimation();
+
+			if (!isAlive) {
+				this->state = EntityState::DEAD;
+			}
+
+			if (app->scene->winCondition) {
+				this->state = EntityState::WIN;
+			}
+
 			Climb();
 
-			LOG("Player is CLIMBING.\n");
+			break;
+
+		case EntityState::WIN:
+
+			// TODO hacer cosa de ganar jugador ole ole
+
 			break;
 
 		case EntityState::DEAD:
-			LOG("Player is DEAD.\n");
+
+			setWinAnimation();
+
+			// TODO resetear mundo, restar vidas, etc
+
 			break;
 
 	}
@@ -145,17 +236,15 @@ bool Player::Update(float dt)
 
 	StateMachine();
 
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-		//
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		direction = -1;
+		state = EntityState::MOVE;
 	}
 	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
-		if(pbody->body->GetLinearVelocity().y == 0)
-		{
-			float impulse = pbody->body->GetMass() * 5;
-			pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
-		}
-	}
+		state = EntityState::JUMP;
+	} 
 
+	/*
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		if (pbody->body->GetLinearVelocity().x >= -5)
 		{
@@ -172,7 +261,10 @@ bool Player::Update(float dt)
 		}
 	}
 
-	LOG("%f", pbody->body->GetLinearVelocity().x);
+			isGrounded = false;
+		}
+	}
+	*/
 
 	//si quieres dar putivueltas descomenta la linea de abajo y comenta la de arriba
 	//app->render->DrawTexture(texture, position.x, position.y,0,1.0f,pbody->body->GetAngle()*RADTODEG);
