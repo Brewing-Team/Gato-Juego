@@ -5,7 +5,11 @@
 
 #include "Defs.h"
 #include "Log.h"
+#include <iostream>
+
+#ifdef __linux__
 #include <SDL_render.h>
+#endif
 
 #define VSYNC true
 
