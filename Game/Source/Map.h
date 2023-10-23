@@ -81,6 +81,7 @@ struct MapLayer
 	int id; 
 	int width;
 	int height;
+	float parallaxFactor;
 	uint* data;
 
 	Properties properties;
