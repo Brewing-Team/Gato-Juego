@@ -199,16 +199,16 @@ bool Player::Start() {
 	pbody->body->SetLinearDamping(1);
 
 	// Create player sensors
-	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + 16, 15, 5, bodyType::DYNAMIC);
+	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 15, 5, bodyType::DYNAMIC);
 	groundSensor->listener = this;
 
-	topSensor = app->physics->CreateRectangleSensor(position.x, position.y + 16, 15, -5, bodyType::DYNAMIC);
+	topSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 15, -5, bodyType::DYNAMIC);
 	topSensor->listener = this;
 
-	leftSensor = app->physics->CreateRectangleSensor(position.x, position.y + 16, 5, 10, bodyType::DYNAMIC);
+	leftSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 5, 10, bodyType::DYNAMIC);
 	leftSensor->listener = this;
 
-	rightSensor = app->physics->CreateRectangleSensor(position.x, position.y + 16, 5, 10, bodyType::DYNAMIC);
+	rightSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 5, 10, bodyType::DYNAMIC);
 	rightSensor->listener = this;
 	
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
@@ -317,10 +317,10 @@ bool Player::Update(float dt)
 	groundSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x, pbody->body->GetTransform().p.y + 0.2f), 0);
 	topSensor->body->SetTransform(
 		b2Vec2(
-			pbody->body->GetTransform().p.x - 
-			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD*90) * 0.65) * 15,
+			pbody->body->GetTransform().p.x -
+			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 90) * 0.65) * (pbody->width + 4),
 			pbody->body->GetTransform().p.y - 
-			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD*90)) * 10), 
+			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 90)) * (pbody->height + 4)),
 			DEGTORAD * pbody->GetRotation());
 
 	LOG("%f", (app->physics->lookAt(topSensor->body->GetPosition(), pbody->body->GetPosition())));
