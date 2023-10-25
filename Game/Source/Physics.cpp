@@ -406,3 +406,48 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 
 	return ret;
 }
+
+b2RevoluteJoint* Physics::CreateRevoluteJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, float lowerAngle, float upperAngle, float referenceAngle, bool collideConnected, bool enableLimit)
+{
+	b2RevoluteJointDef revoluteJointDef;
+	revoluteJointDef.bodyA = A->body;
+	revoluteJointDef.bodyB = B->body;
+	revoluteJointDef.collideConnected = collideConnected;
+	revoluteJointDef.localAnchorA.Set(anchorA.x, anchorA.y);
+	revoluteJointDef.localAnchorB.Set(anchorB.x, anchorB.y);
+	revoluteJointDef.referenceAngle = DEGTORAD * referenceAngle;
+	revoluteJointDef.enableLimit = enableLimit;
+	revoluteJointDef.lowerAngle = -DEGTORAD * lowerAngle;
+	revoluteJointDef.upperAngle = DEGTORAD * upperAngle;
+
+	return (b2RevoluteJoint*)world->CreateJoint(&revoluteJointDef);
+}
+b2PrismaticJoint* Physics::CreatePrismaticJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, b2Vec2 axys, float maxHeight, bool collideConnected, bool enableLimit)
+{
+	b2PrismaticJointDef prismaticJointDef;
+	prismaticJointDef.bodyA = A->body;
+	prismaticJointDef.bodyB = B->body;
+	prismaticJointDef.collideConnected = collideConnected;
+	prismaticJointDef.localAxisA.Set(axys.x, axys.y);
+	prismaticJointDef.localAnchorA.Set(anchorA.x, anchorA.y);
+	prismaticJointDef.localAnchorB.Set(anchorB.x, anchorB.y);
+	prismaticJointDef.referenceAngle = 0;
+	prismaticJointDef.enableLimit = enableLimit;
+	prismaticJointDef.lowerTranslation = -0.01;
+	prismaticJointDef.upperTranslation = maxHeight;
+
+	return (b2PrismaticJoint*)world->CreateJoint(&prismaticJointDef);
+}
+
+b2WeldJoint* Physics::CreateWeldJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, float angle, bool collideConnected, bool enableLimit)
+{
+	b2WeldJointDef weldJointDef;
+	weldJointDef.bodyA = A->body;
+	weldJointDef.bodyB = B->body;
+	weldJointDef.collideConnected = collideConnected;
+	weldJointDef.localAnchorA.Set(anchorA.x, anchorA.y);
+	weldJointDef.localAnchorB.Set(anchorB.x, anchorB.y);
+	weldJointDef.referenceAngle = 0;
+
+	return (b2WeldJoint*)world->CreateJoint(&weldJointDef);
+}

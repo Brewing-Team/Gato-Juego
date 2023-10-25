@@ -202,7 +202,7 @@ bool Player::Start() {
 	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 15, 5, bodyType::DYNAMIC);
 	groundSensor->listener = this;
 
-	topSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 15, -5, bodyType::DYNAMIC);
+	topSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 15, 5, bodyType::DYNAMIC);
 	topSensor->listener = this;
 
 	leftSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 5, 10, bodyType::DYNAMIC);
@@ -325,8 +325,15 @@ bool Player::Update(float dt)
 
 	LOG("%f", (app->physics->lookAt(topSensor->body->GetPosition(), pbody->body->GetPosition())));
 
-	leftSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x + -0.3f, pbody->body->GetTransform().p.y), 0);
+	leftSensor->body->SetTransform(
+		b2Vec2(
+			pbody->body->GetTransform().p.x -
+			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 90) * 0.65) * (pbody->width - 3),
+			pbody->body->GetTransform().p.y - 
+			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 90)) * (pbody->height - 10)),
+			DEGTORAD * pbody->GetRotation());
 	rightSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x + 0.3f, pbody->body->GetTransform().p.y), 0);
+	//app->physics->CreateWeldJoint(pbody, b2Vec2(pbody->body->GetPosition().x + 1.0f, pbody->body->GetPosition().y), rightSensor, b2Vec2(rightSensor->body->GetPosition().x + 1.0f, rightSensor->body->GetPosition().y + 1.0f), 0, false,false);
 	
 
 	//Esto esta aqui temporalmente don't worry :)
