@@ -335,6 +335,14 @@ void Physics::BeginContact(b2Contact* contact)
 		physB->listener->OnCollision(physB, physA);
 }
 
+float Physics::lookAt(b2Vec2 source, b2Vec2 target)
+{
+	return atan2(
+		target.x - source.x, 
+		target.y - source.y
+	);
+}
+
 //--------------- PhysBody
 
 void PhysBody::GetPosition(int& x, int& y) const

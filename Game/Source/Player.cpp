@@ -74,9 +74,8 @@ void Player::Jump() {
 void Player::Climb() {
 
 	
-	if (!isGrounded &&
-		pbody->body->GetLinearVelocity().x != 0) {
-	
+	if (isCollidingLeft || isCollidingRight) {
+		
 	}
 
 }
@@ -195,7 +194,7 @@ bool Player::Start() {
 	pbody->ctype = ColliderType::PLAYER;
 
 	//si quieres dar vueltos como la helice de un helicoptero Boeing AH-64 Apache pon en false la siguiente funcion
-	pbody->body->SetFixedRotation(true);
+	//pbody->body->SetFixedRotation(true);
 	pbody->body->GetFixtureList()->SetFriction(25.0f);
 	pbody->body->SetLinearDamping(1);
 
@@ -305,7 +304,8 @@ bool Player::Update(float dt)
 	*/
 
 	//si quieres dar putivueltas descomenta la linea de abajo y comenta la de arriba
-	//app->render->DrawTexture(texture, position.x, position.y,0,1.0f,pbody->body->GetAngle()*RADTODEG);
+	SDL_Rect rect = { 0,0,50,50 };
+	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect,pbody->body->GetAngle()*RADTODEG);
 	
 	//app->render->DrawTexture(texture, position.x, position.y);//estoy hecho un lio, no se si esto va aqui o al final
 
@@ -315,7 +315,16 @@ bool Player::Update(float dt)
 
 	// Update player sensors
 	groundSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x, pbody->body->GetTransform().p.y + 0.2f), 0);
-	topSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x, pbody->body->GetTransform().p.y + -0.2f), 0);
+	topSensor->body->SetTransform(
+		b2Vec2(
+			pbody->body->GetTransform().p.x - 
+			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD*90) * 0.65) * 15,
+			pbody->body->GetTransform().p.y - 
+			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD*90)) * 10), 
+			DEGTORAD * pbody->GetRotation());
+
+	LOG("%f", (app->physics->lookAt(topSensor->body->GetPosition(), pbody->body->GetPosition())));
+
 	leftSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x + -0.3f, pbody->body->GetTransform().p.y), 0);
 	rightSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x + 0.3f, pbody->body->GetTransform().p.y), 0);
 	
@@ -336,8 +345,8 @@ bool Player::Update(float dt)
 	//app->render->camera.y = std::ceil(std::lerp(app->render->camera.y, (int)(app->render->camera.h / 2 / app->win->GetScale()) - 16 - position.y, dt * 4 / 1000));
 	//app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
 	
-	SDL_Rect rect = { 0,0,50,50 };
-	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect);
+	//SDL_Rect rect = { 0,0,50,50 };
+	//app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect);
 
 	return true;
 }

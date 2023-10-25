@@ -84,6 +84,8 @@ public:
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
 
+	float lookAt(b2Vec2 source, b2Vec2 target);
+
 private:
 
 	// Box2D World
