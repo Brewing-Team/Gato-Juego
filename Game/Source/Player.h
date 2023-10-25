@@ -49,6 +49,9 @@ public:
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
 	PhysBody* groundSensor;
+	PhysBody* topSensor;
+	PhysBody* leftSensor;
+	PhysBody* rightSensor;
 	int pickCoinFxId;
 
 	//Movement
@@ -56,6 +59,9 @@ public:
 	int direction = 0;
 	float moveForce = 1.0f;
 	bool isGrounded = false;
+	bool isCollidingTop = false;
+	bool isCollidingLeft = false;
+	bool isCollidingRight = false;
 };
 
 #endif // __PLAYER_H__

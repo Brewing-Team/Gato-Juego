@@ -73,6 +73,12 @@ void Player::Jump() {
 
 void Player::Climb() {
 
+	
+	if (!isGrounded &&
+		pbody->body->GetLinearVelocity().x != 0) {
+	
+	}
+
 }
 
 EntityState Player::StateMachine() {
@@ -193,8 +199,18 @@ bool Player::Start() {
 	pbody->body->GetFixtureList()->SetFriction(25.0f);
 	pbody->body->SetLinearDamping(1);
 
+	// Create player sensors
 	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + 16, 15, 5, bodyType::DYNAMIC);
 	groundSensor->listener = this;
+
+	topSensor = app->physics->CreateRectangleSensor(position.x, position.y + 16, 15, -5, bodyType::DYNAMIC);
+	topSensor->listener = this;
+
+	leftSensor = app->physics->CreateRectangleSensor(position.x, position.y + 16, 5, 10, bodyType::DYNAMIC);
+	leftSensor->listener = this;
+
+	rightSensor = app->physics->CreateRectangleSensor(position.x, position.y + 16, 5, 10, bodyType::DYNAMIC);
+	rightSensor->listener = this;
 	
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
 
@@ -297,7 +313,11 @@ bool Player::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
+	// Update player sensors
 	groundSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x, pbody->body->GetTransform().p.y + 0.2f), 0);
+	topSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x, pbody->body->GetTransform().p.y + -0.2f), 0);
+	leftSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x + -0.3f, pbody->body->GetTransform().p.y), 0);
+	rightSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x + 0.3f, pbody->body->GetTransform().p.y), 0);
 	
 
 	//Esto esta aqui temporalmente don't worry :)
@@ -330,26 +350,46 @@ bool Player::CleanUp()
 
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
-	if(physA->body->GetFixtureList()->IsSensor())
-	{
+	if(physA->body->GetFixtureList()->IsSensor()) {
+
 		if(physB->ctype == ColliderType::PLATFORM)
 		{
-			LOG("Grounded");
-			isGrounded = true;
+			if (physA == groundSensor) {
+				LOG("Ground colision");
+				isGrounded = true;
+			}
+
+			if (physA == topSensor) {
+				LOG("Top colision");
+				isCollidingTop = true;
+			}
+
+			if (physA == leftSensor) {
+				LOG("Left colision");
+				isCollidingLeft = true;
+			}
+
+			if (physA == rightSensor) {
+				LOG("Right colision");
+				isCollidingRight = true;
+			}
 		}
 	}
 	
-	switch (physB->ctype)
-	{
+	switch (physB->ctype) {
+
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		app->audio->PlayFx(pickCoinFxId);
 		break;
+
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 		break;
+
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
+
 	}
 }
