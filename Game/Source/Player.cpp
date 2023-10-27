@@ -314,7 +314,14 @@ bool Player::Update(float dt)
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	// Update player sensors
-	groundSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x, pbody->body->GetTransform().p.y + 0.2f), 0);
+	groundSensor->body->SetTransform(
+		b2Vec2(
+			pbody->body->GetTransform().p.x -
+			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 270) * 0.65) * (pbody->width + 4),
+			pbody->body->GetTransform().p.y - 
+			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 270)) * (pbody->height + 4)),
+			DEGTORAD * pbody->GetRotation());
+
 	topSensor->body->SetTransform(
 		b2Vec2(
 			pbody->body->GetTransform().p.x -
@@ -323,16 +330,20 @@ bool Player::Update(float dt)
 			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 90)) * (pbody->height + 4)),
 			DEGTORAD * pbody->GetRotation());
 
-	LOG("%f", (app->physics->lookAt(topSensor->body->GetPosition(), pbody->body->GetPosition())));
-
 	leftSensor->body->SetTransform(
 		b2Vec2(
 			pbody->body->GetTransform().p.x -
-			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 90) * 0.65) * (pbody->width - 3),
+			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD) * 0.65) * (pbody->width + 10),
 			pbody->body->GetTransform().p.y - 
-			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 90)) * (pbody->height - 10)),
+			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD)) * (pbody->height + 8)),
 			DEGTORAD * pbody->GetRotation());
-	rightSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x + 0.3f, pbody->body->GetTransform().p.y), 0);
+	rightSensor->body->SetTransform(
+		b2Vec2(
+			pbody->body->GetTransform().p.x -
+			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 180) * 0.65) * (pbody->width + 10),
+			pbody->body->GetTransform().p.y - 
+			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 180)) * (pbody->height + 8)),
+			DEGTORAD * pbody->GetRotation());
 	//app->physics->CreateWeldJoint(pbody, b2Vec2(pbody->body->GetPosition().x + 1.0f, pbody->body->GetPosition().y), rightSensor, b2Vec2(rightSensor->body->GetPosition().x + 1.0f, rightSensor->body->GetPosition().y + 1.0f), 0, false,false);
 	
 
