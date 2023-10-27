@@ -59,6 +59,7 @@ public:
 	//Movement
 	bool inAir = false;
 	int direction = 0;
+	int angle = 0;
 	float moveForce = 1.0f;
 	bool isGrounded = false;
 	bool isCollidingTop = false;

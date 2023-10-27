@@ -45,7 +45,6 @@ void Player::setWinAnimation()
 }
 
 void Player::Move() {
-
 	if (direction == -1) {
 		if (pbody->body->GetLinearVelocity().x >= -5)
 		{
@@ -73,11 +72,24 @@ void Player::Jump() {
 
 void Player::Climb() {
 
-	
-	if (isCollidingLeft || isCollidingRight) {
-		pbody->body->SetTransform(pbody->body->GetPosition(), 90*DEGTORAD);
+	if (isCollidingRight) {
+		angle = -90;
 	}
+	if(isCollidingLeft) {
+		angle = 90;
+	}
+	pbody->body->ApplyForceToCenter(b2Vec2(1, 0), true);
 
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+	{
+		float impulse = pbody->body->GetMass() * 5;
+		pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
+	}
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+	{
+		float impulse = pbody->body->GetMass() * 5;
+		pbody->body->ApplyLinearImpulse(b2Vec2(0, impulse), pbody->body->GetWorldCenter(), true);
+	}
 }
 
 EntityState Player::StateMachine() {
@@ -101,7 +113,6 @@ EntityState Player::StateMachine() {
 			}
 
 			break;
-
 		case EntityState::MOVE:
 
 			setJumpAnimation();
@@ -264,7 +275,10 @@ bool Player::Update(float dt)
 
 	StateMachine();
 
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+	if(angle != 0){
+		state = EntityState::CLIMB;
+	}
+	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		direction = -1;
 		state = EntityState::MOVE;
 	}
@@ -272,9 +286,11 @@ bool Player::Update(float dt)
 		direction = 1;
 		state = EntityState::MOVE;
 	}
-	else if(state != EntityState::JUMP){
+	else if(state != EntityState::JUMP && state != EntityState::CLIMB){
 		state = EntityState::IDLE;
 	}
+
+	pbody->body->SetTransform(pbody->body->GetPosition(), angle*DEGTORAD);
 
 	/*
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
@@ -301,12 +317,6 @@ bool Player::Update(float dt)
 		}
 	}
 	*/
-
-	//si quieres dar putivueltas descomenta la linea de abajo y comenta la de arriba
-	/* SDL_Rect rect = { 0,0,50,50 };
-	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect,pbody->body->GetAngle()*RADTODEG);
-	 */
-	//app->render->DrawTexture(texture, position.x, position.y);//estoy hecho un lio, no se si esto va aqui o al final
 
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
@@ -373,7 +383,7 @@ bool Player::Update(float dt)
 	//app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
 	
 	SDL_Rect rect = { 0,0,50,50 };
-	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect);
+	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect, 1.0f, pbody->body->GetAngle()*RADTODEG);
 
 	return true;
 }
