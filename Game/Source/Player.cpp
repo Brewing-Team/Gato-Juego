@@ -75,7 +75,7 @@ void Player::Climb() {
 
 	
 	if (isCollidingLeft || isCollidingRight) {
-		
+		pbody->body->SetTransform(pbody->body->GetPosition(), 90*DEGTORAD);
 	}
 
 }
@@ -188,13 +188,12 @@ bool Player::Start() {
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 
-	//pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
 	pbody = app->physics->CreateRectangle(position.x, position.y, 25, 15, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
 
 	//si quieres dar vueltos como la helice de un helicoptero Boeing AH-64 Apache pon en false la siguiente funcion
-	//pbody->body->SetFixedRotation(true);
+	pbody->body->SetFixedRotation(true);
 	pbody->body->GetFixtureList()->SetFriction(25.0f);
 	pbody->body->SetLinearDamping(1);
 
@@ -304,9 +303,9 @@ bool Player::Update(float dt)
 	*/
 
 	//si quieres dar putivueltas descomenta la linea de abajo y comenta la de arriba
-	SDL_Rect rect = { 0,0,50,50 };
+	/* SDL_Rect rect = { 0,0,50,50 };
 	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect,pbody->body->GetAngle()*RADTODEG);
-	
+	 */
 	//app->render->DrawTexture(texture, position.x, position.y);//estoy hecho un lio, no se si esto va aqui o al final
 
 	//Update player position in pixels
@@ -352,7 +351,7 @@ bool Player::Update(float dt)
 			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 180)) * (pbody->height + 8)),
 			DEGTORAD * pbody->GetRotation()); */
 
-		CopyParentRotation(pbody, rightSensor, -2, -2, 180);
+	CopyParentRotation(pbody, rightSensor, -2, -2, 180);
 		
 	//app->physics->CreateWeldJoint(pbody, b2Vec2(pbody->body->GetPosition().x + 1.0f, pbody->body->GetPosition().y), rightSensor, b2Vec2(rightSensor->body->GetPosition().x + 1.0f, rightSensor->body->GetPosition().y + 1.0f), 0, false,false);
 	
@@ -373,8 +372,8 @@ bool Player::Update(float dt)
 	//app->render->camera.y = std::ceil(std::lerp(app->render->camera.y, (int)(app->render->camera.h / 2 / app->win->GetScale()) - 16 - position.y, dt * 4 / 1000));
 	//app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
 	
-	//SDL_Rect rect = { 0,0,50,50 };
-	//app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect);
+	SDL_Rect rect = { 0,0,50,50 };
+	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect);
 
 	return true;
 }
@@ -391,7 +390,6 @@ void Player::CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset
 			parent->body->GetTransform().p.y - 
 			PIXEL_TO_METERS(SDL_sin(angle + DEGTORAD * angleOffset)) * (parent->height + child->height + yOffset)),
 			DEGTORAD * parent->GetRotation());
-	LOG("%d, %d", parent->width + child->width, parent->height + child->height);
     //position.x -= PIXEL_TO_METERS(SDL_cos(angle + DEGTORAD * 90) * xOffset) * (body->GetFixtureList()->GetShape()->m_radius + yOffset);
     //position.y -= PIXEL_TO_METERS(SDL_sin(angle + DEGTORAD * 90) * xOffset) * (body->GetFixtureList()->GetShape()->m_radius + yOffset);
     //angle += DEGTORAD * angleOffset;
@@ -427,6 +425,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (physA == rightSensor) {
 				LOG("Right colision");
 				isCollidingRight = true;
+				state = EntityState::CLIMB;
 			}
 		}
 	}
