@@ -314,36 +314,46 @@ bool Player::Update(float dt)
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	// Update player sensors
-	groundSensor->body->SetTransform(
+/* 	groundSensor->body->SetTransform(
 		b2Vec2(
 			pbody->body->GetTransform().p.x -
 			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 270) * 0.65) * (pbody->width + 4),
 			pbody->body->GetTransform().p.y - 
 			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 270)) * (pbody->height + 4)),
-			DEGTORAD * pbody->GetRotation());
+			DEGTORAD * pbody->GetRotation()); */
 
-	topSensor->body->SetTransform(
+	CopyParentRotation(pbody, groundSensor, -17, -2, 270);
+
+/* 	topSensor->body->SetTransform(
 		b2Vec2(
 			pbody->body->GetTransform().p.x -
 			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 90) * 0.65) * (pbody->width + 4),
 			pbody->body->GetTransform().p.y - 
 			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 90)) * (pbody->height + 4)),
-			DEGTORAD * pbody->GetRotation());
+			DEGTORAD * pbody->GetRotation()); */
 
-	leftSensor->body->SetTransform(
+	CopyParentRotation(pbody, topSensor, -17, -2, 90);
+
+/* 	leftSensor->body->SetTransform(
 		b2Vec2(
 			pbody->body->GetTransform().p.x -
 			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD) * 0.65) * (pbody->width + 10),
 			pbody->body->GetTransform().p.y - 
 			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD)) * (pbody->height + 8)),
-			DEGTORAD * pbody->GetRotation());
-	rightSensor->body->SetTransform(
+			DEGTORAD * pbody->GetRotation()); */
+
+	CopyParentRotation(pbody, leftSensor, -2, -2, 0);
+
+	/* rightSensor->body->SetTransform(
 		b2Vec2(
 			pbody->body->GetTransform().p.x -
 			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 180) * 0.65) * (pbody->width + 10),
 			pbody->body->GetTransform().p.y - 
 			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 180)) * (pbody->height + 8)),
-			DEGTORAD * pbody->GetRotation());
+			DEGTORAD * pbody->GetRotation()); */
+
+		CopyParentRotation(pbody, rightSensor, -2, -2, 180);
+		
 	//app->physics->CreateWeldJoint(pbody, b2Vec2(pbody->body->GetPosition().x + 1.0f, pbody->body->GetPosition().y), rightSensor, b2Vec2(rightSensor->body->GetPosition().x + 1.0f, rightSensor->body->GetPosition().y + 1.0f), 0, false,false);
 	
 
@@ -367,6 +377,24 @@ bool Player::Update(float dt)
 	//app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect);
 
 	return true;
+}
+
+void Player::CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset)
+{
+	
+	float angle = parent->body->GetAngle();
+
+	child->body->SetTransform(
+		b2Vec2(
+			parent->body->GetTransform().p.x -
+			PIXEL_TO_METERS(SDL_cos(angle + DEGTORAD * angleOffset)) * (parent->width + child->width + xOffset),
+			parent->body->GetTransform().p.y - 
+			PIXEL_TO_METERS(SDL_sin(angle + DEGTORAD * angleOffset)) * (parent->height + child->height + yOffset)),
+			DEGTORAD * parent->GetRotation());
+	LOG("%d, %d", parent->width + child->width, parent->height + child->height);
+    //position.x -= PIXEL_TO_METERS(SDL_cos(angle + DEGTORAD * 90) * xOffset) * (body->GetFixtureList()->GetShape()->m_radius + yOffset);
+    //position.y -= PIXEL_TO_METERS(SDL_sin(angle + DEGTORAD * 90) * xOffset) * (body->GetFixtureList()->GetShape()->m_radius + yOffset);
+    //angle += DEGTORAD * angleOffset;
 }
 
 bool Player::CleanUp()

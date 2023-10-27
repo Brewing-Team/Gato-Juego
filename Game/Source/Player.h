@@ -41,6 +41,8 @@ public:
 	void setClimbAnimation();
 	void setWinAnimation();
 
+	void CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset);
+
 public:
 	int isAlive = true;
 
