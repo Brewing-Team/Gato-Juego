@@ -56,6 +56,8 @@ public:
 	PhysBody* rightSensor;
 	int pickCoinFxId;
 
+	SDL_RendererFlip flip = SDL_FLIP_NONE;
+
 	//Movement
 	bool inAir = false;
 	int direction = 0;

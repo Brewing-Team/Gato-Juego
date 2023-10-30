@@ -45,20 +45,23 @@ void Player::setWinAnimation()
 }
 
 void Player::Move() {
-	if (direction == -1) {
+	
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		if (pbody->body->GetLinearVelocity().x >= -5)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
 			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
 		}
+		flip = SDL_FLIP_HORIZONTAL;
 	}
 
-	if (direction == 1) {
+	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		if(pbody->body->GetLinearVelocity().x <= 5)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
 			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
 		}
+		flip = SDL_FLIP_NONE;
 	}
 }
 
@@ -74,22 +77,43 @@ void Player::Climb() {
 
 	if (isCollidingRight) {
 		angle = -90;
+		pbody->body->ApplyForceToCenter({ 1, 0 }, true);
+		flip = SDL_FLIP_NONE;
 	}
-	if(isCollidingLeft) {
-		angle = 90;
-	}
-	pbody->body->ApplyForceToCenter(b2Vec2(1, 0), true);
 
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-	{
-		float impulse = pbody->body->GetMass() * 5;
-		pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
+	if (isCollidingLeft) {
+		angle = 90;
+		pbody->body->ApplyForceToCenter({ -1, 0 }, true);
+		flip = SDL_FLIP_HORIZONTAL;
 	}
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-	{
-		float impulse = pbody->body->GetMass() * 5;
-		pbody->body->ApplyLinearImpulse(b2Vec2(0, impulse), pbody->body->GetWorldCenter(), true);
+
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+
+		if (pbody->body->GetLinearVelocity().y >= -5)
+		{
+			float impulse = pbody->body->GetMass() * 1;
+			pbody->body->ApplyLinearImpulse({ 0, -impulse }, pbody->body->GetWorldCenter(), true);
+		}
+
 	}
+
+	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+
+		if (pbody->body->GetLinearVelocity().y >= -5)
+		{
+			float impulse = pbody->body->GetMass() * 1;
+			pbody->body->ApplyLinearImpulse({ 0, impulse }, pbody->body->GetWorldCenter(), true);
+		}
+
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+		float impulse = pbody->body->GetMass() * 5;
+		pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
+	}
+
+	
+	
 }
 
 EntityState Player::StateMachine() {
@@ -97,6 +121,8 @@ EntityState Player::StateMachine() {
 	switch (this->state) {
 
 		case EntityState::IDLE:
+
+			angle = 0;
 
 			setIdleAnimation();
 
@@ -112,8 +138,14 @@ EntityState Player::StateMachine() {
 				Jump();
 			}
 
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT or app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+				this->state = EntityState::MOVE;
+			}
+
 			break;
 		case EntityState::MOVE:
+
+			angle = 0;
 
 			setJumpAnimation();
 			setMoveAnimation();
@@ -149,6 +181,10 @@ EntityState Player::StateMachine() {
 
 			if (app->scene->winCondition) {
 				this->state = EntityState::WIN;
+			}
+
+			if (!isGrounded) {
+				this->state = EntityState::IDLE;
 			}
 
 			Climb();
@@ -275,115 +311,23 @@ bool Player::Update(float dt)
 
 	StateMachine();
 
-	if(angle != 0){
-		state = EntityState::CLIMB;
-	}
-	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		direction = -1;
-		state = EntityState::MOVE;
-	}
-	else if(app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		direction = 1;
-		state = EntityState::MOVE;
-	}
-	else if(state != EntityState::JUMP && state != EntityState::CLIMB){
-		state = EntityState::IDLE;
-	}
-
 	pbody->body->SetTransform(pbody->body->GetPosition(), angle*DEGTORAD);
-
-	/*
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		if (pbody->body->GetLinearVelocity().x >= -5)
-		{
-			float impulse = pbody->body->GetMass() * moveForce;
-			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
-		}
-	}
-	if(app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		if(pbody->body->GetLinearVelocity().x <= 5)
-		{
-			float impulse = pbody->body->GetMass() * moveForce;
-			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
-		}
-	}
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
-		if(isGrounded)
-		{
-			float impulse = pbody->body->GetMass() * 5;
-			pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
-
-			isGrounded = false;
-		}
-	}
-	*/
 
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	// Update player sensors
-/* 	groundSensor->body->SetTransform(
-		b2Vec2(
-			pbody->body->GetTransform().p.x -
-			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 270) * 0.65) * (pbody->width + 4),
-			pbody->body->GetTransform().p.y - 
-			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 270)) * (pbody->height + 4)),
-			DEGTORAD * pbody->GetRotation()); */
-
 	CopyParentRotation(pbody, groundSensor, -17, -2, 270);
-
-/* 	topSensor->body->SetTransform(
-		b2Vec2(
-			pbody->body->GetTransform().p.x -
-			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 90) * 0.65) * (pbody->width + 4),
-			pbody->body->GetTransform().p.y - 
-			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 90)) * (pbody->height + 4)),
-			DEGTORAD * pbody->GetRotation()); */
 
 	CopyParentRotation(pbody, topSensor, -17, -2, 90);
 
-/* 	leftSensor->body->SetTransform(
-		b2Vec2(
-			pbody->body->GetTransform().p.x -
-			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD) * 0.65) * (pbody->width + 10),
-			pbody->body->GetTransform().p.y - 
-			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD)) * (pbody->height + 8)),
-			DEGTORAD * pbody->GetRotation()); */
-
 	CopyParentRotation(pbody, leftSensor, -2, -2, 0);
 
-	/* rightSensor->body->SetTransform(
-		b2Vec2(
-			pbody->body->GetTransform().p.x -
-			PIXEL_TO_METERS(SDL_cos(pbody->body->GetAngle() + DEGTORAD * 180) * 0.65) * (pbody->width + 10),
-			pbody->body->GetTransform().p.y - 
-			PIXEL_TO_METERS(SDL_sin(pbody->body->GetAngle() + DEGTORAD * 180)) * (pbody->height + 8)),
-			DEGTORAD * pbody->GetRotation()); */
-
-	CopyParentRotation(pbody, rightSensor, -2, -2, 180);
-		
-	//app->physics->CreateWeldJoint(pbody, b2Vec2(pbody->body->GetPosition().x + 1.0f, pbody->body->GetPosition().y), rightSensor, b2Vec2(rightSensor->body->GetPosition().x + 1.0f, rightSensor->body->GetPosition().y + 1.0f), 0, false,false);
-	
-
-	//Esto esta aqui temporalmente don't worry :)
-	//app->render->camera.x = -position.x + app->render->camera.w / app->win->GetScale() / 2;
-
-	/* Info para el Hugo del futuro:
-	
-		1. el casteo de int es para que no se rompa al redondear
-		2. el "-16" es el offset del tama�o del player
-		3. el "4" que multiplica al "dt" es la "followSpeed"
-	*/
-
-	//app->render->camera.x = std::ceil(std::lerp(app->render->camera.x, (int)(app->render->camera.w / 2 / app->win->GetScale()) - 16 - position.x, dt * 4 / 1000));
-	//app->render->camera.x = std::ceil(std::lerp(app->render->camera.x, -position.x + 200, dt * 4 / 1000)); // esta funciona en escala 4 pero esta hardcodeado
-
-	//app->render->camera.y = std::ceil(std::lerp(app->render->camera.y, (int)(app->render->camera.h / 2 / app->win->GetScale()) - 16 - position.y, dt * 4 / 1000));
-	//app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
+	CopyParentRotation(pbody, rightSensor, -2, -2, 180);	
 	
 	SDL_Rect rect = { 0,0,50,50 };
-	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect, 1.0f, pbody->body->GetAngle()*RADTODEG);
+	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect, 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
 
 	return true;
 }
@@ -400,14 +344,9 @@ void Player::CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset
 			parent->body->GetTransform().p.y - 
 			PIXEL_TO_METERS(SDL_sin(angle + DEGTORAD * angleOffset)) * (parent->height + child->height + yOffset)),
 			DEGTORAD * parent->GetRotation());
-    //position.x -= PIXEL_TO_METERS(SDL_cos(angle + DEGTORAD * 90) * xOffset) * (body->GetFixtureList()->GetShape()->m_radius + yOffset);
-    //position.y -= PIXEL_TO_METERS(SDL_sin(angle + DEGTORAD * 90) * xOffset) * (body->GetFixtureList()->GetShape()->m_radius + yOffset);
-    //angle += DEGTORAD * angleOffset;
 }
 
-bool Player::CleanUp()
-{
-
+bool Player::CleanUp() {
 	return true;
 }
 
@@ -415,29 +354,50 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	if(physA->body->GetFixtureList()->IsSensor()) {
 
-		if(physB->ctype == ColliderType::PLATFORM)
-		{
+		if (state == EntityState::CLIMB) {
 			if (physA == groundSensor) {
 				LOG("Ground colision");
 				isGrounded = true;
+			} else {
+				isGrounded = false;
 			}
 
 			if (physA == topSensor) {
 				LOG("Top colision");
 				isCollidingTop = true;
 			}
+		} else {
+			if (physB->ctype == ColliderType::PLATFORM) {
 
-			if (physA == leftSensor) {
-				LOG("Left colision");
-				isCollidingLeft = true;
-			}
+				if (physA == groundSensor) {
+					LOG("Ground colision");
+					isGrounded = true;
+				}
 
-			if (physA == rightSensor) {
-				LOG("Right colision");
-				isCollidingRight = true;
-				state = EntityState::CLIMB;
+				if (physA == topSensor) {
+					LOG("Top colision");
+					isCollidingTop = true;
+				}
+
+				if (physA == leftSensor) {
+					LOG("Left colision");
+					isCollidingLeft = true;
+					state = EntityState::CLIMB;
+				} else {
+					isCollidingLeft = false;
+				}
+
+				if (physA == rightSensor) {
+					LOG("Right colision");
+					isCollidingRight = true;
+					state = EntityState::CLIMB;
+				} else {
+					isCollidingRight = false;
+				}
 			}
 		}
+
+		
 	}
 	
 	switch (physB->ctype) {
