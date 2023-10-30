@@ -335,6 +335,18 @@ void Physics::BeginContact(b2Contact* contact)
 		physB->listener->OnCollision(physB, physA);
 }
 
+b2FixtureDef* Physics::CreateRectangleFixture(int width, int height, float friction){
+	b2PolygonShape box;
+	box.SetAsBox(PIXEL_TO_METERS(width) * 0.5f, PIXEL_TO_METERS(height) * 0.5f);
+
+	b2FixtureDef* fixture = new b2FixtureDef();
+	fixture->shape = &box;
+	fixture->density = 1.0f;
+	fixture->friction = friction;
+
+	return fixture;
+}
+
 //--------------- PhysBody
 
 void PhysBody::GetPosition(int& x, int& y) const

@@ -8,6 +8,7 @@
 class b2Body;
 class b2Contact;
 class b2World;
+class b2FixtureDef;
 #elif _MSC_VER
 #include "Box2D/Box2D/Box2D.h"
 #endif
@@ -83,6 +84,8 @@ public:
 	
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
+
+	b2FixtureDef* CreateRectangleFixture(int width, int height, float friction);
 
 private:
 

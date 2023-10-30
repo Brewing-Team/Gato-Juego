@@ -9,6 +9,8 @@
 #include "SDL/include/SDL.h"
 #endif
 
+class b2FixtureDef;
+
 struct SDL_Texture;
 
 class Player : public Entity
@@ -41,6 +43,11 @@ public:
 	PhysBody* pbody;
 	PhysBody* groundSensor;
 	int pickCoinFxId;
+
+	b2FixtureDef* currentFixture = nullptr;
+
+	b2FixtureDef* straightFixture = nullptr;
+	b2FixtureDef* crouchFixture = nullptr;
 
 	//Movement
 	bool inAir = false;

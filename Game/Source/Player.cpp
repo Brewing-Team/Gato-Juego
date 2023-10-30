@@ -154,7 +154,12 @@ bool Player::Start() {
 	pbody->body->GetFixtureList()->SetFriction(25.0f);
 	pbody->body->SetLinearDamping(1);
 
-	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + 16, 15, 5, bodyType::DYNAMIC);
+	straightFixture = app->physics->CreateRectangleFixture(25,15,25.0f);
+	crouchFixture = app->physics->CreateRectangleFixture(25,5,0.0f);
+
+	currentFixture = straightFixture;
+
+	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + 50, 15, 20, bodyType::DYNAMIC);
 	groundSensor->listener = this;
 	
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
@@ -241,6 +246,13 @@ bool Player::Update(float dt)
 			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
 		}
 	}
+	if(app->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT) {
+		pbody->body->DestroyFixture(pbody->body->GetFixtureList());
+
+		currentFixture = crouchFixture;
+		pbody->body->CreateFixture(currentFixture);
+	}
+
 	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
 		if(isGrounded)
 		{
@@ -249,6 +261,15 @@ bool Player::Update(float dt)
 
 			isGrounded = false;
 		}
+	}
+
+	if(!isGrounded)
+	{
+		pbody->body->GetFixtureList()->SetFriction(0.0f);
+	}
+	else if(pbody->body->GetFixtureList()->GetFriction() != 25.0f)
+	{
+		pbody->body->GetFixtureList()->SetFriction(25.0f);
 	}
 
 	//si quieres dar putivueltas descomenta la linea de abajo y comenta la de arriba
@@ -260,7 +281,7 @@ bool Player::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
-	groundSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x, pbody->body->GetTransform().p.y + 0.2f), 0);
+	groundSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x, pbody->body->GetTransform().p.y + 0.4f), 0);
 	
 
 	//Esto esta aqui temporalmente don't worry :)
