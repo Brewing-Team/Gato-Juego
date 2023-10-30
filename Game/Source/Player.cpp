@@ -19,7 +19,6 @@
 #include <Box2D/Dynamics/b2Fixture.h>
 #endif
 
-
 void Player::Move() {
 
 	if (direction == -1) {
@@ -246,11 +245,11 @@ bool Player::Update(float dt)
 			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
 		}
 	}
-	if(app->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT) {
+	if (app->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && currentFixture != crouchFixture) {
 		pbody->body->DestroyFixture(pbody->body->GetFixtureList());
 
 		currentFixture = crouchFixture;
-		pbody->body->CreateFixture(currentFixture);
+		//pbody->body->CreateFixture(currentFixture);
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {

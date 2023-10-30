@@ -10,6 +10,7 @@
 #endif
 
 class b2FixtureDef;
+class b2Fixture;
 
 struct SDL_Texture;
 
