@@ -315,6 +315,13 @@ bool Map::LoadImageLayer(pugi::xml_node mapFile){
         set->texture = app->tex->Load(texPath.GetString());
 
         mapData.imageLayers.Add(set);
+
+         //Load the layer
+        MapLayer* mapLayer = new MapLayer();
+        ret = LoadLayer(layerNode, mapLayer);
+
+        //add the layer to the map
+        mapData.maplayers.Add(mapLayer);
     }
 
     return ret;
