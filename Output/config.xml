@@ -22,7 +22,7 @@
   </audio>
 
   <scene>
-    <map path="Assets/Maps/Debug-Map/" name="debug-map.tmx"/>
+    <map path="Assets/Maps/Debug-Map-2/" name="debug-map-2.tmx"/>
     <player x="0" y="500" texturepath="Assets/Textures/Cat-1-Walk.png"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
     <item x="416" y="512" texturepath="Assets/Textures/goldCoin.png"/>

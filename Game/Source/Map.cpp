@@ -187,6 +187,11 @@ bool Map::Load(SString mapFileName)
 
     if (ret == true)
     {
+        ret = LoadImageLayer(mapFileXML);
+    }
+
+    if (ret == true)
+    {
         ret = LoadAllLayers(mapFileXML.child("map"));
     }
     
@@ -199,12 +204,6 @@ bool Map::Load(SString mapFileName)
 
     PhysBody* c1 = app->physics->CreateRectangle(238, 632, 480 * 50, 16, STATIC);
     c1->ctype = ColliderType::PLATFORM;
-
-   /* PhysBody* c2 = app->physics->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
-    c2->ctype = ColliderType::PLATFORM;
-
-    PhysBody* c3 = app->physics->CreateRectangle(256, 704 + 32, 576, 64, STATIC);
-    c3->ctype = ColliderType::PLATFORM;*/
     
     if(ret == true)
     {
@@ -289,6 +288,33 @@ bool Map::LoadTileSet(pugi::xml_node mapFile){
         set->texture = app->tex->Load(texPath.GetString());
 
         mapData.tilesets.Add(set);
+    }
+
+    return ret;
+}
+
+bool Map::LoadImageLayer(pugi::xml_node mapFile){
+    
+    bool ret = true; 
+
+    pugi::xml_node imageLayer;
+    for (imageLayer = mapFile.child("map").child("imageLayer"); imageLayer && ret; imageLayer = imageLayer.next_sibling("imageLayer"))
+    {
+        ImageLayer* set = new ImageLayer();
+
+        set->name = imageLayer.attribute("name").as_string();
+        set->parallaxFactor = imageLayer.attribute("parallaxx").as_float();
+
+        pugi::xml_node image = imageLayer.child("image");
+
+        set->width = image.attribute("width").as_int();
+        set->height = image.attribute("height").as_int();
+
+        SString texPath = path;
+        texPath += image.attribute("source").as_string();
+        set->texture = app->tex->Load(texPath.GetString());
+
+        mapData.imageLayers.Add(set);
     }
 
     return ret;

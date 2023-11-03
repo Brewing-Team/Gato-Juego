@@ -29,6 +29,15 @@ struct TileSet
 	SDL_Rect GetTileRect(int gid) const;
 };
 
+struct ImageLayer
+{
+	SString name;
+	int width;
+	int height;
+	float parallaxFactor;
+	SDL_Texture* texture;
+};
+
 struct Colliders
 {
 	int x;
@@ -107,6 +116,7 @@ struct MapData
 	int	tileWidth;
 	int	tileHeight;
 	List<TileSet*> tilesets;
+	List<ImageLayer*> imageLayers;
 	MapTypes type;
 
 	List<MapLayer*> maplayers;
@@ -143,6 +153,7 @@ private:
 
 	bool LoadMap(pugi::xml_node mapFile);
 	bool LoadTileSet(pugi::xml_node mapFile);
+	bool LoadImageLayer(pugi::xml_node mapFile);
 	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
 	bool LoadAllLayers(pugi::xml_node mapNode);
 	bool LoadColliders(pugi::xml_node mapFile);
