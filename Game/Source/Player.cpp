@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "App.h"
+#include "Map.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "Input.h"
@@ -144,6 +145,14 @@ bool Player::Start() {
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 
+	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)
+	walkAnim = *app->map->mapData.animations[0];
+	walkAnim.speed = 8.0f;
+	idleAnim = *app->map->mapData.animations[1];
+	idleAnim.speed = 8.0f;
+
+	currentAnimation = &walkAnim;
+
 	//pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
 	pbody = app->physics->CreateRectangle(position.x, position.y, 25, 15, bodyType::DYNAMIC);
 	pbody->listener = this;
@@ -279,8 +288,10 @@ bool Player::Update(float dt)
 	//app->render->camera.y = std::ceil(std::lerp(app->render->camera.y, (int)(app->render->camera.h / 2 / app->win->GetScale()) - 16 - position.y, dt * 4 / 1000));
 	//app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
 	
-	SDL_Rect rect = { 0,0,50,50 };
-	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect);
+	//SDL_Rect rect = { 0,0,50,50 };
+	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame());
+
+	currentAnimation->Update(dt);
 
 	return true;
 }

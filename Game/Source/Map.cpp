@@ -1,4 +1,5 @@
 
+#include "Animation.h"
 #include "App.h"
 #include "Render.h"
 #include "Textures.h"
@@ -288,8 +289,34 @@ bool Map::LoadTileSet(pugi::xml_node mapFile){
         texPath += tileset.child("image").attribute("source").as_string();
         set->texture = app->tex->Load(texPath.GetString());
 
-        mapData.tilesets.Add(set);
+        if(tileset.child("tile")) //check if the tileset is an Animation (no se si seria mejor checkear si tiene un animation child)
+        {
+            LoadAnimation(tileset.child("tile"), set);
+        }
+        else
+        {
+            mapData.tilesets.Add(set);
+        }
     }
+
+    return ret;
+}
+
+bool Map::LoadAnimation(pugi::xml_node node, TileSet* tileset)
+{
+    bool ret = true;
+
+    Animation* anim = new Animation();
+    anim->name = tileset->name;
+    anim->texture = tileset->texture;
+
+    for (pugi::xml_node frameNode = node.child("animation").child("frame"); frameNode && ret; frameNode = frameNode.next_sibling("frame"))
+    {
+        int id = frameNode.attribute("tileid").as_int();
+        anim->PushBack({tileset->tileWidth * id,0, tileset->tileWidth, tileset->tileHeight});
+    }
+
+    mapData.animations.Add(anim);
 
     return ret;
 }
