@@ -397,10 +397,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			} else if (physA == rightSensor) {
 				LOG("Right collision");
 				isCollidingRight = true;
-			} else {
-				isGrounded = false;
-				isCollidingLeft = false;
-				isCollidingRight = false;
 			}
 		}
 
@@ -420,5 +416,23 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision UNKNOWN");
 		break;
 
+	}
+}
+
+void Player::EndCollision(PhysBody* physA, PhysBody* physB){
+
+	if(physA->body->GetFixtureList()->IsSensor()) {
+		if (physB->ctype == ColliderType::PLATFORM) {
+			if (physA == groundSensor) {
+				LOG("Ground collision");
+				isGrounded = false;
+			} else if (physA == leftSensor) {
+				LOG("Left collision");
+				isCollidingLeft = false;
+			} else if (physA == rightSensor) {
+				LOG("Right collision");
+				isCollidingRight = false;
+			}
+		}
 	}
 }

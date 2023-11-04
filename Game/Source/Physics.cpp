@@ -8,6 +8,7 @@
 #include "Render.h"
 #include "Player.h"
 #include "Window.h"
+#include <Box2D/Dynamics/Contacts/b2Contact.h>
 
 #ifdef __linux__
 #include <SDL_keycode.h>
@@ -333,6 +334,20 @@ void Physics::BeginContact(b2Contact* contact)
 
 	if (physB && physB->listener != NULL)
 		physB->listener->OnCollision(physB, physA);
+}
+
+void Physics::EndContact(b2Contact* contact)
+{
+	// Call the OnCollision listener function to bodies A and B, passing as inputs our custom PhysBody classes
+	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+	if (physA && physA->listener != NULL)
+		physA->listener->EndCollision(physA, physB);
+
+	if (physB && physB->listener != NULL)
+		physB->listener->EndCollision(physB, physA);
+
 }
 
 float Physics::lookAt(b2Vec2 source, b2Vec2 target)

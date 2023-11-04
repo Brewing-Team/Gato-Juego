@@ -35,6 +35,8 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
 
+	void EndCollision(PhysBody* physA, PhysBody* physB);
+
 	// Set animations
 	void setIdleAnimation();
 	void setMoveAnimation();
