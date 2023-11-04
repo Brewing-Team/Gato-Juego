@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "App.h"
+#include "Entity.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "Input.h"
@@ -77,14 +78,18 @@ void Player::Climb() {
 
 	if (isCollidingRight) {
 		angle = -90;
-		pbody->body->ApplyForceToCenter({ 1, 0 }, true);
 		flip = SDL_FLIP_NONE;
 	}
 
 	if (isCollidingLeft) {
 		angle = 90;
-		pbody->body->ApplyForceToCenter({ -1, 0 }, true);
 		flip = SDL_FLIP_HORIZONTAL;
+	}
+
+	if(angle == -90){
+		pbody->body->ApplyForceToCenter({ 1, 0 }, true);
+	} else {
+		pbody->body->ApplyForceToCenter({ -1, 0 }, true);
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
@@ -183,11 +188,12 @@ EntityState Player::StateMachine() {
 				this->state = EntityState::WIN;
 			}
 
-			if (!isGrounded) {
+			Climb();
+			
+			if (!isGrounded and !isCollidingLeft and !isCollidingRight) {
 				this->state = EntityState::IDLE;
 			}
 
-			Climb();
 
 			break;
 
@@ -309,7 +315,16 @@ bool Player::Update(float dt)
 
 	// END OF DEBUG TOOLS -----------------------------------------
 
+	// Update player state
+
+	if(state == EntityState::MOVE) {
+		if (isCollidingLeft or isCollidingRight and !isGrounded) {
+			state = EntityState::CLIMB;
+		}
+	}
+
 	StateMachine();
+	LOG(" %d", isGrounded);
 
 	pbody->body->SetTransform(pbody->body->GetPosition(), angle*DEGTORAD);
 
@@ -353,53 +368,24 @@ bool Player::CleanUp() {
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	if(physA->body->GetFixtureList()->IsSensor()) {
-
-		if (state == EntityState::CLIMB) {
+		if (physB->ctype == ColliderType::PLATFORM) {
 			if (physA == groundSensor) {
-				LOG("Ground colision");
+				LOG("Ground collision");
 				isGrounded = true;
+			} else if (physA == leftSensor) {
+				LOG("Left collision");
+				isCollidingLeft = true;
+			} else if (physA == rightSensor) {
+				LOG("Right collision");
+				isCollidingRight = true;
 			} else {
 				isGrounded = false;
-			}
-
-			if (physA == topSensor) {
-				LOG("Top colision");
-				isCollidingTop = true;
-			}
-		} else {
-			if (physB->ctype == ColliderType::PLATFORM) {
-
-				if (physA == groundSensor) {
-					LOG("Ground colision");
-					isGrounded = true;
-				}
-
-				if (physA == topSensor) {
-					LOG("Top colision");
-					isCollidingTop = true;
-				}
-
-				if (physA == leftSensor) {
-					LOG("Left colision");
-					isCollidingLeft = true;
-					state = EntityState::CLIMB;
-				} else {
-					isCollidingLeft = false;
-				}
-
-				if (physA == rightSensor) {
-					LOG("Right colision");
-					isCollidingRight = true;
-					state = EntityState::CLIMB;
-				} else {
-					isCollidingRight = false;
-				}
+				isCollidingLeft = false;
+				isCollidingRight = false;
 			}
 		}
 
-		
 	}
-	
 	switch (physB->ctype) {
 
 	case ColliderType::ITEM:

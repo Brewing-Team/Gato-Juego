@@ -24,7 +24,7 @@
 
   <scene>
     <map path="Assets/Maps/Debug-Map/" name="debug-map.tmx"/>
-    <player x="0" y="500" texturepath="Assets/Textures/Cat-1-Walk.png"/>
+    <player x="0" y="630" texturepath="Assets/Textures/Cat-1-Walk.png"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
   </scene>
   
