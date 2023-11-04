@@ -1,4 +1,5 @@
 
+#include "Animation.h"
 #include "App.h"
 #include "Render.h"
 #include "Textures.h"
@@ -70,7 +71,8 @@ bool Map::Update(float dt)
                     app->render->DrawTexture(tileset->texture,
                         pos.x,
                         pos.y,
-                        &r);
+                        &r,
+                        mapLayerItem->data->parallaxFactor);
                 }
             }
         }
@@ -287,8 +289,34 @@ bool Map::LoadTileSet(pugi::xml_node mapFile){
         texPath += tileset.child("image").attribute("source").as_string();
         set->texture = app->tex->Load(texPath.GetString());
 
-        mapData.tilesets.Add(set);
+        if(tileset.child("tile")) //check if the tileset is an Animation (no se si seria mejor checkear si tiene un animation child)
+        {
+            LoadAnimation(tileset.child("tile"), set);
+        }
+        else
+        {
+            mapData.tilesets.Add(set);
+        }
     }
+
+    return ret;
+}
+
+bool Map::LoadAnimation(pugi::xml_node node, TileSet* tileset)
+{
+    bool ret = true;
+
+    Animation* anim = new Animation();
+    anim->name = tileset->name;
+    anim->texture = tileset->texture;
+
+    for (pugi::xml_node frameNode = node.child("animation").child("frame"); frameNode && ret; frameNode = frameNode.next_sibling("frame"))
+    {
+        int id = frameNode.attribute("tileid").as_int();
+        anim->PushBack({tileset->tileWidth * id,0, tileset->tileWidth, tileset->tileHeight});
+    }
+
+    mapData.animations.Add(anim);
 
     return ret;
 }
@@ -302,6 +330,14 @@ bool Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
     layer->name = node.attribute("name").as_string();
     layer->width = node.attribute("width").as_int();
     layer->height = node.attribute("height").as_int();
+    if (node.attribute("parallaxx"))
+    {
+        layer->parallaxFactor = node.attribute("parallaxx").as_float();
+    }
+    else
+    {
+        layer->parallaxFactor = 1.0f;
+    }
 
     LoadProperties(node, layer->properties);
 
@@ -346,8 +382,9 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
     //TODO!! check if the objectgroup's class is collider
     for(collider = mapFile.child("map").child("objectgroup").child("object"); collider && ret; collider = collider.next_sibling("object"))
     {
-        //if (SDL_strcmp(collider.attribute("type").as_string(), "rectangle"))
-        //{
+        
+        if (SString(collider.attribute("type").as_string()) == "rectangle")
+        {
         Colliders* c = new Colliders();
 
         c->x = collider.attribute("x").as_int();
@@ -358,17 +395,17 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
         PhysBody* c1 = app->physics->CreateRectangle(c->x + c->width / 2, c->y + c->height / 2, c->width, c->height, STATIC);
         c1->ctype = ColliderType::PLATFORM;
         
-        //}
-        /* else if(SDL_strcmp(collider.attribute("type").as_string(), "polygon"))
+        }
+        else if(SString(collider.attribute("type").as_string()) == "polygon")
         {
-            int* points = new int[collider.child("polygon").attribute("points").as_int() * sizeof(int)];
+           /* int* points = new int[collider.child("polygon").attribute("points").as_int() * sizeof(int)];
 
             app->physics->CreateChain(collider.attribute("x").as_int(),
                                       collider.attribute("y").as_int(),
                                       points,
                                       collider.child("polygon").attribute("points").as_int(),
-                                        STATIC);
-        }*/
+                                        STATIC);*/
+        }
     } 
 
     return ret;

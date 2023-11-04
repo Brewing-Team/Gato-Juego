@@ -1,6 +1,7 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
+#include "Animation.h"
 #include "Entity.h"
 #include "Point.h"
 #ifdef __linux__
@@ -44,8 +45,13 @@ public:
 	void CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset);
 
 public:
-	int isAlive = true;
+	//Animations
+	Animation idleAnim;
+	Animation walkAnim;
+	Animation* currentAnimation = nullptr;
 
+	int isAlive = true;
+	
 	float speed = 0.2f;
 	const char* texturePath;
 	SDL_Texture* texture = NULL;

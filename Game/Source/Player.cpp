@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "App.h"
-#include "Entity.h"
+#include "Map.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "Input.h"
@@ -241,6 +241,15 @@ bool Player::Start() {
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 
+	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)
+	walkAnim = *app->map->mapData.animations[0];
+	walkAnim.speed = 8.0f;
+	idleAnim = *app->map->mapData.animations[1];
+	idleAnim.speed = 8.0f;
+
+	currentAnimation = &walkAnim;
+
+	//pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
 	pbody = app->physics->CreateRectangle(position.x, position.y, 25, 15, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
@@ -341,8 +350,10 @@ bool Player::Update(float dt)
 
 	CopyParentRotation(pbody, rightSensor, -2, -2, 180);	
 	
-	SDL_Rect rect = { 0,0,50,50 };
-	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect, 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
+	//SDL_Rect rect = { 0,0,50,50 };
+	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame());
+
+	currentAnimation->Update(dt);
 
 	return true;
 }
