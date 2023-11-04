@@ -48,11 +48,12 @@ public:
 	//Animations
 	Animation idleAnim;
 	Animation walkAnim;
+	Animation jumpAnim;
 	Animation* currentAnimation = nullptr;
 
 	int isAlive = true;
 	
-	float speed = 0.2f;
+	float maxSpeed = 2.0f;
 	const char* texturePath;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;

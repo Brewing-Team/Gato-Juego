@@ -22,17 +22,17 @@
 
 void Player::setIdleAnimation()
 {
-	// TODO set idle animation
+	currentAnimation = &idleAnim;
 }
 
 void Player::setMoveAnimation()
 {
-	// TODO set move animation
+	currentAnimation = &walkAnim;
 }
 
 void Player::setJumpAnimation()
 {
-	// TODO set jump animation
+	currentAnimation = &jumpAnim;
 }
 
 void Player::setClimbAnimation()
@@ -48,7 +48,7 @@ void Player::setWinAnimation()
 void Player::Move() {
 	
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		if (pbody->body->GetLinearVelocity().x >= -5)
+		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
 			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
@@ -56,14 +56,18 @@ void Player::Move() {
 		flip = SDL_FLIP_HORIZONTAL;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		if(pbody->body->GetLinearVelocity().x <= 5)
+	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		if(pbody->body->GetLinearVelocity().x <= maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
 			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
 		}
 		flip = SDL_FLIP_NONE;
 	}
+	else if(isGrounded){
+		state = EntityState::IDLE;
+	}
+
 }
 
 void Player::Jump() {
@@ -92,9 +96,11 @@ void Player::Climb() {
 		pbody->body->ApplyForceToCenter({ -1, 0 }, true);
 	}
 
+	pbody->body->ApplyForceToCenter({ 0, -2.0f }, true);
+
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 
-		if (pbody->body->GetLinearVelocity().y >= -5)
+		if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * 1;
 			pbody->body->ApplyLinearImpulse({ 0, -impulse }, pbody->body->GetWorldCenter(), true);
@@ -104,7 +110,7 @@ void Player::Climb() {
 
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 
-		if (pbody->body->GetLinearVelocity().y >= -5)
+		if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * 1;
 			pbody->body->ApplyLinearImpulse({ 0, impulse }, pbody->body->GetWorldCenter(), true);
@@ -246,8 +252,10 @@ bool Player::Start() {
 	walkAnim.speed = 8.0f;
 	idleAnim = *app->map->mapData.animations[1];
 	idleAnim.speed = 8.0f;
+	jumpAnim = *app->map->mapData.animations[2];
+	jumpAnim.speed = 8.0f;
 
-	currentAnimation = &walkAnim;
+	currentAnimation = &idleAnim;
 
 	//pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
 	pbody = app->physics->CreateRectangle(position.x, position.y, 25, 15, bodyType::DYNAMIC);
@@ -333,7 +341,7 @@ bool Player::Update(float dt)
 	}
 
 	StateMachine();
-	LOG(" %d", isGrounded);
+	LOG("state: %d", state);
 
 	pbody->body->SetTransform(pbody->body->GetPosition(), angle*DEGTORAD);
 
@@ -351,7 +359,7 @@ bool Player::Update(float dt)
 	CopyParentRotation(pbody, rightSensor, -2, -2, 180);	
 	
 	//SDL_Rect rect = { 0,0,50,50 };
-	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame());
+	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
 
 	currentAnimation->Update(dt);
 
