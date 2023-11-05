@@ -5,7 +5,7 @@
   </app>
 
   <renderer>
-    <vsync value="true"/>
+    <vsync value="false"/>
   </renderer>
 
   <window>
@@ -23,8 +23,8 @@
   </audio>
 
   <scene>
-    <map path="Assets/Maps/Debug-Map/" name="debug-map.tmx"/>
-    <player x="0" y="590" texturepath="Assets/Textures/Cat-1-Walk.png"/>
+    <map path="Assets/Maps/Level-1/" name="Level-1-map.tmx"/>
+    <player x="672" y="2032" texturepath="Assets/Textures/Cat-1-Walk.png"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
   </scene>
   
