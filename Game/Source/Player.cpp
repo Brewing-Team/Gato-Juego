@@ -215,16 +215,50 @@ EntityState Player::StateMachine() {
 
 			// TODO resetear mundo, restar vidas, etc
 
-			position = spawnPosition;
-
-			pbody->body->SetTransform({ PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y) }, 0);
-
-			// reset player physics
-			pbody->body->SetAwake(false);
-			pbody->body->SetAwake(true);
+			moveToSpawnPoint();
 
 			isAlive = true;
 			state = EntityState::IDLE;
+
+			break;
+
+		case EntityState::NO_CLIP:
+
+			setIdleAnimation();
+
+			if (noClip) {
+				// deactivate physics
+				this->pbody->body->SetAwake(false);
+
+				// Deactivate gravity
+				pbody->body->SetGravityScale(0);
+
+				// debug controls
+				if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+					pbody->body->SetLinearVelocity({ -3,0});
+				}
+
+				if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+					pbody->body->SetLinearVelocity({ 3,0});
+				}
+
+				if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+					pbody->body->SetLinearVelocity({ 0,-3});
+				}
+
+				if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+					pbody->body->SetLinearVelocity({ 0,3 });
+				}
+			} else {
+				// activate physics
+				this->pbody->body->GetFixtureList()->SetSensor(false);
+				this->pbody->body->SetAwake(true);
+
+				// Activate Gravity
+				pbody->body->SetGravityScale(1);
+
+				state = EntityState::IDLE;
+			}
 
 			break;
 
@@ -294,6 +328,10 @@ bool Player::Start() {
 	
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
 
+	// TODO load debug menu texture from xml
+	// load debug menu texture
+	debugMenuTexture = app->tex->Load("Assets/Textures/debug_menu.png");
+
 	return true;
 }
 
@@ -340,49 +378,53 @@ void Player::debugTools()
 {
 	// DEBUG TOOLS ------------------------------------------------
 
+	if (debug) {
+		//app->render->DrawTexture(debugMenuTexture, position.x, position.y);
+		//app->render->DrawTexture(debugMenuTexture, app->render->camera.x, app->render->camera.y);
+	}
+
 	// Toggle on/off debug mode + View colliders / logic
 	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		debug = !debug;
-	}
-
-	// Teleport Menu Level
-	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
-		// Resetart Level 1
-		position = spawnPosition;
-		// Resetart Level 2
-		// TODO teleport player to the spawnPosition of the next level
-		position = spawnPosition;
-	}
-
-	// Restart current level (Kill player)
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-		isAlive = false;
-	}
-
-	// Toggle free cam mode on/off
-	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
-		freeCam = !freeCam;
-	}
-
-	// Toggle god mode on/off
-	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
-		godMode = !godMode;
-	}
-
-	// Toggle no-clip mode on/off
-	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
-		noClip = !noClip;
-		if (noClip) {
-			this->pbody->body->GetFixtureList()->SetSensor(true);
-		} else {
-			this->pbody->body->GetFixtureList()->SetSensor(false);
-		}
 		
 	}
 
-	// Toggle FPS cap on/off
-	if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
-		fpsLimiter = !fpsLimiter;
+	if (debug) {
+		// Teleport Menu Level
+		if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+			// Resetart Level 1
+			moveToSpawnPoint();
+			// Resetart Level 2
+			// TODO teleport player to the spawnPosition of the next level
+			// position = spawnPosition;
+		}
+
+		// Restart current level (Kill player)
+		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+			isAlive = false;
+		}
+
+		// Toggle free cam mode on/off
+		if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+			freeCam = !freeCam;
+		}
+
+		// Toggle god mode on/off
+		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
+			godMode = !godMode;
+		}
+
+		// Toggle no-clip mode on/off
+		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
+			noClip = !noClip;
+			state = EntityState::NO_CLIP;
+			this->pbody->body->GetFixtureList()->SetSensor(true);
+		}
+
+		// Toggle FPS cap on/off
+		if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
+			fpsLimiter = !fpsLimiter;
+		}
 	}
 
 	// END OF DEBUG TOOLS -----------------------------------------
@@ -400,6 +442,17 @@ void Player::CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset
 			parent->body->GetTransform().p.y - 
 			PIXEL_TO_METERS(SDL_sin(angle + DEGTORAD * angleOffset)) * (parent->height + child->height + yOffset)),
 			DEGTORAD * parent->GetRotation());
+}
+
+void Player::moveToSpawnPoint()
+{
+	position = spawnPosition;
+
+	pbody->body->SetTransform({ PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y) }, 0);
+
+	// reset player physics
+	pbody->body->SetAwake(false);
+	pbody->body->SetAwake(true);
 }
 
 bool Player::CleanUp() {

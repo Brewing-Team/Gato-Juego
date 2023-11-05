@@ -48,6 +48,8 @@ public:
 
 	void CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset);
 
+	void moveToSpawnPoint();
+
 public:
 	//Animations
 	Animation idleAnim;
@@ -86,6 +88,9 @@ public:
 	bool isCollidingTop = false;
 	bool isCollidingLeft = false;
 	bool isCollidingRight = false;
+
+	// debug textures
+	SDL_Texture* debugMenuTexture;
 };
 
 #endif // __PLAYER_H__
