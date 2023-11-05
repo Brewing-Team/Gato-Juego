@@ -121,7 +121,7 @@ void Player::Climb() {
 
 	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 		float impulse = pbody->body->GetMass() * 5;
-		pbody->body->ApplyLinearImpulse({ impulse * SDL_sin(angle), 0 }, pbody->body->GetWorldCenter(), true);
+		pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_sin(angle), 0 }, pbody->body->GetWorldCenter(), true);
 
 		flip = (flip == SDL_FLIP_HORIZONTAL) ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
 	}
