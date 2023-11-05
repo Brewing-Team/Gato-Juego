@@ -424,6 +424,10 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
                 {
                     c1->ctype = ColliderType::LIMITS;
                 }
+                else if (SString(objectGroup.attribute("class").as_string()) == "win")
+                {
+                    c1->ctype = ColliderType::WIN;
+                }
                 else
                 {
                     c1->ctype = ColliderType::UNKNOWN;

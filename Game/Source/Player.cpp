@@ -252,6 +252,10 @@ EntityState Player::StateMachine() {
 
 			// TODO hacer cosa de ganar jugador ole ole
 
+			moveToSpawnPoint();
+
+			state = EntityState::IDLE;
+
 			break;
 
 		case EntityState::DEAD:
@@ -549,10 +553,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::LIMITS:
 		LOG("Collision LIMITS");
 		break;
-
+	case ColliderType::WIN:
+		state = EntityState::WIN;
+		LOG("Collision WIN");
+		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
+
 	}
 	
 }
