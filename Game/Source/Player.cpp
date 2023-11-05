@@ -194,11 +194,11 @@ EntityState Player::StateMachine() {
 				this->state = EntityState::WIN;
 			}
 
-			Climb();
-			
 			if (!isGrounded and !isCollidingLeft and !isCollidingRight) {
 				this->state = EntityState::IDLE;
 			}
+			Climb();
+			
 
 
 			break;
@@ -214,6 +214,14 @@ EntityState Player::StateMachine() {
 			setWinAnimation();
 
 			// TODO resetear mundo, restar vidas, etc
+
+			//hacer esto mejor, con un spawn point y tal pero de momento esto vale
+			position.x = parameters.attribute("x").as_int();
+			position.y = parameters.attribute("y").as_int() - 50;
+			pbody->body->SetTransform({ PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y) }, 0);
+
+			isAlive = true;
+			state = EntityState::IDLE;
 
 			break;
 
@@ -399,8 +407,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				isCollidingRight = true;
 			}
 		}
-
 	}
+
 	switch (physB->ctype) {
 
 	case ColliderType::ITEM:
@@ -410,6 +418,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
+		break;
+
+	case ColliderType::DEATH:
+		LOG("Collision DEATH");
+		isAlive = false;
 		break;
 
 	case ColliderType::UNKNOWN:
