@@ -39,6 +39,7 @@ enum class ColliderType {
 	ITEM,
 	PLATFORM,
 	DEATH,
+	LIMITS,
 	UNKNOWN
 	// ..
 };

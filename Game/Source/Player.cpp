@@ -453,10 +453,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		isAlive = false;
 		break;
 
+	case ColliderType::LIMITS:
+		LOG("Collision LIMITS");
+		break;
+
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
-
 	}
 }
 
