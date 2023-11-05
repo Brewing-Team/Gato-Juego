@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "Physics.h"
 #include "Window.h"
+#include "Scene.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -59,16 +60,22 @@ bool Map::Update(float dt)
     while (mapLayerItem != NULL) {
 
         if (mapLayerItem->data->properties.GetProperty("Draw") != NULL && mapLayerItem->data->properties.GetProperty("Draw")->value) {
+            
+            int TILES_TO_LOAD = 17 * app->win->GetScale();
 
-            int xToTiledLeft = WorldToMap(app->render->camera.x, app->render->camera.y).x;
-            int xToTiledRight = WorldToMap(app->render->camera.x, app->render->camera.y).x + app->render->camera.w / mapData.tileWidth + 1;
+            iPoint playerPos = app->scene->player->position;
 
-            int yToTiledTop = WorldToMap(app->render->camera.x, app->render->camera.y).y;
-            int yToTiledBottom = WorldToMap(app->render->camera.x, app->render->camera.y).y + app->render->camera.h / mapData.tileHeight + 1;
+            int leftClipping = MAX((playerPos.x / mapData.tileWidth) - TILES_TO_LOAD, 0);
+            int rightClipping = MIN((playerPos.x / mapData.tileWidth) + TILES_TO_LOAD, mapLayerItem->data->width);
+            
+            int topClipping = MAX((playerPos.y / mapData.tileWidth) - TILES_TO_LOAD, 0);
+            int bottomClipping = MIN((playerPos.y / mapData.tileWidth) + TILES_TO_LOAD, mapLayerItem->data->height);
 
-            for (int x = xToTiledLeft; x < xToTiledRight; x++)
+            mapLayerItem->data->width;
+
+            for (int x = leftClipping; x < rightClipping; x++)
             {
-                for (int y = 0; y < mapLayerItem->data->height; y++)
+                for (int y = topClipping; y < bottomClipping; y++)
                 {
                     int gid = mapLayerItem->data->Get(x, y);
                     TileSet* tileset = GetTilesetFromTileId(gid);
