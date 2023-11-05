@@ -28,6 +28,7 @@ void Player::setIdleAnimation()
 void Player::setMoveAnimation()
 {
 	currentAnimation = &walkAnim;
+	jumpAnim.Reset();
 }
 
 void Player::setJumpAnimation()
@@ -37,7 +38,7 @@ void Player::setJumpAnimation()
 
 void Player::setClimbAnimation()
 {
-	// TODO set climb animation
+	currentAnimation = &idleAnim;
 }
 
 void Player::setWinAnimation()
@@ -145,8 +146,15 @@ EntityState Player::StateMachine() {
 				this->state = EntityState::WIN;
 			}
 
-			if (isGrounded && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-				Jump();
+			if (isGrounded) {
+				if(app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN){
+					Jump();
+					jumpAnim.Reset();
+				}
+			}
+			else
+			{
+				setJumpAnimation();
 			}
 
 			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT or app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
@@ -158,8 +166,14 @@ EntityState Player::StateMachine() {
 
 			angle = 0;
 
-			setJumpAnimation();
-			setMoveAnimation();
+			if(isGrounded)
+			{
+				setMoveAnimation();
+			}
+			else
+			{
+				setJumpAnimation();
+			}
 
 			if (!isAlive) {
 				this->state = EntityState::DEAD;
@@ -184,7 +198,19 @@ EntityState Player::StateMachine() {
 
 		case EntityState::CLIMB:
 
-			setClimbAnimation();
+			if(isGrounded)
+			{
+				setClimbAnimation();
+			}
+			else
+			{
+				setJumpAnimation();
+			}
+			if (pbody->body->GetLinearVelocity().y == 0) //esto rarete pero buenop
+			{
+				setIdleAnimation();
+			}
+			
 
 			if (!isAlive) {
 				this->state = EntityState::DEAD;
@@ -197,6 +223,7 @@ EntityState Player::StateMachine() {
 			if (!isGrounded and !isCollidingLeft and !isCollidingRight) {
 				this->state = EntityState::IDLE;
 			}
+			
 			Climb();
 			
 
@@ -370,7 +397,6 @@ bool Player::Update(float dt)
 	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
 
 	currentAnimation->Update(dt);
-
 	return true;
 }
 
