@@ -60,7 +60,13 @@ bool Map::Update(float dt)
 
         if (mapLayerItem->data->properties.GetProperty("Draw") != NULL && mapLayerItem->data->properties.GetProperty("Draw")->value) {
 
-            for (int x = 0; x < mapLayerItem->data->width; x++)
+            int xToTiledLeft = WorldToMap(app->render->camera.x, app->render->camera.y).x;
+            int xToTiledRight = WorldToMap(app->render->camera.x, app->render->camera.y).x + app->render->camera.w / mapData.tileWidth + 1;
+
+            int yToTiledTop = WorldToMap(app->render->camera.x, app->render->camera.y).y;
+            int yToTiledBottom = WorldToMap(app->render->camera.x, app->render->camera.y).y + app->render->camera.h / mapData.tileHeight + 1;
+
+            for (int x = xToTiledLeft; x < xToTiledRight; x++)
             {
                 for (int y = 0; y < mapLayerItem->data->height; y++)
                 {
