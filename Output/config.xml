@@ -14,6 +14,7 @@
     <borderless value="false"/>
     <resizable value="false"/>
     <fullscreen_window value="false"/>
+    <screen value="0"/>
   </window>
 
   <audio>
@@ -23,12 +24,8 @@
 
   <scene>
     <map path="Assets/Maps/Debug-Map/" name="debug-map.tmx"/>
-    <player x="0" y="500" texturepath="Assets/Textures/Cat-1-Walk.png"/>
+    <player x="0" y="590" texturepath="Assets/Textures/Cat-1-Walk.png"/>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
-    <item x="416" y="512" texturepath="Assets/Textures/goldCoin.png"/>
-    <item x="384" y="352" texturepath="Assets/Textures/goldCoin.png"/>
-    <item x="200" y="672" texturepath="Assets/Textures/goldCoin.png"/>
-    <item x="500" y="672" texturepath="Assets/Textures/goldCoin.png"/>
   </scene>
   
 </config>

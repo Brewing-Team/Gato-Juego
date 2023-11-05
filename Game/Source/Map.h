@@ -12,6 +12,7 @@
 #include "PugiXml\src\pugixml.hpp"
 #endif
 
+class Animation;
 
 // Ignore Terrain Types and Tile Types for now, but we want the image!
 struct TileSet
@@ -110,6 +111,7 @@ struct MapData
 	MapTypes type;
 
 	List<MapLayer*> maplayers;
+	List<Animation*> animations;
 };
 
 class Map : public Module
@@ -143,6 +145,7 @@ private:
 
 	bool LoadMap(pugi::xml_node mapFile);
 	bool LoadTileSet(pugi::xml_node mapFile);
+	bool LoadAnimation(pugi::xml_node node, TileSet* tileset);
 	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
 	bool LoadAllLayers(pugi::xml_node mapNode);
 	bool LoadColliders(pugi::xml_node mapFile);

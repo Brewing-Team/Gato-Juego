@@ -1,6 +1,8 @@
 
+#include "Animation.h"
 #include "App.h"
 #include "Render.h"
+#include "SString.h"
 #include "Textures.h"
 #include "Map.h"
 #include "Physics.h"
@@ -13,6 +15,7 @@
 
 #ifdef __linux__
 #include <SDL_image.h>
+#include <Box2D/Dynamics/b2Fixture.h>
 #elif _MSC_VER
 #include "SDL_image/include/SDL_image.h"
 #endif
@@ -288,8 +291,34 @@ bool Map::LoadTileSet(pugi::xml_node mapFile){
         texPath += tileset.child("image").attribute("source").as_string();
         set->texture = app->tex->Load(texPath.GetString());
 
-        mapData.tilesets.Add(set);
+        if(tileset.child("tile")) //check if the tileset is an Animation (no se si seria mejor checkear si tiene un animation child)
+        {
+            LoadAnimation(tileset.child("tile"), set);
+        }
+        else
+        {
+            mapData.tilesets.Add(set);
+        }
     }
+
+    return ret;
+}
+
+bool Map::LoadAnimation(pugi::xml_node node, TileSet* tileset)
+{
+    bool ret = true;
+
+    Animation* anim = new Animation();
+    anim->name = tileset->name;
+    anim->texture = tileset->texture;
+
+    for (pugi::xml_node frameNode = node.child("animation").child("frame"); frameNode && ret; frameNode = frameNode.next_sibling("frame"))
+    {
+        int id = frameNode.attribute("tileid").as_int();
+        anim->PushBack({tileset->tileWidth * id,0, tileset->tileWidth, tileset->tileHeight});
+    }
+
+    mapData.animations.Add(anim);
 
     return ret;
 }
@@ -351,35 +380,51 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
     bool ret = true; 
     uint scale = app->win->GetScale();
 
-    pugi::xml_node collider;
     //TODO!! check if the objectgroup's class is collider
-    for(collider = mapFile.child("map").child("objectgroup").child("object"); collider && ret; collider = collider.next_sibling("object"))
-    {
-        
-        if (SString(collider.attribute("type").as_string()) == "rectangle")
+    pugi::xml_node objectGroup;
+    for(objectGroup = mapFile.child("map").child("objectgroup"); objectGroup && ret; objectGroup = objectGroup.next_sibling("objectgroup"))
+   {
+        pugi::xml_node collider;
+        for(collider = objectGroup.child("object"); collider && ret; collider = collider.next_sibling("object"))
         {
-        Colliders* c = new Colliders();
+            
+            if (SString(collider.attribute("type").as_string()) == "rectangle")
+            {
+                Colliders* c = new Colliders();
 
-        c->x = collider.attribute("x").as_int();
-        c->y = collider.attribute("y").as_int();
-        c->width = collider.attribute("width").as_int();
-        c->height = collider.attribute("height").as_int();
+                c->x = collider.attribute("x").as_int();
+                c->y = collider.attribute("y").as_int();
+                c->width = collider.attribute("width").as_int();
+                c->height = collider.attribute("height").as_int();
 
-        PhysBody* c1 = app->physics->CreateRectangle(c->x + c->width / 2, c->y + c->height / 2, c->width, c->height, STATIC);
-        c1->ctype = ColliderType::PLATFORM;
-        
-        }
-        else if(SString(collider.attribute("type").as_string()) == "polygon")
-        {
-           /* int* points = new int[collider.child("polygon").attribute("points").as_int() * sizeof(int)];
+                PhysBody* c1 = app->physics->CreateRectangle(c->x + c->width / 2, c->y + c->height / 2, c->width, c->height, STATIC);
 
-            app->physics->CreateChain(collider.attribute("x").as_int(),
-                                      collider.attribute("y").as_int(),
-                                      points,
-                                      collider.child("polygon").attribute("points").as_int(),
-                                        STATIC);*/
-        }
-    } 
+                if(SString(objectGroup.attribute("class").as_string())  == "platforms") {
+                    c1->ctype = ColliderType::PLATFORM;
+                }
+                else if(SString(objectGroup.attribute("class").as_string())  == "death")
+                {
+                    c1->ctype = ColliderType::DEATH;
+                    c1->body->GetFixtureList()->SetSensor(true);
+                }
+                else
+                {
+                    c1->ctype = ColliderType::UNKNOWN;
+                }
+
+            }
+            else if(SString(collider.attribute("type").as_string()) == "polygon")
+            {
+            /* int* points = new int[collider.child("polygon").attribute("points").as_int() * sizeof(int)];
+
+                app->physics->CreateChain(collider.attribute("x").as_int(),
+                                        collider.attribute("y").as_int(),
+                                        points,
+                                        collider.child("polygon").attribute("points").as_int(),
+                                            STATIC);*/
+            }
+        } 
+    }
 
     return ret;
 }

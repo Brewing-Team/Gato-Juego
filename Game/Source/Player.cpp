@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "App.h"
+#include "Map.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "Input.h"
@@ -19,98 +20,275 @@
 #include <Box2D/Dynamics/b2Fixture.h>
 #endif
 
-void Player::Move() {
+void Player::setIdleAnimation()
+{
+	currentAnimation = &idleAnim;
+}
 
-	if (direction == -1) {
-		if (pbody->body->GetLinearVelocity().x >= -5)
+void Player::setMoveAnimation()
+{
+	currentAnimation = &walkAnim;
+	jumpAnim.Reset();
+}
+
+void Player::setJumpAnimation()
+{
+	currentAnimation = &jumpAnim;
+}
+
+void Player::setClimbAnimation()
+{
+	currentAnimation = &idleAnim;
+}
+
+void Player::setWinAnimation()
+{
+	// TODO set win animation
+}
+
+void Player::Move() {
+	
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
 			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
 		}
+		flip = SDL_FLIP_HORIZONTAL;
 	}
 
-	if (direction == 1) {
-		if(pbody->body->GetLinearVelocity().x <= 5)
+	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		if(pbody->body->GetLinearVelocity().x <= maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
 			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
 		}
+		flip = SDL_FLIP_NONE;
 	}
+	else if(isGrounded){
+		state = EntityState::IDLE;
+	}
+
 }
 
 void Player::Jump() {
-	if(isGrounded)
-		{	
-			if(!inAir)
-			{
-				float impulse = pbody->body->GetMass() * 5;
-				pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
-
-				isGrounded = false;
-				inAir = true;
-			}
-			else{
-				moveForce = 1.0f;
-				state = EntityState::NONE;
-				inAir = false;
-			}
-		}
-		else{
-			moveForce = 0.05f;
-
-			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-				if (pbody->body->GetLinearVelocity().x >= -5)
-				{
-					float impulse = pbody->body->GetMass() * moveForce;
-					pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
-				}
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-				if(pbody->body->GetLinearVelocity().x <= 5)
-				{
-					float impulse = pbody->body->GetMass() * moveForce;
-					pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
-				}
-			}
-		}
-		
+	
+	float impulse = pbody->body->GetMass() * 5;
+	pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
+	isGrounded = false;
 	
 }
 
 void Player::Climb() {
 
+	if (isCollidingRight) {
+		angle = -90;
+		flip = SDL_FLIP_NONE;
+	}
+
+	if (isCollidingLeft) {
+		angle = 90;
+		flip = SDL_FLIP_HORIZONTAL;
+	}
+
+	if(angle == -90){
+		pbody->body->ApplyForceToCenter({ 1, 0 }, true);
+	} else {
+		pbody->body->ApplyForceToCenter({ -1, 0 }, true);
+	}
+
+	pbody->body->ApplyForceToCenter({ 0, -2.0f }, true);
+
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+
+		if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
+		{
+			float impulse = pbody->body->GetMass() * 1;
+			pbody->body->ApplyLinearImpulse({ 0, -impulse }, pbody->body->GetWorldCenter(), true);
+		}
+
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+
+		if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
+		{
+			float impulse = pbody->body->GetMass() * 1;
+			pbody->body->ApplyLinearImpulse({ 0, impulse }, pbody->body->GetWorldCenter(), true);
+		}
+
+	}
+
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+		float impulse = pbody->body->GetMass() * 5;
+		pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_sin(angle), 0 }, pbody->body->GetWorldCenter(), true);
+
+		flip = (flip == SDL_FLIP_HORIZONTAL) ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+	}
+
+	
+	
 }
 
 EntityState Player::StateMachine() {
-	switch (this->state) {
-		case EntityState::IDLE:
-			LOG("Player is IDLE.\n");
-			break;
 
+	switch (this->state) {
+
+		case EntityState::IDLE:
+
+			angle = 0;
+
+			setIdleAnimation();
+
+			if (!isAlive and !godMode) {
+				this->state = EntityState::DEAD;
+			}
+
+			if (app->scene->winCondition) {
+				this->state = EntityState::WIN;
+			}
+
+			if (isGrounded) {
+				if(app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN){
+					Jump();
+					jumpAnim.Reset();
+				}
+			}
+			else
+			{
+				setJumpAnimation();
+			}
+
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT or app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+				this->state = EntityState::MOVE;
+			}
+
+			break;
 		case EntityState::MOVE:
 
-			Move();
+			angle = 0;
 
-			//LOG("Player is MOVING.\n");
-			break;
+			if(isGrounded)
+			{
+				setMoveAnimation();
+			}
+			else
+			{
+				setJumpAnimation();
+			}
 
-		case EntityState::JUMP:
+			if (!isAlive and !godMode) {
+				this->state = EntityState::DEAD;
+			}
 
-			Jump();
+			if (app->scene->winCondition) {
+				this->state = EntityState::WIN;
+			}
 
-			LOG("Player is JUMPING.\n");
+			if (isGrounded && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+
+				Jump();
+				Move();
+
+			} else {
+
+				Move();
+
+			}
+
 			break;
 
 		case EntityState::CLIMB:
 
-			Climb();
+			if(isGrounded)
+			{
+				setClimbAnimation();
+			}
+			else
+			{
+				setJumpAnimation();
+			}
+			if (pbody->body->GetLinearVelocity().y == 0) //esto rarete pero buenop
+			{
+				setIdleAnimation();
+			}
+			
 
-			LOG("Player is CLIMBING.\n");
+			if (!isAlive and !godMode) {
+				this->state = EntityState::DEAD;
+			}
+
+			if (app->scene->winCondition) {
+				this->state = EntityState::WIN;
+			}
+
+			if (!isGrounded and !isCollidingLeft and !isCollidingRight) {
+				this->state = EntityState::IDLE;
+			}
+			
+			Climb();
+			
+
+
+			break;
+
+		case EntityState::WIN:
+
+			// TODO hacer cosa de ganar jugador ole ole
+
 			break;
 
 		case EntityState::DEAD:
-			LOG("Player is DEAD.\n");
+
+			setWinAnimation();
+
+			// TODO resetear mundo, restar vidas, etc
+
+			moveToSpawnPoint();
+
+			isAlive = true;
+			state = EntityState::IDLE;
+
+			break;
+
+		case EntityState::NO_CLIP:
+
+			setIdleAnimation();
+
+			if (noClip) {
+				// deactivate physics
+				this->pbody->body->SetAwake(false);
+
+				// Deactivate gravity
+				pbody->body->SetGravityScale(0);
+
+				// debug controls
+				if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+					pbody->body->SetLinearVelocity({ -3,0});
+				}
+
+				if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+					pbody->body->SetLinearVelocity({ 3,0});
+				}
+
+				if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+					pbody->body->SetLinearVelocity({ 0,-3});
+				}
+
+				if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+					pbody->body->SetLinearVelocity({ 0,3 });
+				}
+			} else {
+				// activate physics
+				this->pbody->body->GetFixtureList()->SetSensor(false);
+				this->pbody->body->SetAwake(true);
+
+				// Activate Gravity
+				pbody->body->SetGravityScale(1);
+
+				state = EntityState::IDLE;
+			}
+
 			break;
 
 	}
@@ -134,17 +312,25 @@ bool Player::Awake() {
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
+	spawnPosition = position;
 
 	return true;
 }
 
 bool Player::Start() {
 
-	//initilize textures
-	texture = app->tex->Load(texturePath);
+	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)
+	walkAnim = *app->map->mapData.animations[0];
+	walkAnim.speed = 8.0f;
+	idleAnim = *app->map->mapData.animations[1];
+	idleAnim.speed = 8.0f;
+	jumpAnim = *app->map->mapData.animations[2];
+	jumpAnim.speed = 8.0f;
+
+	currentAnimation = &idleAnim;
 
 	//pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
-	pbody = app->physics->CreateRectangle(position.x, position.y, 25, 15, bodyType::DYNAMIC);
+	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 10, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
 
@@ -158,10 +344,24 @@ bool Player::Start() {
 
 	currentFixture = straightFixture;
 
-	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + 50, 15, 20, bodyType::DYNAMIC);
+	// Create player sensors
+	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 10, 5, bodyType::DYNAMIC);
 	groundSensor->listener = this;
+
+	topSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 10, 1, bodyType::DYNAMIC);
+	topSensor->listener = this;
+
+	leftSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 1, 5, bodyType::DYNAMIC);
+	leftSensor->listener = this;
+
+	rightSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 1, 5, bodyType::DYNAMIC);
+	rightSensor->listener = this;
 	
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
+
+	// TODO load debug menu texture from xml
+	// load debug menu texture
+	debugMenuTexture = app->tex->Load("Assets/Textures/debug_menu.png");
 
 	return true;
 }
@@ -169,170 +369,195 @@ bool Player::Start() {
 bool Player::Update(float dt)
 {
 
-	// DEBUG TOOLS ------------------------------------------------
+	debugTools();
 
-	// Resetart Level 1
-	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
-	}
+	// Update player state
 
-	// Resetart Level 2
-	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
+	if(state == EntityState::MOVE) {
+		if (isCollidingLeft or isCollidingRight and !isGrounded) {
+			state = EntityState::CLIMB;
+		}
 	}
-
-	// Restart current level
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
-	}
-
-	// Toggle no clip
-	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
-		freeCam = !freeCam;
-	}
-	
-	// View colliders / logic
-	if (app->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
-	}
-
-	// Activate or deactivate GOD mode
-	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
-	}
-
-	// Activate or deactivate FPS cap
-	if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
-		fpsLimiter = !fpsLimiter;
-	}
-
-	// END OF DEBUG TOOLS -----------------------------------------
 
 	StateMachine();
+	LOG("state: %d", state);
 
-	/* if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		direction = -1;
-		state = EntityState::MOVE;
-	}
-	else if(app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		direction = 1;
-		state = EntityState::MOVE;
-	}
-	else if(state != EntityState::JUMP){
-		state = EntityState::IDLE;
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
-		state = EntityState::JUMP;
-	} */
-
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		if (pbody->body->GetLinearVelocity().x >= -5)
-		{
-			float impulse = pbody->body->GetMass() * moveForce;
-			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
-		}
-	}
-	if(app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		if(pbody->body->GetLinearVelocity().x <= 5)
-		{
-			float impulse = pbody->body->GetMass() * moveForce;
-			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
-		}
-	}
-	if (app->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && currentFixture != crouchFixture) {
-		pbody->body->DestroyFixture(pbody->body->GetFixtureList());
-
-		currentFixture = crouchFixture;
-		//pbody->body->CreateFixture(currentFixture);
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) {
-		if(isGrounded)
-		{
-			float impulse = pbody->body->GetMass() * 5;
-			pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
-
-			isGrounded = false;
-		}
-	}
-
-	if(!isGrounded)
-	{
-		pbody->body->GetFixtureList()->SetFriction(0.0f);
-	}
-	else if(pbody->body->GetFixtureList()->GetFriction() != 25.0f)
-	{
-		pbody->body->GetFixtureList()->SetFriction(25.0f);
-	}
-
-	//si quieres dar putivueltas descomenta la linea de abajo y comenta la de arriba
-	//app->render->DrawTexture(texture, position.x, position.y,0,1.0f,pbody->body->GetAngle()*RADTODEG);
-	
-	//app->render->DrawTexture(texture, position.x, position.y);//estoy hecho un lio, no se si esto va aqui o al final
+	pbody->body->SetTransform(pbody->body->GetPosition(), angle*DEGTORAD);
 
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
-	groundSensor->body->SetTransform(b2Vec2(pbody->body->GetTransform().p.x, pbody->body->GetTransform().p.y + 0.4f), 0);
+	// Update player sensors
+	CopyParentRotation(pbody, groundSensor, -12, -2, 270);
+
+	CopyParentRotation(pbody, topSensor, -14, 0, 90);
+
+	CopyParentRotation(pbody, leftSensor, 0, 1, 0);
+
+	CopyParentRotation(pbody, rightSensor, 0, 1, 180);	
 	
+	//SDL_Rect rect = { 0,0,50,50 };
+	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
 
-	//Esto esta aqui temporalmente don't worry :)
-	//app->render->camera.x = -position.x + app->render->camera.w / app->win->GetScale() / 2;
-
-	/* Info para el Hugo del futuro:
-	
-		1. el casteo de int es para que no se rompa al redondear
-		2. el "-16" es el offset del tama�o del player
-		3. el "4" que multiplica al "dt" es la "followSpeed"
-	*/
-
-	//app->render->camera.x = std::ceil(std::lerp(app->render->camera.x, (int)(app->render->camera.w / 2 / app->win->GetScale()) - 16 - position.x, dt * 4 / 1000));
-	//app->render->camera.x = std::ceil(std::lerp(app->render->camera.x, -position.x + 200, dt * 4 / 1000)); // esta funciona en escala 4 pero esta hardcodeado
-
-	//app->render->camera.y = std::ceil(std::lerp(app->render->camera.y, (int)(app->render->camera.h / 2 / app->win->GetScale()) - 16 - position.y, dt * 4 / 1000));
-	//app->render->camera.y = -position.y + app->render->camera.h / app->win->GetScale() / 2;
-	
-	SDL_Rect rect = { 0,0,50,50 };
-	app->render->DrawTexture(texture, position.x - 9, position.y - 9, &rect);
-
+	currentAnimation->Update(dt);
 	return true;
 }
 
-bool Player::CleanUp()
+void Player::debugTools()
 {
+	// DEBUG TOOLS ------------------------------------------------
+
+	if (debug) {
+		// Draw debug menu
+
+		//app->render->DrawTexture(debugMenuTexture, position.x, position.y);
+		//app->render->DrawTexture(debugMenuTexture, app->render->camera.x, app->render->camera.y);
+	}
+
+	// Toggle on/off debug mode + View colliders / logic
+	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+		debug = !debug;
+		
+	}
+
+	if (debug) {
+		// Teleport Menu Level
+		if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+			// Resetart Level 1
+			moveToSpawnPoint();
+			// Resetart Level 2
+			// TODO teleport player to the spawnPosition of the next level
+			// position = spawnPosition;
+		}
+
+		// Restart current level (Kill player)
+		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+			isAlive = false;
+		}
+
+		// Toggle free cam mode on/off
+		if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+			freeCam = !freeCam;
+		}
+
+		// Toggle god mode on/off
+		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
+			godMode = !godMode;
+		}
+
+		// Toggle no-clip mode on/off
+		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
+			noClip = !noClip;
+			state = EntityState::NO_CLIP;
+			this->pbody->body->GetFixtureList()->SetSensor(true);
+		}
+
+		// Toggle FPS cap on/off
+		if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
+			fpsLimiter = !fpsLimiter;
+		}
+	}
+
+	// END OF DEBUG TOOLS -----------------------------------------
+}
+
+void Player::CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset)
+{
+	
+	float angle = parent->body->GetAngle();
+
+	child->body->SetTransform(
+		b2Vec2(
+			parent->body->GetTransform().p.x -
+			PIXEL_TO_METERS(SDL_cos(angle + DEGTORAD * angleOffset)) * (parent->width + child->width + xOffset),
+			parent->body->GetTransform().p.y - 
+			PIXEL_TO_METERS(SDL_sin(angle + DEGTORAD * angleOffset)) * (parent->height + child->height + yOffset)),
+			DEGTORAD * parent->GetRotation());
+}
+
+void Player::moveToSpawnPoint()
+{
+	position = spawnPosition;
+
+	pbody->body->SetTransform({ PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y) }, 0);
+
+	// reset player physics
+	pbody->body->SetAwake(false);
+	pbody->body->SetAwake(true);
+}
+
+bool Player::CleanUp() {
+
+	app->tex->UnLoad(debugMenuTexture);
+	app->tex->UnLoad(texture);
+
+
+	// Theres no need to unload audio fx because they are unloaded when te audio module is cleaned up
+	// app->audio->UnloadFx(pickCoinFxId);
 
 	return true;
 }
 
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
-	if(physA->body->GetFixtureList()->IsSensor())
-	{
-		if(physB->ctype == ColliderType::PLATFORM)
-		{
-			LOG("Grounded");
-			isGrounded = true;
+	if (physA->body->GetFixtureList()->IsSensor()) {
+		if (physB->ctype == ColliderType::PLATFORM) {
+			if (physA == groundSensor) {
+				LOG("Ground collision");
+				isGrounded = true;
+			}
+			else if (physA == leftSensor) {
+				LOG("Left collision");
+				isCollidingLeft = true;
+			}
+			else if (physA == rightSensor) {
+				LOG("Right collision");
+				isCollidingRight = true;
+			}
 		}
 	}
-	
-	switch (physB->ctype)
-	{
+	switch (physB->ctype) {
+
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		app->audio->PlayFx(pickCoinFxId);
 		break;
+
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 		break;
+
+	case ColliderType::DEATH:
+		LOG("Collision DEATH");
+		isAlive = false;
+		break;
+
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
+
 	}
+	
+}
+
+void Player::EndCollision(PhysBody* physA, PhysBody* physB){
+
+	if (physA->body->GetFixtureList()->IsSensor()) {
+		if (physB->ctype == ColliderType::PLATFORM) {
+			if (physA == groundSensor) {
+				LOG("Ground collision");
+				isGrounded = false;
+			}
+			else if (physA == leftSensor) {
+				LOG("Left collision");
+				isCollidingLeft = false;
+			}
+			else if (physA == rightSensor) {
+				LOG("Right collision");
+				isCollidingRight = false;
+			}
+		}
+	}
+	
 }

@@ -12,6 +12,7 @@
 #ifdef __linux__
 #include <SDL_keycode.h>
 #include <Box2D/Box2D.h>
+#include <Box2D/Dynamics/Contacts/b2Contact.h>
 #elif _MSC_VER
 #include "SDL/include/SDL_keycode.h"
 #include "Box2D/Box2D/Box2D.h"
@@ -345,6 +346,29 @@ b2FixtureDef* Physics::CreateRectangleFixture(int width, int height, float frict
 	fixture->friction = friction;
 
 	return fixture;
+
+}
+
+void Physics::EndContact(b2Contact* contact)
+{
+	// Call the OnCollision listener function to bodies A and B, passing as inputs our custom PhysBody classes
+	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+	if (physA && physA->listener != NULL)
+		physA->listener->EndCollision(physA, physB);
+
+	if (physB && physB->listener != NULL)
+		physB->listener->EndCollision(physB, physA);
+
+}
+
+float Physics::lookAt(b2Vec2 source, b2Vec2 target)
+{
+	return atan2(
+		target.x - source.x, 
+		target.y - source.y
+	);
 }
 
 //--------------- PhysBody
@@ -409,4 +433,49 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	}
 
 	return ret;
+}
+
+b2RevoluteJoint* Physics::CreateRevoluteJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, float lowerAngle, float upperAngle, float referenceAngle, bool collideConnected, bool enableLimit)
+{
+	b2RevoluteJointDef revoluteJointDef;
+	revoluteJointDef.bodyA = A->body;
+	revoluteJointDef.bodyB = B->body;
+	revoluteJointDef.collideConnected = collideConnected;
+	revoluteJointDef.localAnchorA.Set(anchorA.x, anchorA.y);
+	revoluteJointDef.localAnchorB.Set(anchorB.x, anchorB.y);
+	revoluteJointDef.referenceAngle = DEGTORAD * referenceAngle;
+	revoluteJointDef.enableLimit = enableLimit;
+	revoluteJointDef.lowerAngle = -DEGTORAD * lowerAngle;
+	revoluteJointDef.upperAngle = DEGTORAD * upperAngle;
+
+	return (b2RevoluteJoint*)world->CreateJoint(&revoluteJointDef);
+}
+b2PrismaticJoint* Physics::CreatePrismaticJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, b2Vec2 axys, float maxHeight, bool collideConnected, bool enableLimit)
+{
+	b2PrismaticJointDef prismaticJointDef;
+	prismaticJointDef.bodyA = A->body;
+	prismaticJointDef.bodyB = B->body;
+	prismaticJointDef.collideConnected = collideConnected;
+	prismaticJointDef.localAxisA.Set(axys.x, axys.y);
+	prismaticJointDef.localAnchorA.Set(anchorA.x, anchorA.y);
+	prismaticJointDef.localAnchorB.Set(anchorB.x, anchorB.y);
+	prismaticJointDef.referenceAngle = 0;
+	prismaticJointDef.enableLimit = enableLimit;
+	prismaticJointDef.lowerTranslation = -0.01;
+	prismaticJointDef.upperTranslation = maxHeight;
+
+	return (b2PrismaticJoint*)world->CreateJoint(&prismaticJointDef);
+}
+
+b2WeldJoint* Physics::CreateWeldJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, float angle, bool collideConnected, bool enableLimit)
+{
+	b2WeldJointDef weldJointDef;
+	weldJointDef.bodyA = A->body;
+	weldJointDef.bodyB = B->body;
+	weldJointDef.collideConnected = collideConnected;
+	weldJointDef.localAnchorA.Set(anchorA.x, anchorA.y);
+	weldJointDef.localAnchorB.Set(anchorB.x, anchorB.y);
+	weldJointDef.referenceAngle = 0;
+
+	return (b2WeldJoint*)world->CreateJoint(&weldJointDef);
 }

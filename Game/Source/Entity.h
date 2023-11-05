@@ -21,7 +21,9 @@ enum class EntityState {
 	MOVE,
 	JUMP,
 	CLIMB,
-	DEAD
+	WIN,
+	DEAD,
+	NO_CLIP
 };
 
 class Entity
@@ -85,6 +87,10 @@ public:
 	}
 
 	virtual void OnCollision(PhysBody* physA, PhysBody* physB) {
+
+	};
+
+	virtual void EndCollision(PhysBody* physA, PhysBody* physB) {
 
 	};
 

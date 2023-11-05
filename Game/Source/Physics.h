@@ -9,6 +9,9 @@ class b2Body;
 class b2Contact;
 class b2World;
 class b2FixtureDef;
+class b2RevoluteJoint;
+class b2PrismaticJoint;
+class b2WeldJoint;
 #elif _MSC_VER
 #include "Box2D/Box2D/Box2D.h"
 #endif
@@ -35,7 +38,8 @@ enum bodyType {
 enum class ColliderType {
 	PLAYER, 
 	ITEM,
-	PLATFORM, 
+	PLATFORM,
+	DEATH,
 	UNKNOWN
 	// ..
 };
@@ -81,9 +85,15 @@ public:
 	PhysBody* CreateCircle(int x, int y, int radious, bodyType type);
 	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, bodyType type);
 	PhysBody* CreateChain(int x, int y, int* points, int size, bodyType type);
+	b2RevoluteJoint* CreateRevoluteJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, float lowerAngle, float upperAngle, float referenceAngle, bool collideConnected, bool enableLimit);
+	b2PrismaticJoint* CreatePrismaticJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, b2Vec2 axys, float maxHeight, bool collideConnected, bool enableLimit);
+	b2WeldJoint* CreateWeldJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, float angle, bool collideConnected, bool enableLimit);
 	
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
+	void EndContact(b2Contact* contact);
+
+	float lookAt(b2Vec2 source, b2Vec2 target);
 
 	b2FixtureDef* CreateRectangleFixture(int width, int height, float friction);
 

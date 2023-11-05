@@ -43,6 +43,7 @@ bool Window::Awake(pugi::xml_node& config)
 		bool borderless = config.child("bordeless").attribute("value").as_bool(); // get from config
 		bool resizable = config.child("resizable").attribute("value").as_bool(); // get from config
 		bool fullscreen_window = config.child("fullscreen_window").attribute("value").as_bool(); // get from config
+		bool screen = config.child("screen").attribute("value").as_int(); // get from config
 
 		width = config.child("resolution").attribute("width").as_int(); //get from config 
 		height = config.child("resolution").attribute("height").as_int();; //get from config 
@@ -53,7 +54,7 @@ bool Window::Awake(pugi::xml_node& config)
 		if (resizable == true) flags |= SDL_WINDOW_RESIZABLE;
 		if (fullscreen_window == true) flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 
-		window = SDL_CreateWindow(app->GetTitle(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(app->GetTitle(), SDL_WINDOWPOS_CENTERED_DISPLAY( screen ), SDL_WINDOWPOS_CENTERED_DISPLAY( screen ), width, height, flags);
 
 		if (window == NULL)
 		{

@@ -34,6 +34,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+public:
+	bool winCondition = false;
+
 private:
 	SDL_Texture* img;
 	float textPosX, textPosY = 0;

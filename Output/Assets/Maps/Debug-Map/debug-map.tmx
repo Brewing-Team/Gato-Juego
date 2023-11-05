@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="90" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="82">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="90" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="86">
  <properties>
   <property name="Draw" type="bool" value="true"/>
  </properties>
@@ -24,19 +24,40 @@
    </wangset>
   </wangsets>
  </tileset>
- <tileset firstgid="257" name="CatsBlack16x16Tile" tilewidth="16" tileheight="16" tilecount="132" columns="4">
-  <image source="../../../../Assets/Third-Party/CatsBlack16x16/CatsBlack16x16Tile.png" width="64" height="528"/>
-  <tile id="12">
+ <tileset firstgid="257" name="Cat-1-Walk" tilewidth="50" tileheight="50" tilecount="8" columns="8">
+  <image source="Cat-1/Cat-1-Walk.png" width="400" height="50"/>
+  <tile id="0">
    <animation>
-    <frame tileid="12" duration="100"/>
-    <frame tileid="13" duration="100"/>
-    <frame tileid="14" duration="100"/>
-    <frame tileid="15" duration="100"/>
+    <frame tileid="0" duration="100"/>
+    <frame tileid="1" duration="100"/>
+    <frame tileid="2" duration="100"/>
+    <frame tileid="3" duration="100"/>
+    <frame tileid="4" duration="100"/>
+    <frame tileid="5" duration="100"/>
+    <frame tileid="6" duration="100"/>
+    <frame tileid="7" duration="100"/>
    </animation>
   </tile>
  </tileset>
- <tileset firstgid="389" name="Cat-1-Walk" tilewidth="50" tileheight="50" tilecount="8" columns="8">
-  <image source="../../../../Assets/Third-Party/Pet Cats Pack/Cat-1/Cat-1-Walk.png" width="400" height="50"/>
+ <tileset firstgid="265" name="Cat-1-Idle" tilewidth="50" tileheight="50" tilecount="10" columns="10">
+  <image source="Cat-1/Cat-1-Idle.png" width="500" height="50"/>
+  <tile id="0">
+   <animation>
+    <frame tileid="0" duration="100"/>
+    <frame tileid="1" duration="100"/>
+    <frame tileid="2" duration="100"/>
+    <frame tileid="3" duration="100"/>
+    <frame tileid="4" duration="100"/>
+    <frame tileid="5" duration="100"/>
+    <frame tileid="6" duration="100"/>
+    <frame tileid="7" duration="100"/>
+    <frame tileid="8" duration="100"/>
+    <frame tileid="9" duration="100"/>
+   </animation>
+  </tile>
+ </tileset>
+ <tileset firstgid="275" name="Cat-1-Run" tilewidth="50" tileheight="50" tilecount="8" columns="8">
+  <image source="Cat-1/Cat-1-Run.png" width="400" height="50"/>
   <tile id="0">
    <animation>
     <frame tileid="0" duration="100"/>
@@ -7264,7 +7285,7 @@
    <tile gid="115"/>
   </data>
  </layer>
- <objectgroup id="4" name="Collisions">
+ <objectgroup id="4" name="Collisions" class="platforms">
   <object id="2" type="rectangle" x="536.25" y="488.125" width="47.75" height="32"/>
   <object id="8" type="rectangle" x="487.8" y="376.333" width="32" height="127.333"/>
   <object id="10" type="rectangle" x="536.125" y="376.125" width="47.625" height="95.75"/>
@@ -7303,11 +7324,12 @@
    <polygon points="0,0 -16.3636,-0.181818 -16,-79.2727 -112.364,-79.0909 -112.182,-288 95.4545,-287.636 95.2727,-271.636 -95.8182,-271.091 -95.4545,-191.636 50.3636,-192.182 46.7273,-174 5.27273,-174.545 -96.3636,-175.091 -95.4545,-96.9091 -0.181818,-95.4545"/>
   </object>
  </objectgroup>
+ <objectgroup id="6" name="VoidColliders" class="death">
+  <object id="83" type="rectangle" x="-800" y="854.545" width="2763.64" height="496.97"/>
+ </objectgroup>
  <objectgroup id="5" name="Object Layer 2">
-  <object id="77" gid="389" x="525.182" y="585.545" width="50" height="50"/>
-  <object id="78" gid="389" x="621.364" y="473.727" width="50" height="50"/>
-  <object id="79" gid="389" x="538.75" y="298.125" width="50" height="50"/>
-  <object id="80" gid="269" x="562.545" y="216" width="16" height="16"/>
-  <object id="81" gid="269" x="550.909" y="376.182" width="16" height="16"/>
+  <object id="77" gid="257" x="525.182" y="585.545" width="50" height="50"/>
+  <object id="78" gid="257" x="621.364" y="473.727" width="50" height="50"/>
+  <object id="79" gid="257" x="538.75" y="298.125" width="50" height="50"/>
  </objectgroup>
 </map>
