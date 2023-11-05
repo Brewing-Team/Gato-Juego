@@ -407,6 +407,10 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
                     c1->ctype = ColliderType::DEATH;
                     c1->body->GetFixtureList()->SetSensor(true);
                 }
+                else if(SString(objectGroup.attribute("class").as_string())  == "limits")
+                {
+                    c1->ctype = ColliderType::LIMITS;
+                }
                 else
                 {
                     c1->ctype = ColliderType::UNKNOWN;
