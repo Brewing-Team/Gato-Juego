@@ -293,7 +293,7 @@ bool Player::Start() {
 	currentAnimation = &idleAnim;
 
 	//pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
-	pbody = app->physics->CreateRectangle(position.x, position.y, 25, 15, bodyType::DYNAMIC);
+	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 10, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
 
@@ -303,16 +303,16 @@ bool Player::Start() {
 	pbody->body->SetLinearDamping(1);
 
 	// Create player sensors
-	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 15, 5, bodyType::DYNAMIC);
+	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 10, 5, bodyType::DYNAMIC);
 	groundSensor->listener = this;
 
-	topSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 15, 5, bodyType::DYNAMIC);
+	topSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 10, 1, bodyType::DYNAMIC);
 	topSensor->listener = this;
 
-	leftSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 5, 10, bodyType::DYNAMIC);
+	leftSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 1, 5, bodyType::DYNAMIC);
 	leftSensor->listener = this;
 
-	rightSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 5, 10, bodyType::DYNAMIC);
+	rightSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 1, 5, bodyType::DYNAMIC);
 	rightSensor->listener = this;
 	
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
@@ -385,13 +385,13 @@ bool Player::Update(float dt)
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	// Update player sensors
-	CopyParentRotation(pbody, groundSensor, -17, -2, 270);
+	CopyParentRotation(pbody, groundSensor, -12, -2, 270);
 
-	CopyParentRotation(pbody, topSensor, -17, -2, 90);
+	CopyParentRotation(pbody, topSensor, -14, 0, 90);
 
-	CopyParentRotation(pbody, leftSensor, -2, -2, 0);
+	CopyParentRotation(pbody, leftSensor, 0, 1, 0);
 
-	CopyParentRotation(pbody, rightSensor, -2, -2, 180);	
+	CopyParentRotation(pbody, rightSensor, 0, 1, 180);	
 	
 	//SDL_Rect rect = { 0,0,50,50 };
 	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
