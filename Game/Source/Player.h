@@ -16,6 +16,9 @@ class Player : public Entity
 {
 public:
 
+	bool startTimer = true;
+	Timer timer;
+
 	EntityState StateMachine() override;
 	void Move() override;
 	void Jump() override;

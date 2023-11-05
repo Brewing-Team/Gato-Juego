@@ -80,54 +80,70 @@ void Player::Jump() {
 }
 
 void Player::Climb() {
-
-	if (isCollidingRight) {
-		angle = -90;
-		flip = SDL_FLIP_NONE;
+	
+	if (startTimer) {
+		timer.Start();
+		startTimer = false;
 	}
 
-	if (isCollidingLeft) {
-		angle = 90;
-		flip = SDL_FLIP_HORIZONTAL;
-	}
+	LOG("TIMER: %d", timer.ReadSec());
 
-	if(angle == -90){
-		pbody->body->ApplyForceToCenter({ 1, 0 }, true);
+	if (timer.ReadSec() <= 5) {
+		if (isCollidingRight) {
+			angle = -90;
+			flip = SDL_FLIP_NONE;
+		}
+
+		if (isCollidingLeft) {
+			angle = 90;
+			flip = SDL_FLIP_HORIZONTAL;
+		}
+
+		if (angle == -90) {
+			pbody->body->ApplyForceToCenter({ 1, 0 }, true);
+		}
+		else {
+			pbody->body->ApplyForceToCenter({ -1, 0 }, true);
+		}
+
+		pbody->body->ApplyForceToCenter({ 0, -2.0f }, true);
+
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+
+			if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
+			{
+				float impulse = pbody->body->GetMass() * 1;
+				pbody->body->ApplyLinearImpulse({ 0, -impulse }, pbody->body->GetWorldCenter(), true);
+			}
+
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+
+			if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
+			{
+				float impulse = pbody->body->GetMass() * 1;
+				pbody->body->ApplyLinearImpulse({ 0, impulse }, pbody->body->GetWorldCenter(), true);
+			}
+
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+
+			float impulse = pbody->body->GetMass() * 5;
+			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_sin(angle), 0 }, pbody->body->GetWorldCenter(), true);
+
+			flip = (flip == SDL_FLIP_HORIZONTAL) ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+
+		}
+	
 	} else {
-		pbody->body->ApplyForceToCenter({ -1, 0 }, true);
-	}
-
-	pbody->body->ApplyForceToCenter({ 0, -2.0f }, true);
-
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-
-		if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
-		{
-			float impulse = pbody->body->GetMass() * 1;
-			pbody->body->ApplyLinearImpulse({ 0, -impulse }, pbody->body->GetWorldCenter(), true);
-		}
+		
+		startTimer = true;
+		state = EntityState::IDLE;
 
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-
-		if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
-		{
-			float impulse = pbody->body->GetMass() * 1;
-			pbody->body->ApplyLinearImpulse({ 0, impulse }, pbody->body->GetWorldCenter(), true);
-		}
-
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-		float impulse = pbody->body->GetMass() * 5;
-		pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_sin(angle), 0 }, pbody->body->GetWorldCenter(), true);
-
-		flip = (flip == SDL_FLIP_HORIZONTAL) ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
-	}
-
-	
-	
 }
 
 EntityState Player::StateMachine() {
@@ -318,6 +334,8 @@ bool Player::Awake() {
 }
 
 bool Player::Start() {
+
+	timer = Timer();
 
 	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)
 	walkAnim = *app->map->mapData.animations[0];
