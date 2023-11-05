@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="90" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="82">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="90" height="40" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="86">
  <properties>
   <property name="Draw" type="bool" value="true"/>
  </properties>
@@ -7285,7 +7285,7 @@
    <tile gid="115"/>
   </data>
  </layer>
- <objectgroup id="4" name="Collisions">
+ <objectgroup id="4" name="Collisions" class="platforms">
   <object id="2" type="rectangle" x="536.25" y="488.125" width="47.75" height="32"/>
   <object id="8" type="rectangle" x="487.8" y="376.333" width="32" height="127.333"/>
   <object id="10" type="rectangle" x="536.125" y="376.125" width="47.625" height="95.75"/>
@@ -7323,6 +7323,10 @@
   <object id="75" type="polygon" x="632.182" y="375.455">
    <polygon points="0,0 -16.3636,-0.181818 -16,-79.2727 -112.364,-79.0909 -112.182,-288 95.4545,-287.636 95.2727,-271.636 -95.8182,-271.091 -95.4545,-191.636 50.3636,-192.182 46.7273,-174 5.27273,-174.545 -96.3636,-175.091 -95.4545,-96.9091 -0.181818,-95.4545"/>
   </object>
+ </objectgroup>
+ <objectgroup id="6" name="VoidColliders" class="death">
+  <object id="83" type="rectangle" x="-800" y="854.545" width="2763.64" height="496.97"/>
+  <object id="85" type="rectangle" x="286.667" y="541.333" width="90" height="74.6667"/>
  </objectgroup>
  <objectgroup id="5" name="Object Layer 2">
   <object id="77" gid="257" x="525.182" y="585.545" width="50" height="50"/>
