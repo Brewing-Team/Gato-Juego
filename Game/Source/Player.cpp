@@ -137,7 +137,7 @@ EntityState Player::StateMachine() {
 
 			setIdleAnimation();
 
-			if (!isAlive) {
+			if (!isAlive and !godMode) {
 				this->state = EntityState::DEAD;
 			}
 
@@ -161,7 +161,7 @@ EntityState Player::StateMachine() {
 			setJumpAnimation();
 			setMoveAnimation();
 
-			if (!isAlive) {
+			if (!isAlive and !godMode) {
 				this->state = EntityState::DEAD;
 			}
 
@@ -186,7 +186,7 @@ EntityState Player::StateMachine() {
 
 			setClimbAnimation();
 
-			if (!isAlive) {
+			if (!isAlive and !godMode) {
 				this->state = EntityState::DEAD;
 			}
 
@@ -215,10 +215,13 @@ EntityState Player::StateMachine() {
 
 			// TODO resetear mundo, restar vidas, etc
 
-			//hacer esto mejor, con un spawn point y tal pero de momento esto vale
-			position.x = parameters.attribute("x").as_int();
-			position.y = parameters.attribute("y").as_int() - 50;
+			position = spawnPosition;
+
 			pbody->body->SetTransform({ PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y) }, 0);
+
+			// reset player physics
+			pbody->body->SetAwake(false);
+			pbody->body->SetAwake(true);
 
 			isAlive = true;
 			state = EntityState::IDLE;
@@ -246,6 +249,7 @@ bool Player::Awake() {
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
+	spawnPosition = position;
 
 	return true;
 }
@@ -296,49 +300,7 @@ bool Player::Start() {
 bool Player::Update(float dt)
 {
 
-	// DEBUG TOOLS ------------------------------------------------
-
-	// Resetart Level 1
-	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
-	}
-
-	// Resetart Level 2
-	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
-	}
-
-	// Restart current level
-	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
-	}
-
-	// Toggle no clip
-	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
-		freeCam = !freeCam;
-	}
-	
-	// View colliders / logic
-	if (app->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
-	}
-
-	// Activate or deactivate GOD mode
-	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
-		debug = !debug;
-		// TODO debug
-	}
-
-	// Activate or deactivate FPS cap
-	if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
-		fpsLimiter = !fpsLimiter;
-	}
-
-	// END OF DEBUG TOOLS -----------------------------------------
+	debugTools();
 
 	// Update player state
 
@@ -374,6 +336,58 @@ bool Player::Update(float dt)
 	return true;
 }
 
+void Player::debugTools()
+{
+	// DEBUG TOOLS ------------------------------------------------
+
+	// Toggle on/off debug mode + View colliders / logic
+	if (app->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+		debug = !debug;
+	}
+
+	// Teleport Menu Level
+	if (app->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+		// Resetart Level 1
+		position = spawnPosition;
+		// Resetart Level 2
+		// TODO teleport player to the spawnPosition of the next level
+		position = spawnPosition;
+	}
+
+	// Restart current level (Kill player)
+	if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+		isAlive = false;
+	}
+
+	// Toggle free cam mode on/off
+	if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+		freeCam = !freeCam;
+	}
+
+	// Toggle god mode on/off
+	if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
+		godMode = !godMode;
+	}
+
+	// Toggle no-clip mode on/off
+	if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
+		noClip = !noClip;
+		if (noClip) {
+			this->pbody->body->GetFixtureList()->SetSensor(true);
+		} else {
+			this->pbody->body->GetFixtureList()->SetSensor(false);
+		}
+		
+	}
+
+	// Toggle FPS cap on/off
+	if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
+		fpsLimiter = !fpsLimiter;
+	}
+
+	// END OF DEBUG TOOLS -----------------------------------------
+}
+
 void Player::CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset)
 {
 	
@@ -394,21 +408,22 @@ bool Player::CleanUp() {
 
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
-	if(physA->body->GetFixtureList()->IsSensor()) {
+	if (physA->body->GetFixtureList()->IsSensor()) {
 		if (physB->ctype == ColliderType::PLATFORM) {
 			if (physA == groundSensor) {
 				LOG("Ground collision");
 				isGrounded = true;
-			} else if (physA == leftSensor) {
+			}
+			else if (physA == leftSensor) {
 				LOG("Left collision");
 				isCollidingLeft = true;
-			} else if (physA == rightSensor) {
+			}
+			else if (physA == rightSensor) {
 				LOG("Right collision");
 				isCollidingRight = true;
 			}
 		}
 	}
-
 	switch (physB->ctype) {
 
 	case ColliderType::ITEM:
@@ -430,22 +445,26 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 
 	}
+	
 }
 
 void Player::EndCollision(PhysBody* physA, PhysBody* physB){
 
-	if(physA->body->GetFixtureList()->IsSensor()) {
+	if (physA->body->GetFixtureList()->IsSensor()) {
 		if (physB->ctype == ColliderType::PLATFORM) {
 			if (physA == groundSensor) {
 				LOG("Ground collision");
 				isGrounded = false;
-			} else if (physA == leftSensor) {
+			}
+			else if (physA == leftSensor) {
 				LOG("Left collision");
 				isCollidingLeft = false;
-			} else if (physA == rightSensor) {
+			}
+			else if (physA == rightSensor) {
 				LOG("Right collision");
 				isCollidingRight = false;
 			}
 		}
 	}
+	
 }

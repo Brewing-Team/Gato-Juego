@@ -8,11 +8,11 @@
 #include "Render.h"
 #include "Player.h"
 #include "Window.h"
-#include <Box2D/Dynamics/Contacts/b2Contact.h>
 
 #ifdef __linux__
 #include <SDL_keycode.h>
 #include <Box2D/Box2D.h>
+#include <Box2D/Dynamics/Contacts/b2Contact.h>
 #elif _MSC_VER
 #include "SDL/include/SDL_keycode.h"
 #include "Box2D/Box2D/Box2D.h"

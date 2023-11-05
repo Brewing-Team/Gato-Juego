@@ -129,6 +129,9 @@
     <ClInclude Include="Source\Window.h">
       <Filter>Game\Modules\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Animation.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

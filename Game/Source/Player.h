@@ -31,6 +31,8 @@ public:
 
 	bool Update(float dt);
 
+	void debugTools();
+
 	bool CleanUp();
 
 	void OnCollision(PhysBody* physA, PhysBody* physB);
@@ -54,9 +56,17 @@ public:
 	Animation* currentAnimation = nullptr;
 
 	int isAlive = true;
+
+	// Check if the player has won
+	int win = false;
+
+	// debug attributes
+	bool godMode = false;
+	bool noClip = false;
 	
 	float maxSpeed = 2.0f;
 	const char* texturePath;
+	iPoint spawnPosition;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
 	PhysBody* groundSensor;

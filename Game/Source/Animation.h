@@ -3,8 +3,8 @@
 
 #include "App.h"
 #include "SString.h"
-#include <SDL_render.h>
 #ifdef __linux__
+#include <SDL_render.h>
 #include "SDL2/SDL_rect.h"
 #elif _MSC_VER
 #include "SDL/include/SDL_rect.h"
