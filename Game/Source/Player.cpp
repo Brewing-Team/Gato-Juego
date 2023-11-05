@@ -319,9 +319,6 @@ bool Player::Awake() {
 
 bool Player::Start() {
 
-	//initilize textures
-	texture = app->tex->Load(texturePath);
-
 	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)
 	walkAnim = *app->map->mapData.animations[0];
 	walkAnim.speed = 8.0f;
@@ -407,6 +404,8 @@ void Player::debugTools()
 	// DEBUG TOOLS ------------------------------------------------
 
 	if (debug) {
+		// Draw debug menu
+
 		//app->render->DrawTexture(debugMenuTexture, position.x, position.y);
 		//app->render->DrawTexture(debugMenuTexture, app->render->camera.x, app->render->camera.y);
 	}
@@ -484,6 +483,14 @@ void Player::moveToSpawnPoint()
 }
 
 bool Player::CleanUp() {
+
+	app->tex->UnLoad(debugMenuTexture);
+	app->tex->UnLoad(texture);
+
+
+	// Theres no need to unload audio fx because they are unloaded when te audio module is cleaned up
+	// app->audio->UnloadFx(pickCoinFxId);
+
 	return true;
 }
 

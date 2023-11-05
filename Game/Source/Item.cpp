@@ -52,5 +52,7 @@ bool Item::Update(float dt)
 
 bool Item::CleanUp()
 {
+
+	app->tex->UnLoad(texture);
 	return true;
 }
