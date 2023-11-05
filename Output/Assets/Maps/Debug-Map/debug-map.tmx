@@ -7326,7 +7326,6 @@
  </objectgroup>
  <objectgroup id="6" name="VoidColliders" class="death">
   <object id="83" type="rectangle" x="-800" y="854.545" width="2763.64" height="496.97"/>
-  <object id="85" type="rectangle" x="286.667" y="541.333" width="90" height="74.6667"/>
  </objectgroup>
  <objectgroup id="5" name="Object Layer 2">
   <object id="77" gid="257" x="525.182" y="585.545" width="50" height="50"/>
