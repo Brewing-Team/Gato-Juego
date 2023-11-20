@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="164" height="176" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="225">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="164" height="176" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="226">
  <properties>
   <property name="Draw" type="bool" value="true"/>
  </properties>
@@ -86744,6 +86744,9 @@
   <object id="99" type="rectangle" x="1337.83" y="1141" width="225.333" height="30.6667"/>
   <object id="102" type="rectangle" x="661.667" y="1360.67" width="226" height="31"/>
   <object id="221" type="rectangle" x="1096.67" y="1920" width="175.333" height="209.333"/>
+ </objectgroup>
+ <objectgroup id="9" name="WinCollider" class="win">
+  <object id="225" type="rectangle" x="675.667" y="785.667" width="87" height="28"/>
  </objectgroup>
  <objectgroup id="7" name="Limits" class="limits">
   <object id="88" type="rectangle" x="610" y="3.0303" width="51.5152" height="2809.09"/>

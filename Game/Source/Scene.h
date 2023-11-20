@@ -36,7 +36,6 @@ public:
 
 public:
 	bool winCondition = false;
-	Player* player;
 
 private:
 	SDL_Texture* img;
@@ -44,7 +43,7 @@ private:
 	uint texW, texH;
 	uint windowW, windowH;
 	
-
+	Player* player;
 };
 
 #endif // __SCENE_H__

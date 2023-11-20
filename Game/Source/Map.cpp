@@ -60,16 +60,16 @@ bool Map::Update(float dt)
     while (mapLayerItem != NULL) {
 
         if (mapLayerItem->data->properties.GetProperty("Draw") != NULL && mapLayerItem->data->properties.GetProperty("Draw")->value) {
-            
-            int TILES_TO_LOAD = 17 * app->win->GetScale();
 
-            iPoint playerPos = app->scene->player->position;
+            iPoint cameraPosMap = WorldToMap((int)(app->render->camera.x / (float)app->win->GetScale()), (int)(app->render->camera.y / (float)app->win->GetScale()));
 
-            int leftClipping = MAX((playerPos.x / mapData.tileWidth) - TILES_TO_LOAD, 0);
-            int rightClipping = MIN((playerPos.x / mapData.tileWidth) + TILES_TO_LOAD, mapLayerItem->data->width);
+            int leftClipping = MAX(cameraPosMap.x, 0);
+            int rightClipping = MIN(cameraPosMap.x + app->render->camera.w, mapLayerItem->data->width);
             
-            int topClipping = MAX((playerPos.y / mapData.tileWidth) - TILES_TO_LOAD, 0);
-            int bottomClipping = MIN((playerPos.y / mapData.tileWidth) + TILES_TO_LOAD, mapLayerItem->data->height);
+            int topClipping = MAX(cameraPosMap.y, 0);
+            int bottomClipping = MIN(cameraPosMap.y + app->render->camera.h, mapLayerItem->data->height);
+
+            LOG("cameraPosMap: (%d, %d)", cameraPosMap.x, cameraPosMap.y);
 
             mapLayerItem->data->width;
 
@@ -110,9 +110,10 @@ iPoint Map::MapToWorld(int x, int y) const
 
 iPoint Map::WorldToMap(int x, int y) 
 {
-    iPoint ret(0, 0);
+    iPoint ret;
 
-    //
+    ret.x = x / mapData.tileWidth;
+    ret.y = y / mapData.tileHeight;
 
     return ret;
 }
