@@ -62,19 +62,23 @@ bool Map::Update(float dt)
         if (mapLayerItem->data->properties.GetProperty("Draw") != NULL && mapLayerItem->data->properties.GetProperty("Draw")->value) {
 
             iPoint cameraPosMap = WorldToMap((int)(-app->render->camera.x), (int)(-app->render->camera.y));
-            //cameraPosMap = { 80,80 };
-
+            //cameraPosMap = { 20,40 };
 
             int leftClipping = MAX(cameraPosMap.x, 0);
-            int rightClipping = MIN((cameraPosMap.x + (int)(app->render->camera.w / mapData.tileWidth)), mapLayerItem->data->width);
+            int rightClipping = MIN(((cameraPosMap.x + (int)(app->render->camera.w / mapData.tileWidth) / app->win->GetScale()) + clippingMargin), mapLayerItem->data->width);
             
             int topClipping = MAX(cameraPosMap.y, 0);
-            int bottomClipping = MIN((cameraPosMap.y + (int)(app->render->camera.h / mapData.tileHeight)), mapLayerItem->data->height);
+            int bottomClipping = MIN(((cameraPosMap.y + (int)(app->render->camera.h / mapData.tileHeight) / app->win->GetScale()) + clippingMargin), mapLayerItem->data->height);
 
-            LOG("cameraPosMap: (%d, %d)", cameraPosMap.x, cameraPosMap.y);
-            LOG("%d, %d, %d, %d", leftClipping, rightClipping, topClipping, bottomClipping);
 
-            mapLayerItem->data->width;
+            // NO CLIPPING (DEBUG PURPOUSE)
+
+            /*
+            leftClipping = 0;
+            rightClipping = mapLayerItem->data->width;
+            topClipping = 0;
+            bottomClipping = mapLayerItem->data->height;
+            */
 
             for (int x = leftClipping; x < rightClipping; x++)
             {
@@ -86,11 +90,37 @@ bool Map::Update(float dt)
                     SDL_Rect r = tileset->GetTileRect(gid);
                     iPoint pos = MapToWorld(x, y);
 
+
+                    // TODO 
+                    // HACER QUE EL PARALAX NO TENGA DESFASE DE COORDENADAS POR LA ESCALA
+                    /*
+                    
+                    if (mapLayerItem->data->parallaxFactor == 1.0f)
+                    {
+                        app->render->DrawTexture(tileset->texture,
+                            pos.x,
+                            pos.y,
+                            &r,
+                            mapLayerItem->data->parallaxFactor);
+                    }
+                    else
+                    {
+                        app->render->DrawTexture(tileset->texture,
+                            pos.x * mapLayerItem->data->parallaxFactor,
+                            pos.y * mapLayerItem->data->parallaxFactor,
+                            &r,
+                            mapLayerItem->data->parallaxFactor);
+                    }
+                    
+                    */
+                    
                     app->render->DrawTexture(tileset->texture,
                         pos.x,
                         pos.y,
                         &r,
-                        1.0f);
+                        mapLayerItem->data->parallaxFactor);
+                        
+                        
                 }
             }
         }

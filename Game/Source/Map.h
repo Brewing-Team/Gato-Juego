@@ -114,8 +114,8 @@ struct MapData
 	List<Animation*> animations;
 };
 
-class Map : public Module
-{
+class Map : public Module {
+
 public:
 
     Map();
@@ -142,6 +142,9 @@ public:
 	iPoint WorldToMap(int x, int y);
 
 private:
+
+	// clipping margin to prevent seeing the tiles generating in the border of the screen
+	const int clippingMargin = 1;
 
 	bool LoadMap(pugi::xml_node mapFile);
 	bool LoadTileSet(pugi::xml_node mapFile);
