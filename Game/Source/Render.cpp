@@ -112,8 +112,8 @@ void Render::SetBackgroundColor(SDL_Color color)
 
 void Render::SetViewPort(const SDL_Rect& rect)
 {	
-
-	SDL_RenderSetClipRect(renderer, &rect);
+	//SDL_RenderSetClipRect
+	SDL_RenderSetViewport(renderer, &rect);
 	
 }
 
