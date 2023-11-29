@@ -79,6 +79,8 @@ bool Map::Update(float dt)
             topClipping = 0;
             bottomClipping = mapLayerItem->data->height;
             */
+            
+
 
             for (int x = leftClipping; x < rightClipping; x++)
             {
@@ -113,13 +115,13 @@ bool Map::Update(float dt)
                     }
                     
                     */
-                    
+
                     app->render->DrawTexture(tileset->texture,
                         pos.x,
                         pos.y,
                         &r,
-                        mapLayerItem->data->parallaxFactor);
-                        
+                        1.0f);
+                      
                         
                 }
             }

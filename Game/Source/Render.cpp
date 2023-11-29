@@ -73,6 +73,14 @@ bool Render::Start()
 bool Render::PreUpdate()
 {
 	SDL_RenderClear(renderer);
+
+	SetViewPort({
+		0,
+		0,
+		camera.w,
+		camera.h
+		});
+
 	return true;
 }
 
@@ -84,8 +92,10 @@ bool Render::Update(float dt)
 
 bool Render::PostUpdate()
 {
+	
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.b, background.a);
 	SDL_RenderPresent(renderer);
+	
 	return true;
 }
 
@@ -103,8 +113,10 @@ void Render::SetBackgroundColor(SDL_Color color)
 }
 
 void Render::SetViewPort(const SDL_Rect& rect)
-{
-	SDL_RenderSetViewport(renderer, &rect);
+{	
+
+	SDL_RenderSetClipRect(renderer, &rect);
+	
 }
 
 void Render::ResetViewPort()
