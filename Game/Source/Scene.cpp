@@ -48,6 +48,7 @@ bool Scene::Awake(pugi::xml_node& config)
 	app->render->camera.useInterpolation = true;
 	app->render->camera.lerpSpeed = 4.0f;
 	app->render->camera.offset = { 0,0 };
+	app->LoadRequest();
 
 	return ret;
 }

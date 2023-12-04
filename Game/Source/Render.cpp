@@ -279,3 +279,24 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 
 	return ret;
 }
+
+// L14: TODO 6: Implement a method to load the state
+// for now load camera's x and y
+bool Render::LoadState(pugi::xml_node node) {
+
+	camera.x = node.child("camera").attribute("x").as_int();
+	camera.y = node.child("camera").attribute("y").as_int();
+
+	return true;
+}
+
+// L14: TODO 8: Create a method to save the state of the renderer
+// using append_child and append_attribute
+bool Render::SaveState(pugi::xml_node node) {
+
+	pugi::xml_node camNode = node.append_child("camera");
+	camNode.append_attribute("x").set_value(camera.x);
+	camNode.append_attribute("y").set_value(camera.y);
+
+	return true;
+}

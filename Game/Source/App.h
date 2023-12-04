@@ -55,6 +55,12 @@ public:
 	const char* GetTitle() const;
 	const char* GetOrganization() const;
 
+	// Request a save data in an XML file 
+	bool LoadRequest();
+
+	// Request to load data from XML file 
+	bool SaveRequest();
+
 private:
 
 	// Load config file
@@ -74,6 +80,12 @@ private:
 
 	// Call modules after each loop iteration
 	bool PostUpdate();
+
+	// Reads XML file and loads the data
+	bool LoadFromFile();
+
+	// Save XML file
+	bool SaveFromFile();
 
 public:
 
@@ -120,6 +132,9 @@ private:
 	uint32_t maxFrameDuration = 16;
 
 	float maxFps = 30; // TODO hacer esto variable
+
+	bool loadRequest = false;
+	bool saveRequest = false;
 
 };
 

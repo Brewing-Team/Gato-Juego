@@ -474,6 +474,10 @@ void Player::debugTools()
 		if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
 			fpsLimiter = !fpsLimiter;
 		}
+
+		// TODO cambiar teclas
+		if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) app->SaveRequest();
+		if (app->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN) app->LoadRequest();
 	}
 
 	// END OF DEBUG TOOLS -----------------------------------------
