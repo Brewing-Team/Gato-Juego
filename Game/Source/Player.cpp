@@ -146,6 +146,16 @@ void Player::Climb() {
 
 }
 
+bool Player::SaveState(pugi::xml_node& node) {
+
+	pugi::xml_node playerPos = node.append_child("player");
+	playerPos.append_attribute("x").set_value(this->position.x);
+	playerPos.append_attribute("y").set_value(this->position.y);
+
+	return true;
+
+}
+
 EntityState Player::StateMachine() {
 
 	switch (this->state) {

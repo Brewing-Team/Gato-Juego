@@ -24,6 +24,8 @@ public:
 	void Jump() override;
 	void Climb() override;
 
+	bool SaveState(pugi::xml_node& node) override;
+
 	Player();
 	
 	virtual ~Player();
