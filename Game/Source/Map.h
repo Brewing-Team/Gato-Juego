@@ -2,6 +2,7 @@
 #define __MAP_H__
 
 #include "Module.h"
+#include "PathFinding.h"
 #include "List.h"
 #include "Point.h"
 
@@ -11,6 +12,15 @@
 #elif _MSC_VER
 #include "PugiXml\src\pugixml.hpp"
 #endif
+
+#include "Defs.h"
+#include "Log.h"
+
+enum MapOrientation
+{
+	ORTOGRAPHIC = 0,
+	ISOMETRIC
+};
 
 class Animation;
 
@@ -79,7 +89,7 @@ struct Properties
 struct MapLayer
 {
 	SString	name;
-	int id; 
+	int id;
 	int width;
 	int height;
 	float parallaxFactor;
@@ -118,13 +128,13 @@ class Map : public Module {
 
 public:
 
-    Map();
+	Map();
 
-    // Destructor
-    virtual ~Map();
+	// Destructor
+	virtual ~Map();
 
-    // Called before render is available
-    bool Awake(pugi::xml_node& conf);
+	// Called before render is available
+	bool Awake(pugi::xml_node& conf);
 
 	// Called before the first frame
 	bool Start();
@@ -132,14 +142,17 @@ public:
 	// Called each loop iteration
 	bool Update(float dt);
 
-    // Called before quitting
-    bool CleanUp();
+	// Called before quitting
+	bool CleanUp();
 
-    // Load new map
+	// Load new map
 	bool Load(SString mapFileName);
 
 	iPoint MapToWorld(int x, int y) const;
 	iPoint WorldToMap(int x, int y);
+
+	// L13: Create navigation map for pathfinding
+    void CreateNavigationMap(int& width, int& height, uchar** buffer) const;
 
 private:
 
@@ -155,15 +168,17 @@ private:
 	TileSet* GetTilesetFromTileId(int gid) const;
 	bool LoadProperties(pugi::xml_node& node, Properties& properties);
 
-public: 
+public:
 
 	MapData mapData;
 	SString name;
 	SString path;
+	PathFinding* pathfinding;
 
 private:
-
 	bool mapLoaded;
+	MapLayer* navigationLayer;
+	int blockedGid = 49; //!!!! make sure that you assign blockedGid according to your map
 };
 
 #endif // __MAP_H__

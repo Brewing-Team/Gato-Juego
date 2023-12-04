@@ -36,7 +36,7 @@ public:
 	// Operators
 	VALUE& operator[](unsigned int index)
 	{
-		ASSERT(index < numElements);
+		assert(index < numElements);
 		return data[index];
 	}
 
@@ -48,10 +48,10 @@ public:
 
 	const DynArray<VALUE>& operator+= (const DynArray<VALUE>& array)
 	{
-		if(numElements + array.numElements > memCapacity)
+		if (numElements + array.numElements > memCapacity)
 			Alloc(numElements + array.numElements);
 
-		for(uint i = 0; i < array.numElements; ++i)
+		for (uint i = 0; i < array.numElements; ++i)
 			data[numElements++] = array.data[i];
 
 		return(*this);
@@ -60,7 +60,7 @@ public:
 	// Data Management
 	void PushBack(const VALUE& element)
 	{
-		if(numElements >= memCapacity)
+		if (numElements >= memCapacity)
 		{
 			Alloc(memCapacity + DYN_ARRAY_BLOCK_SIZE);
 		}
@@ -70,7 +70,7 @@ public:
 
 	bool Pop(VALUE& result)
 	{
-		if(numElements > 0)
+		if (numElements > 0)
 		{
 			result = data[--numElements];
 			return true;
@@ -85,19 +85,19 @@ public:
 
 	bool Insert(const VALUE& element, unsigned int position)
 	{
-		if(position > numElements)
+		if (position > numElements)
 			return false;
 
-		if(position == numElements)
+		if (position == numElements)
 		{
 			PushBack(element);
 			return true;
 		}
 
-		if(numElements + 1 > memCapacity)
+		if (numElements + 1 > memCapacity)
 			Alloc(memCapacity + DYN_ARRAY_BLOCK_SIZE);
 
-		for(unsigned int i = numElements; i > position; --i)
+		for (unsigned int i = numElements; i > position; --i)
 		{
 			data[i] = data[i - 1];
 		}
@@ -110,13 +110,13 @@ public:
 
 	bool Insert(const DynArray<VALUE>& array, unsigned int position)
 	{
-		if(position > numElements)
+		if (position > numElements)
 			return false;
 
-		if(numElements + array.numElements > memCapacity)
+		if (numElements + array.numElements > memCapacity)
 			Alloc(numElements + array.numElements + 1);
 
-		for(unsigned int i = position; i < position + array.numElements; ++i)
+		for (unsigned int i = position; i < position + array.numElements; ++i)
 		{
 			data[i + array.numElements] = data[i];
 			data[i] = array[i - position];
@@ -130,7 +130,7 @@ public:
 	{
 		VALUE* result = NULL;
 
-		if(index < numElements)
+		if (index < numElements)
 			return result = &data[index];
 
 		return result;
@@ -140,7 +140,7 @@ public:
 	{
 		VALUE* result = NULL;
 
-		if(index < numElements)
+		if (index < numElements)
 			return result = &data[index];
 
 		return result;
@@ -163,13 +163,13 @@ public:
 		int ret = 0;
 		bool swapped = true;
 
-		while(swapped)
+		while (swapped)
 		{
 			swapped = false;
-			for(unsigned int i = 0; i < numElements - 2; ++i)
+			for (unsigned int i = 0; i < numElements - 2; ++i)
 			{
 				++ret;
-				if(data[i] > data[i + 1])
+				if (data[i] > data[i + 1])
 				{
 					SWAP(data[i], data[i + 1]);
 					swapped = true;
@@ -186,14 +186,14 @@ public:
 		unsigned int count;
 		unsigned int last = numElements - 2;
 
-		while(last > 0)
+		while (last > 0)
 		{
 			count = last;
 			last = 0;
-			for(unsigned int i = 0; i < count; ++i)
+			for (unsigned int i = 0; i < count; ++i)
 			{
 				++ret;
-				if(data[i] > data[i + 1])
+				if (data[i] > data[i + 1])
 				{
 					SWAP(data[i], data[i + 1]);
 					last = i;
@@ -210,15 +210,15 @@ public:
 		int gap = numElements - 1;
 		float shrink = 1.3f;
 
-		while(swapped || gap > 1)
+		while (swapped || gap > 1)
 		{
 			gap = MAX(1, gap / shrink);
 
 			swapped = false;
-			for(unsigned int i = 0; i + gap < numElements - 1; ++i)
+			for (unsigned int i = 0; i + gap < numElements - 1; ++i)
 			{
 				++ret;
-				if(data[i] > data[i + gap])
+				if (data[i] > data[i + gap])
 				{
 					SWAP(data[i], data[i + gap]);
 					swapped = true;
@@ -232,9 +232,9 @@ public:
 	void Flip()
 	{
 		VALUE* start = &data[0];
-		VALUE* end = &data[numElements-1];
+		VALUE* end = &data[numElements - 1];
 
-		while(start < end) SWAP(*start++, *end--);
+		while (start < end) SWAP(*start++, *end--);
 	}
 
 private:
@@ -249,9 +249,9 @@ private:
 
 		numElements = MIN(memCapacity, numElements);
 
-		if(tmp != NULL)
+		if (tmp != NULL)
 		{
-			for(unsigned int i = 0; i < numElements; ++i) data[i] = tmp[i];
+			for (unsigned int i = 0; i < numElements; ++i) data[i] = tmp[i];
 
 			delete[] tmp;
 		}

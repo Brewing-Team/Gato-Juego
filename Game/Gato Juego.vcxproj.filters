@@ -52,6 +52,9 @@
     <ClCompile Include="Source\Window.cpp">
       <Filter>Game\Modules\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Pathfinding.cpp">
+      <Filter>Game\Modules\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Defs.h">
@@ -130,6 +133,12 @@
       <Filter>Game\Modules\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Animation.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PQueue.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Pathfinding.h">
       <Filter>Game\Modules\Core</Filter>
     </ClInclude>
   </ItemGroup>
