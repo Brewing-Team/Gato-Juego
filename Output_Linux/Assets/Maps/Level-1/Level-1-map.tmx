@@ -71,6 +71,17 @@
    </animation>
   </tile>
  </tileset>
+ <tileset firstgid="283" name="owl-1-idle" tilewidth="47" tileheight="33" tilecount="4" columns="4">
+  <image source="Owl-1/owl-1-idle.png" width="188" height="33"/>
+  <tile id="0">
+   <animation>
+    <frame tileid="0" duration="500"/>
+    <frame tileid="1" duration="500"/>
+    <frame tileid="2" duration="500"/>
+    <frame tileid="3" duration="500"/>
+   </animation>
+  </tile>
+ </tileset>
  <layer id="1" name="Background" width="164" height="176" parallaxx="0.5" parallaxy="0.5">
   <properties>
    <property name="Draw" type="bool" value="true"/>
