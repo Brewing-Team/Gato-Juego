@@ -355,7 +355,7 @@ bool Player::Awake() {
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
 	spawnPosition = position;
-
+	
 	return true;
 }
 
@@ -364,11 +364,11 @@ bool Player::Start() {
 	timer = Timer();
 
 	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)
-	walkAnim = *app->map->mapData.animations[0];
+	walkAnim = *app->map->GetAnimByName("Cat-1-Walk");
 	walkAnim.speed = 8.0f;
-	idleAnim = *app->map->mapData.animations[1];
+	idleAnim = *app->map->GetAnimByName("Cat-1-Idle");
 	idleAnim.speed = 8.0f;
-	jumpAnim = *app->map->mapData.animations[2];
+	jumpAnim = *app->map->GetAnimByName("Cat-1-Run");
 	jumpAnim.speed = 8.0f;
 
 	currentAnimation = &idleAnim;
