@@ -33,6 +33,12 @@ public:
 
 	void AddEntity(Entity* entity);
 
+	// Called when we want to load data from XML
+	bool LoadState(pugi::xml_node node);
+
+	// Called when we want to save data from XML
+	bool SaveState(pugi::xml_node node);
+
 public:
 
 	List<Entity*> entities;

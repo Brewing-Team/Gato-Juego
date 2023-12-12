@@ -25,6 +25,7 @@ public:
 	void Climb() override;
 
 	bool SaveState(pugi::xml_node& node) override;
+	bool LoadState(pugi::xml_node& node) override;
 
 	Player();
 	

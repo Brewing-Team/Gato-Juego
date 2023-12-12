@@ -148,12 +148,24 @@ void Player::Climb() {
 
 bool Player::SaveState(pugi::xml_node& node) {
 
-	pugi::xml_node playerPos = node.append_child("player");
-	playerPos.append_attribute("x").set_value(this->position.x);
-	playerPos.append_attribute("y").set_value(this->position.y);
+	pugi::xml_node playerAttributes = node.append_child("player");
+	playerAttributes.append_attribute("x").set_value(this->position.x);
+	playerAttributes.append_attribute("y").set_value(this->position.y);
+	playerAttributes.append_attribute("angle").set_value(this->angle);
 
 	return true;
 
+}
+
+bool Player::LoadState(pugi::xml_node& node)
+{
+	pbody->body->SetTransform({ PIXEL_TO_METERS(node.child("player").attribute("x").as_int()), PIXEL_TO_METERS(node.child("player").attribute("y").as_int()) }, node.child("player").attribute("angle").as_int());
+
+	// reset player physics
+	pbody->body->SetAwake(false);
+	pbody->body->SetAwake(true);
+
+	return true;
 }
 
 EntityState Player::StateMachine() {

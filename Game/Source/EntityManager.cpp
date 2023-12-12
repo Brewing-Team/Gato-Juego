@@ -127,3 +127,38 @@ bool EntityManager::Update(float dt)
 
 	return ret;
 }
+
+bool EntityManager::SaveState(pugi::xml_node node) {
+	bool ret = true;
+	ListItem<Entity*>* item;
+	Entity* pEntity = NULL;
+
+	for (item = entities.start; item != NULL && ret == true; item = item->next)
+	{
+		pEntity = item->data;
+
+		if (pEntity->active == false) continue;
+		
+		pEntity->SaveState(node);
+	}
+
+	return ret;
+}
+
+bool EntityManager::LoadState(pugi::xml_node node)
+{
+	bool ret = true;
+	ListItem<Entity*>* item;
+	Entity* pEntity = NULL;
+
+	for (item = entities.start; item != NULL && ret == true; item = item->next)
+	{
+		pEntity = item->data;
+
+		if (pEntity->active == false) continue;
+
+		pEntity->LoadState(node);
+	}
+
+	return ret;
+}
