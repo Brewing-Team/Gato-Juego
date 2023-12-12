@@ -26,7 +26,7 @@
     <map path="Assets/Maps/Level-1/" name="Level-1-map.tmx"/>
     <player x="672" y="2032" texturepath="Assets/Textures/Cat-1-Walk.png"/>
 	<enemies>
-		<owl_enemy x="672" y="2032" texturepath=""/>
+		<owl_enemy x="672" y="2000" texturepath=""/>
 	</enemies>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
   </scene>

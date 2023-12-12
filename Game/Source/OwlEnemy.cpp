@@ -96,12 +96,14 @@ bool OwlEnemy::Start() {
 	timer = Timer();
 
 	//load Animations
-	currentAnimation = &idleAnim;
+	idleAnim = *app->map->GetAnimByName("owl-1-idle");
+	idleAnim.speed = 8.0f;
 
+	currentAnimation = &idleAnim;
 	
 	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 10, bodyType::DYNAMIC);
 	pbody->listener = this;
-	pbody->ctype = ColliderType::DEATH; // TODO revisar donde tengo que añadir el nuevo tipo de collider
+	pbody->ctype = ColliderType::ENEMY; // TODO revisar donde tengo que aï¿½adir el nuevo tipo de collider
 
 	//si quieres dar vueltos como la helice de un helicoptero Boeing AH-64 Apache pon en false la siguiente funcion
 	pbody->body->SetFixedRotation(true);
@@ -130,7 +132,7 @@ bool OwlEnemy::Update(float dt)
 
 	// Render OwlEnemie texture
 	// app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle() * RADTODEG, flip);
-	app->render->DrawRectangle({position.x,position.y,50,50}, 255,255,255);
+	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
 
 	// currentAnimation->Update(dt);
 	return true;
