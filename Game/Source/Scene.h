@@ -37,14 +37,13 @@ public:
 
 public:
 	bool winCondition = false;
+	Player* player;
 
 private:
 	SDL_Texture* img;
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;
-	
-	Player* player;
 };
 
 #endif // __SCENE_H__

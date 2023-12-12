@@ -46,6 +46,9 @@ bool Map::Start() {
     mapPath += name;
     bool ret = Load(mapPath);
 
+    //Create Pathfinding
+    pathfinding = new PathFinding();
+
     return ret;
 }
 
@@ -208,11 +211,8 @@ bool Map::CleanUp()
 {
     LOG("Unloading map");
 
-    //Clean up pathfing class
-    // 
-    // TODO LIMPIAR PATHFINDING PORQUE XD SE ROMPE si intenta limpiar un pathfinding que no existe
-    // 
-    // pathfinding->CleanUp();
+    //Clean up pathfing class 
+    pathfinding->CleanUp();
 
     // L05: DONE 2: Make sure you clean up any memory allocated from tilesets/map
     ListItem<TileSet*>* tileset;

@@ -121,12 +121,36 @@ bool OwlEnemy::Update(float dt)
 	// Update OwlEnemie state
 	StateMachine();
 	LOG("Owl Enemie state: %d", state);
+
+
+	// ------------------------------
+
+
+	iPoint origin = app->map->MapToWorld(position.x, position.y);
+
+	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+		iPoint destination = iPoint(app->scene->player->position.x, app->scene->player->position.y);
+		app->map->pathfinding->CreatePath(origin, destination);
+	}
+
+	const DynArray<iPoint>* path = app->map->pathfinding->GetLastPath();
+	for (uint i = 0; i < path->Count(); ++i)
+	{
+		position = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+		app->render->DrawTexture(texture, position.x, position.y);
+	}
+
+
+	// ------------------------------
+
 	
 	pbody->body->SetTransform(pbody->body->GetPosition(), angle * DEGTORAD);
 
 	//Update OwlEnemie position in pixels
+	/*
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+	*/
 
 	// Update OwlEnemie sensors
 
