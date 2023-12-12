@@ -4,13 +4,11 @@
 	<input />
 	<textures />
 	<audio />
-	<:anonymous />
 	<scene />
-	<:anonymous />
 	<entitymanager>
-		<player/>
+		<player x="688" y="2041" angle="0" />
 	</entitymanager>
 	<renderer>
-		<camera x="-1491" y="-1433" />
+		<camera x="-569" y="-1947" />
 	</renderer>
 </game_state>

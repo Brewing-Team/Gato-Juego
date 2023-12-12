@@ -38,6 +38,11 @@ bool Scene::Awake(pugi::xml_node& config)
 		player->parameters = config.child("player");
 	}
 
+	if (config.child("enemies").child("owl_enemy")) {
+		OwlEnemy* owlEnemy = (OwlEnemy*)app->entityManager->CreateEntity(EntityType::ENEMY);
+		owlEnemy->parameters = config.child("enemies").child("owl_enemy");
+	}
+
 	if (config.child("map")) {
 		//Get the map name from the config file and assigns the value in the module
 		app->map->name = config.child("map").attribute("name").as_string();
