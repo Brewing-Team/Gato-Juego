@@ -2,7 +2,7 @@
 #define __MAP_H__
 
 #include "Module.h"
-#include "PathFinding.h"
+#include "Pathfinding.h"
 #include "List.h"
 #include "Point.h"
 

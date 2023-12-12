@@ -1,6 +1,6 @@
 #include "App.h"
 #include "Map.h"
-#include "PathFinding.h"
+#include "Pathfinding.h"
 
 #include "Defs.h"
 #include "Log.h"
