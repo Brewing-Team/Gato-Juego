@@ -129,10 +129,10 @@ bool OwlEnemy::Update(float dt)
 	// PATHFINDING LOGIC
 	// ------------------------------
 
-	iPoint origin = app->map->WorldToMap(newPosition.x, newPosition.y);
+	iPoint origin = app->map->WorldToMap(newPosition.x + 8, newPosition.y + 8); //añadir el tile size / 2 hace que el owl se acerque mas
 
 	if (timer.ReadMSec() > 250) {
-		iPoint destination = app->map->WorldToMap(app->scene->player->position.x, app->scene->player->position.y);
+		iPoint destination = app->map->WorldToMap(app->scene->player->position.x + 8, app->scene->player->position.y + 8);  //añadir el tile size / 2 hace que el owl se acerque mas
 		app->map->pathfinding->CreatePath(origin, destination);
 		timer.Start();
 		currentPathPos = 0;
