@@ -18,6 +18,7 @@ public:
 
 	bool startTimer = true;
 	Timer timer;
+	Timer movementDelay;
 
 	EntityState StateMachine() override;
 	void Move() override;
@@ -74,6 +75,9 @@ public:
 	int angle = 0;
 	float moveForce = 1.0f;
 	bool isGrounded = false;
+	int moveSpeed = 2;
+
+	int currentPathPos;
 
 };
 

@@ -86,7 +86,7 @@ bool OwlEnemy::Awake() {
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
-	spawnPosition = position;
+	newPosition = spawnPosition = position;
 
 	return true;
 }
@@ -94,12 +94,18 @@ bool OwlEnemy::Awake() {
 bool OwlEnemy::Start() {
 
 	timer = Timer();
+	timer.Start();
+
+	movementDelay = Timer();
+	timer.Start();
 
 	//load Animations
 	idleAnim = *app->map->GetAnimByName("owl-1-idle");
 	idleAnim.speed = 8.0f;
+	walkAnim = *app->map->GetAnimByName("owl-1-flying");
+	walkAnim.speed = 8.0f;
 
-	currentAnimation = &idleAnim;
+	currentAnimation = &walkAnim;
 	
 	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 10, bodyType::DYNAMIC);
 	pbody->listener = this;
@@ -109,6 +115,7 @@ bool OwlEnemy::Start() {
 	pbody->body->SetFixedRotation(true);
 	pbody->body->GetFixtureList()->SetFriction(25.0f);
 	pbody->body->SetLinearDamping(1);
+	pbody->body->SetGravityScale(0);
 
 	// Create OwlEnemie sensors
 
@@ -123,34 +130,60 @@ bool OwlEnemy::Update(float dt)
 	LOG("Owl Enemie state: %d", state);
 
 
+	// PATHFINDING LOGIC
 	// ------------------------------
 
 
-	iPoint origin = app->map->MapToWorld(position.x, position.y);
+	iPoint origin = app->map->WorldToMap(newPosition.x, newPosition.y);
 
-	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-		iPoint destination = iPoint(app->scene->player->position.x, app->scene->player->position.y);
+	if (timer.ReadMSec() > 250) {
+		iPoint destination = app->map->WorldToMap(app->scene->player->position.x, app->scene->player->position.y);
 		app->map->pathfinding->CreatePath(origin, destination);
+		timer.Start();
+		currentPathPos = 0;
 	}
 
+	
 	const DynArray<iPoint>* path = app->map->pathfinding->GetLastPath();
-	for (uint i = 0; i < path->Count(); ++i)
-	{
-		position = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-		app->render->DrawTexture(texture, position.x, position.y);
+
+	if (movementDelay.ReadMSec() > 100) {
+		if (currentPathPos < path->Count())
+		{
+			newPosition = app->map->MapToWorld(path->At(currentPathPos)->x, path->At(currentPathPos)->y);
+			currentPathPos++;
+			LOG("%d", currentPathPos);
+			movementDelay.Start();
+		}
 	}
+
+	pbody->body->SetTransform(
+		{
+			std::lerp(pbody->body->GetPosition().x, PIXEL_TO_METERS(newPosition.x), dt * moveSpeed / 1000),
+			std::lerp(pbody->body->GetPosition().y, PIXEL_TO_METERS(newPosition.y), dt * moveSpeed / 1000)
+
+		},
+
+		angle * DEGTORAD
+	);
+	
+	LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
+
+	// DEBUG pathfinding
+	/*for (uint i = 0; i < path->Count(); ++i)
+	{
+		iPoint position = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+		app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame());
+	}*/
 
 
 	// ------------------------------
 
 	
-	pbody->body->SetTransform(pbody->body->GetPosition(), angle * DEGTORAD);
+	//pbody->body->SetTransform(pbody->body->GetPosition(), angle * DEGTORAD);
 
 	//Update OwlEnemie position in pixels
-	/*
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
-	*/
 
 	// Update OwlEnemie sensors
 
@@ -158,7 +191,7 @@ bool OwlEnemy::Update(float dt)
 	// app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle() * RADTODEG, flip);
 	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
 
-	// currentAnimation->Update(dt);
+	currentAnimation->Update(dt);
 	return true;
 }
 
