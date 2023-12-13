@@ -48,14 +48,12 @@ public:
 	void setMoveAnimation();
 	void setJumpAnimation();
 
-	void CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset);
-
 	void moveToSpawnPoint();
 
 public:
 	//Animations
 	Animation idleAnim;
-	Animation walkAnim;
+	Animation flyAnim;
 	Animation jumpAnim;
 	Animation* currentAnimation = nullptr;
 
@@ -70,12 +68,8 @@ public:
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 
 	//Movement
-	bool inAir = false;
-	int direction = 0;
-	int angle = 0;
-	float moveForce = 1.0f;
-	bool isGrounded = false;
 	int moveSpeed = 2;
+	int angle;
 
 	int currentPathPos;
 

@@ -27,7 +27,7 @@ void OwlEnemy::setIdleAnimation()
 
 void OwlEnemy::setMoveAnimation()
 {
-	currentAnimation = &walkAnim;
+	currentAnimation = &flyAnim;
 	jumpAnim.Reset();
 }
 
@@ -102,22 +102,18 @@ bool OwlEnemy::Start() {
 	//load Animations
 	idleAnim = *app->map->GetAnimByName("owl-1-idle");
 	idleAnim.speed = 8.0f;
-	walkAnim = *app->map->GetAnimByName("owl-1-flying");
-	walkAnim.speed = 8.0f;
+	flyAnim = *app->map->GetAnimByName("owl-1-flying");
+	flyAnim.speed = 8.0f;
 
-	currentAnimation = &walkAnim;
+	currentAnimation = &flyAnim;
 	
-	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 10, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(position.x, position.y, 15, bodyType::DYNAMIC);
 	pbody->listener = this;
-	pbody->ctype = ColliderType::ENEMY; // TODO revisar donde tengo que a�adir el nuevo tipo de collider
+	pbody->ctype = ColliderType::ENEMY;
 
 	//si quieres dar vueltos como la helice de un helicoptero Boeing AH-64 Apache pon en false la siguiente funcion
 	pbody->body->SetFixedRotation(true);
-	pbody->body->GetFixtureList()->SetFriction(25.0f);
-	pbody->body->SetLinearDamping(1);
 	pbody->body->SetGravityScale(0);
-
-	// Create OwlEnemie sensors
 
 	return true;
 }
@@ -133,7 +129,6 @@ bool OwlEnemy::Update(float dt)
 	// PATHFINDING LOGIC
 	// ------------------------------
 
-
 	iPoint origin = app->map->WorldToMap(newPosition.x, newPosition.y);
 
 	if (timer.ReadMSec() > 250) {
@@ -142,7 +137,6 @@ bool OwlEnemy::Update(float dt)
 		timer.Start();
 		currentPathPos = 0;
 	}
-
 	
 	const DynArray<iPoint>* path = app->map->pathfinding->GetLastPath();
 
@@ -168,48 +162,41 @@ bool OwlEnemy::Update(float dt)
 	
 	LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
 
-	// DEBUG pathfinding
-	/*for (uint i = 0; i < path->Count(); ++i)
-	{
-		iPoint position = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-		app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame());
-	}*/
 
+	if (debug)
+	{
+		//Render Path
+		if (path->Count() > 0)
+		{
+			for (uint i = 0; i < path->Count() - 1; ++i)
+			{
+				iPoint pos1 = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+				iPoint pos2 = app->map->MapToWorld(path->At(i + 1)->x, path->At(i + 1)->y);
+				app->render->DrawLine(pos1.x, pos1.y, pos2.x, pos2.y, 0, 0, 255);
+			}
+
+		}
+
+	//Debug: Render the line between Owl and Player
+	app->render->DrawLine(position.x + 27, position.y + 17, app->scene->player->position.x + 20, app->scene->player->position.y + 10, 0, 0, 255);
+	}
 
 	// ------------------------------
 
-	
-	//pbody->body->SetTransform(pbody->body->GetPosition(), angle * DEGTORAD);
-
 	//Update OwlEnemie position in pixels
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 24;
+	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 17;
 
 	// Update OwlEnemie sensors
 
 	// Render OwlEnemie texture
-	// app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle() * RADTODEG, flip);
-	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
+	app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
 
 	currentAnimation->Update(dt);
 	return true;
 }
 
-void OwlEnemy::CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset)
-{
-
-	float angle = parent->body->GetAngle();
-
-	child->body->SetTransform(
-		b2Vec2(
-			parent->body->GetTransform().p.x -
-			PIXEL_TO_METERS(SDL_cos(angle + DEGTORAD * angleOffset)) * (parent->width + child->width + xOffset),
-			parent->body->GetTransform().p.y -
-			PIXEL_TO_METERS(SDL_sin(angle + DEGTORAD * angleOffset)) * (parent->height + child->height + yOffset)),
-		DEGTORAD * parent->GetRotation());
-}
-
-void OwlEnemy::moveToSpawnPoint()
+void OwlEnemy::moveToSpawnPoint() //Yo haria que esta funcion haga que el objetivo del Owl sea el spawnpoint y asi hace el pathfinding
 {
 	position = spawnPosition;
 
@@ -223,9 +210,6 @@ void OwlEnemy::moveToSpawnPoint()
 bool OwlEnemy::CleanUp() {
 
 	app->tex->UnLoad(texture);
-
-	// Theres no need to unload audio fx because they are unloaded when te audio module is cleaned up
-	// app->audio->UnloadFx(pickCoinFxId);
 
 	return true;
 }
