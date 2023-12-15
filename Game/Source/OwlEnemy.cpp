@@ -123,7 +123,6 @@ bool OwlEnemy::Update(float dt)
 
 	// Update OwlEnemie state
 	StateMachine();
-	LOG("Owl Enemie state: %d", state);
 
 
 	// PATHFINDING LOGIC
@@ -160,7 +159,7 @@ bool OwlEnemy::Update(float dt)
 		angle * DEGTORAD
 	);
 	
-	LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
+	//LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
 
 
 	if (debug)
