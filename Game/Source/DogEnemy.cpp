@@ -1,4 +1,4 @@
-#include "OwlEnemy.h"
+#include "DogEnemy.h"
 #include "App.h"
 #include "Map.h"
 #include "Textures.h"
@@ -20,31 +20,31 @@
 #include <Box2D/Dynamics/b2Fixture.h>
 #endif
 
-void OwlEnemy::setIdleAnimation()
+void DogEnemy::setIdleAnimation()
 {
 	currentAnimation = &idleAnim;
 }
 
-void OwlEnemy::setMoveAnimation()
+void DogEnemy::setMoveAnimation()
 {
 	currentAnimation = &flyAnim;
 	jumpAnim.Reset();
 }
 
-void OwlEnemy::setJumpAnimation()
+void DogEnemy::setJumpAnimation()
 {
 	currentAnimation = &jumpAnim;
 }
 
-void OwlEnemy::Move() {
+void DogEnemy::Move() {
 	// TODO move logic
 }
 
-void OwlEnemy::Jump() {
+void DogEnemy::Jump() {
 	// TODO jump logic
 }
 
-bool OwlEnemy::SaveState(pugi::xml_node& node) {
+bool DogEnemy::SaveState(pugi::xml_node& node) {
 
 	//pugi::xml_node playerAttributes = node.append_child("player");
 	//playerAttributes.append_attribute("x").set_value(this->position.x);
@@ -55,7 +55,7 @@ bool OwlEnemy::SaveState(pugi::xml_node& node) {
 
 }
 
-bool OwlEnemy::LoadState(pugi::xml_node& node)
+bool DogEnemy::LoadState(pugi::xml_node& node)
 {
 	//pbody->body->SetTransform({ PIXEL_TO_METERS(node.child("player").attribute("x").as_int()), PIXEL_TO_METERS(node.child("player").attribute("y").as_int()) }, node.child("player").attribute("angle").as_int());
 
@@ -66,22 +66,22 @@ bool OwlEnemy::LoadState(pugi::xml_node& node)
 	return true;
 }
 
-EntityState OwlEnemy::StateMachine() {
+EntityState DogEnemy::StateMachine() {
 	// TODO state machine logic
 	return EntityState::IDLE;
 }
 
-OwlEnemy::OwlEnemy() : Entity(EntityType::OWLENEMY)
+DogEnemy::DogEnemy() : Entity(EntityType::DOGENEMY)
 {
-	name.Create("OwlEnemy");
+	name.Create("DogEnemy");
 	state = EntityState::IDLE;
 }
 
-OwlEnemy::~OwlEnemy() {
+DogEnemy::~DogEnemy() {
 
 }
 
-bool OwlEnemy::Awake() {
+bool DogEnemy::Awake() {
 
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
@@ -91,7 +91,7 @@ bool OwlEnemy::Awake() {
 	return true;
 }
 
-bool OwlEnemy::Start() {
+bool DogEnemy::Start() {
 
 	timer = Timer();
 	timer.Start();
@@ -107,18 +107,19 @@ bool OwlEnemy::Start() {
 
 	currentAnimation = &flyAnim;
 	
-	pbody = app->physics->CreateCircle(position.x, position.y, 15, bodyType::DYNAMIC);
+	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 10, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::ENEMY;
 
 	//si quieres dar vueltos como la helice de un helicoptero Boeing AH-64 Apache pon en false la siguiente funcion
 	pbody->body->SetFixedRotation(true);
-	pbody->body->SetGravityScale(0);
+	pbody->body->GetFixtureList()->SetFriction(25.0f);
+	pbody->body->SetLinearDamping(1);
 
 	return true;
 }
 
-bool OwlEnemy::Update(float dt)
+bool DogEnemy::Update(float dt)
 {
 
 	// Update OwlEnemie state
@@ -190,13 +191,14 @@ bool OwlEnemy::Update(float dt)
 	// Update OwlEnemie sensors
 
 	// Render OwlEnemie texture
-	app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
+	//app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
+	app->render->DrawRectangle({position.x + 14,position.y + 12,20, 10}, 255, 255, 255);
 
 	currentAnimation->Update(dt);
 	return true;
 }
 
-void OwlEnemy::moveToSpawnPoint() //Yo haria que esta funcion haga que el objetivo del Owl sea el spawnpoint y asi hace el pathfinding
+void DogEnemy::moveToSpawnPoint() //Yo haria que esta funcion haga que el objetivo del Owl sea el spawnpoint y asi hace el pathfinding
 {
 	position = spawnPosition;
 
@@ -207,14 +209,14 @@ void OwlEnemy::moveToSpawnPoint() //Yo haria que esta funcion haga que el objeti
 	pbody->body->SetAwake(true);
 }
 
-bool OwlEnemy::CleanUp() {
+bool DogEnemy::CleanUp() {
 
 	app->tex->UnLoad(texture);
 
 	return true;
 }
 
-void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
+void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	switch (physB->ctype) {
 
@@ -246,6 +248,6 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 }
 
-void OwlEnemy::EndCollision(PhysBody* physA, PhysBody* physB) {
+void DogEnemy::EndCollision(PhysBody* physA, PhysBody* physB) {
 
 }

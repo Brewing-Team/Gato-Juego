@@ -40,8 +40,13 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	
 	if (config.child("enemies").child("owl_enemy")) {
-		OwlEnemy* owlEnemy = (OwlEnemy*)app->entityManager->CreateEntity(EntityType::ENEMY);
+		OwlEnemy* owlEnemy = (OwlEnemy*)app->entityManager->CreateEntity(EntityType::OWLENEMY);
 		owlEnemy->parameters = config.child("enemies").child("owl_enemy");
+	}
+
+	if (config.child("enemies").child("dog_enemy")) {
+		DogEnemy* dogEnemy = (DogEnemy*)app->entityManager->CreateEntity(EntityType::DOGENEMY);
+		dogEnemy->parameters = config.child("enemies").child("dog_enemy");
 	}
 	
 
