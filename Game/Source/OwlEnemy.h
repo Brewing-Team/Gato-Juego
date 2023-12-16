@@ -4,6 +4,7 @@
 #include "Animation.h"
 #include "Entity.h"
 #include "Point.h"
+#include "Player.h"
 #ifdef __linux__
 #include <SDL.h>
 #elif _MSC_VER
@@ -20,9 +21,10 @@ public:
 	Timer timer;
 	Timer movementDelay;
 
-	EntityState StateMachine() override;
+	EntityState StateMachine(float dt) override;
+	void Idle();
 	void Move() override;
-	void Jump() override;
+	void Attack() override;
 
 	bool SaveState(pugi::xml_node& node) override;
 	bool LoadState(pugi::xml_node& node) override;
@@ -49,6 +51,7 @@ public:
 	void setJumpAnimation();
 
 	void moveToSpawnPoint();
+	void pathfindingMovement(float dt);
 
 public:
 	//Animations
@@ -72,6 +75,13 @@ public:
 	int angle;
 
 	int currentPathPos;
+	
+	//Attack
+	Timer attackTimer;
+
+private:
+
+	Player* player;
 
 };
 

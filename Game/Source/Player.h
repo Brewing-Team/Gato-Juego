@@ -19,7 +19,7 @@ public:
 	bool startTimer = true;
 	Timer timer;
 
-	EntityState StateMachine() override;
+	EntityState StateMachine(float dt) override;
 	void Move() override;
 	void Jump() override;
 	void Climb() override;
@@ -64,6 +64,9 @@ public:
 	Animation* currentAnimation = nullptr;
 
 	int isAlive = true;
+
+	int lives = 7;
+	Timer immunityTimer;
 
 	// Check if the player has won
 	int win = false;

@@ -23,6 +23,7 @@ enum class EntityState {
 	MOVE,
 	JUMP,
 	CLIMB,
+	ATTACK,
 	WIN,
 	DEAD,
 	NO_CLIP
@@ -64,11 +65,12 @@ public:
 		return true;
 	}
 
-	virtual EntityState StateMachine() { return EntityState::NONE; };
+	virtual EntityState StateMachine(float dt) { return EntityState::NONE; };
 
 	virtual void Move() {};
 	virtual void Jump() {};
 	virtual void Climb() {};
+	virtual void Attack() {};
 
 	void Enable()
 	{

@@ -168,7 +168,7 @@ bool Player::LoadState(pugi::xml_node& node)
 	return true;
 }
 
-EntityState Player::StateMachine() {
+EntityState Player::StateMachine(float dt) {
 
 	switch (this->state) {
 
@@ -289,6 +289,7 @@ EntityState Player::StateMachine() {
 			moveToSpawnPoint();
 
 			isAlive = true;
+			lives = 7;
 			state = EntityState::IDLE;
 
 			break;
@@ -410,6 +411,11 @@ bool Player::Update(float dt)
 
 	debugTools();
 
+	//tmp para que los enemigos le ataquen
+	if (lives <= 0){
+		isAlive = false;
+	}
+
 	// Update player state
 
 	if(state == EntityState::MOVE) {
@@ -418,8 +424,8 @@ bool Player::Update(float dt)
 		}
 	}
 
-	StateMachine();
-	LOG("state: %d", state);
+	StateMachine(dt);
+	//LOG("state: %d", state);
 
 	pbody->body->SetTransform(pbody->body->GetPosition(), angle*DEGTORAD);
 
@@ -472,6 +478,7 @@ void Player::debugTools()
 
 		// Restart current level (Kill player)
 		if (app->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+			lives = 0;
 			isAlive = false;
 		}
 
@@ -567,12 +574,21 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		app->audio->PlayFx(pickCoinFxId);
 		break;
 
+	case ColliderType::ENEMY:
+		LOG("Collision ENEMY");
+		if (immunityTimer.ReadSec() >= 1){
+			lives--;
+			immunityTimer.Start();
+		}
+		break;
+
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 		break;
 
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
+		lives = 0;
 		isAlive = false;
 		break;
 

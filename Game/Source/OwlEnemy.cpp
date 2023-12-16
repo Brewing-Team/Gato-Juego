@@ -36,12 +36,16 @@ void OwlEnemy::setJumpAnimation()
 	currentAnimation = &jumpAnim;
 }
 
+void OwlEnemy::Idle(){
+
+}
+
 void OwlEnemy::Move() {
 	// TODO move logic
 }
 
-void OwlEnemy::Jump() {
-	// TODO jump logic
+void OwlEnemy::Attack()
+{
 }
 
 bool OwlEnemy::SaveState(pugi::xml_node& node) {
@@ -66,9 +70,46 @@ bool OwlEnemy::LoadState(pugi::xml_node& node)
 	return true;
 }
 
-EntityState OwlEnemy::StateMachine() {
+EntityState OwlEnemy::StateMachine(float dt) {
 	// TODO state machine logic
-	return EntityState::IDLE;
+	LOG("%f", PIXEL_TO_METERS(player->position.DistanceTo(this->position)));
+	switch (this->state) {
+			case EntityState::IDLE:
+				setIdleAnimation();
+				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
+				{
+					state = EntityState::MOVE;
+				}
+			break;
+			
+			case EntityState::MOVE:
+				setMoveAnimation();
+				pathfindingMovement(dt);
+				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f){
+					if (attackTimer.ReadSec() >= 2)
+					{
+						state = EntityState::ATTACK;
+					}
+				}
+				else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)){
+					state = EntityState::IDLE;
+				}
+
+			break;
+
+			case EntityState::ATTACK:
+				b2Vec2 attackDirection = {player->position.x - position.x, player->position.y - position.y};
+				attackDirection.Normalize();
+
+				b2Vec2 attackImpulse = {attackDirection.x, attackDirection.y};
+
+				pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
+
+				attackTimer.Start();
+				state = EntityState::MOVE;
+			break;
+	}
+	return this->state;
 }
 
 OwlEnemy::OwlEnemy() : Entity(EntityType::OWLENEMY)
@@ -99,6 +140,8 @@ bool OwlEnemy::Start() {
 	movementDelay = Timer();
 	timer.Start();
 
+	player = app->scene->player;
+
 	//load Animations
 	idleAnim = *app->map->GetAnimByName("owl-1-idle");
 	idleAnim.speed = 8.0f;
@@ -122,16 +165,37 @@ bool OwlEnemy::Update(float dt)
 {
 
 	// Update OwlEnemie state
-	StateMachine();
-
+	StateMachine(dt);
+	//LOG("state: %d", state);
 
 	// PATHFINDING LOGIC
 	// ------------------------------
 
+	//Debug: Render the line between Owl and Player
+	if (debug){
+		app->render->DrawLine(position.x + 27, position.y + 17, player->position.x + 20, player->position.y + 10, 0, 0, 255);
+	}
+
+	// ------------------------------
+
+	//Update OwlEnemie position in pixels
+	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 24;
+	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 17;
+
+	// Update OwlEnemie sensors
+
+	// Render OwlEnemie texture
+	app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
+
+	currentAnimation->Update(dt);
+	return true;
+}
+
+void OwlEnemy::pathfindingMovement(float dt){
 	iPoint origin = app->map->WorldToMap(newPosition.x + 8, newPosition.y + 8); //añadir el tile size / 2 hace que el owl se acerque mas
 
 	if (timer.ReadMSec() > 250) {
-		iPoint destination = app->map->WorldToMap(app->scene->player->position.x + 8, app->scene->player->position.y + 8);  //añadir el tile size / 2 hace que el owl se acerque mas
+		iPoint destination = app->map->WorldToMap(player->position.x + 8, player->position.y + 8);  //añadir el tile size / 2 hace que el owl se acerque mas
 		app->map->pathfinding->CreatePath(origin, destination);
 		timer.Start();
 		currentPathPos = 0;
@@ -144,7 +208,7 @@ bool OwlEnemy::Update(float dt)
 		{
 			newPosition = app->map->MapToWorld(path->At(currentPathPos)->x, path->At(currentPathPos)->y);
 			currentPathPos++;
-			LOG("%d", currentPathPos);
+			//LOG("%d", currentPathPos);
 			movementDelay.Start();
 		}
 	}
@@ -175,24 +239,7 @@ bool OwlEnemy::Update(float dt)
 			}
 
 		}
-
-	//Debug: Render the line between Owl and Player
-	app->render->DrawLine(position.x + 27, position.y + 17, app->scene->player->position.x + 20, app->scene->player->position.y + 10, 0, 0, 255);
 	}
-
-	// ------------------------------
-
-	//Update OwlEnemie position in pixels
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 24;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 17;
-
-	// Update OwlEnemie sensors
-
-	// Render OwlEnemie texture
-	app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
-
-	currentAnimation->Update(dt);
-	return true;
 }
 
 void OwlEnemy::moveToSpawnPoint() //Yo haria que esta funcion haga que el objetivo del Owl sea el spawnpoint y asi hace el pathfinding
@@ -217,8 +264,8 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	switch (physB->ctype) {
 
-	case ColliderType::ITEM:
-		LOG("Collision ITEM");
+	case ColliderType::PLAYER:
+		LOG("Collision PLAYER");
 		break;
 
 	case ColliderType::PLATFORM:

@@ -20,7 +20,7 @@ public:
 	Timer timer;
 	Timer movementDelay;
 
-	EntityState StateMachine() override;
+	EntityState StateMachine(float dt) override;
 	void Move() override;
 	void Jump() override;
 

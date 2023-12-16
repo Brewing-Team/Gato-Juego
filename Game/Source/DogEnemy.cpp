@@ -66,7 +66,7 @@ bool DogEnemy::LoadState(pugi::xml_node& node)
 	return true;
 }
 
-EntityState DogEnemy::StateMachine() {
+EntityState DogEnemy::StateMachine(float dt) {
 	// TODO state machine logic
 	return EntityState::IDLE;
 }
@@ -123,7 +123,7 @@ bool DogEnemy::Update(float dt)
 {
 
 	// Update OwlEnemie state
-	StateMachine();
+	StateMachine(dt);
 	LOG("Owl Enemie state: %d", state);
 
 
