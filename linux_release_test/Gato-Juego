@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cd "$(dirname "$(readlink -f "$0")")"
+here="$(pwd)"
+
+command="$(basename "$0")"
+
+export LD_LIBRARY_PATH="$here/lib:$LD_LIBRARY_PATH"
+
+exec "$here/bin/$command" "$@"

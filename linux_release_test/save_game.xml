@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<game_state>
+	<window />
+	<input />
+	<textures />
+	<audio />
+	<scene />
+	<entitymanager>
+		<player x="688" y="2041" angle="0" />
+	</entitymanager>
+	<renderer>
+		<camera x="-569" y="-1947" />
+	</renderer>
+</game_state>
