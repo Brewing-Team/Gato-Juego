@@ -58,6 +58,9 @@
     <ClCompile Include="Source\OwlEnemy.cpp">
       <Filter>Game\Entities\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DogEnemy.cpp">
+      <Filter>Game\Entities\Enemies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Defs.h">
@@ -145,6 +148,9 @@
       <Filter>Game\Modules\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\OwlEnemy.h">
+      <Filter>Game\Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DogEnemy.h">
       <Filter>Game\Entities\Enemies</Filter>
     </ClInclude>
   </ItemGroup>

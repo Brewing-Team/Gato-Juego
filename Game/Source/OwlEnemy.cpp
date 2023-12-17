@@ -106,7 +106,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 		break;
 
 		case EntityState::ATTACK:
-			b2Vec2 attackDirection = {player->position.x - position.x, player->position.y - position.y};
+			b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
 			attackDirection.Normalize();
 
 			b2Vec2 attackImpulse = {attackDirection.x, attackDirection.y};
