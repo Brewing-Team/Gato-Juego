@@ -403,7 +403,8 @@ bool Player::Start() {
 	// load debug menu texture
 	debugMenuTexture = app->tex->Load("Assets/Textures/debug_menu.png");
 
-	app->physics->CreateRope(5);
+	//app->physics->CreateRope(20, {21,28}, {25, 32});
+	app->physics->CreateRope(20, {5,0}, {10, 0});
 
 	return true;
 }

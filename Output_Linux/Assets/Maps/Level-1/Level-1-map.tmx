@@ -144469,20 +144469,6 @@
   <object id="179" type="rectangle" x="791.029" y="1527.65" width="33" height="32.2727"/>
   <object id="180" type="rectangle" x="855.482" y="1495.47" width="32.3636" height="32.2727"/>
   <object id="181" type="rectangle" x="1000.07" y="1512.05" width="63.625" height="31.375"/>
-  <object id="182" type="rectangle" x="1063.94" y="1527.05" width="15.375" height="32.75"/>
-  <object id="183" type="rectangle" x="1079.32" y="1542.92" width="16.5" height="34"/>
-  <object id="184" type="rectangle" x="1095.85" y="1560.01" width="16.2727" height="33"/>
-  <object id="185" type="rectangle" x="1112.21" y="1575.1" width="15.9091" height="34.1818"/>
-  <object id="186" type="rectangle" x="1128.03" y="1590.92" width="16.1818" height="35.0909"/>
-  <object id="187" type="rectangle" x="1144.21" y="1607.01" width="16" height="35.0909"/>
-  <object id="188" type="rectangle" x="1160.12" y="1622.83" width="16.0909" height="35.4545"/>
-  <object id="189" type="rectangle" x="1176.03" y="1638.74" width="16.1818" height="35.4545"/>
-  <object id="190" type="rectangle" x="1192.03" y="1654.74" width="16.2727" height="36.0909"/>
-  <object id="191" type="rectangle" x="1208.3" y="1670.56" width="15.9091" height="37.3636"/>
-  <object id="192" type="rectangle" x="1223.76" y="1686.47" width="16.2727" height="36.8182"/>
-  <object id="193" type="rectangle" x="1240.03" y="1703.92" width="15.7273" height="32"/>
-  <object id="194" type="rectangle" x="1255.67" y="1719.83" width="16.4545" height="32"/>
-  <object id="195" type="rectangle" x="1271.85" y="1735.74" width="16" height="16.9091"/>
   <object id="196" type="rectangle" x="1273.27" y="1751.92" width="382.667" height="360.667"/>
   <object id="197" type="rectangle" x="1447.94" y="1639.17" width="207.75" height="112"/>
   <object id="198" type="rectangle" x="1512.07" y="1543.92" width="31.625" height="32"/>
