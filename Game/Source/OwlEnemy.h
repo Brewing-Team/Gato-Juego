@@ -51,7 +51,7 @@ public:
 	void setJumpAnimation();
 
 	void moveToSpawnPoint();
-	void pathfindingMovement(float dt);
+	void pathfindingMovement(Entity* target, float dt);
 
 public:
 	//Animations
@@ -64,7 +64,8 @@ public:
 
 	float maxSpeed = 2.0f;
 	const char* texturePath;
-	iPoint spawnPosition;
+	Entity spawnPoint = Entity(EntityType::UNKNOWN);
+	Entity* currentTarget;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
 

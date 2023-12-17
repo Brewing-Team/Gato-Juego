@@ -72,42 +72,50 @@ bool OwlEnemy::LoadState(pugi::xml_node& node)
 
 EntityState OwlEnemy::StateMachine(float dt) {
 	// TODO state machine logic
-	LOG("%f", PIXEL_TO_METERS(player->position.DistanceTo(this->position)));
 	switch (this->state) {
-			case EntityState::IDLE:
-				setIdleAnimation();
-				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
-				{
-					state = EntityState::MOVE;
-				}
-			break;
-			
-			case EntityState::MOVE:
-				setMoveAnimation();
-				pathfindingMovement(dt);
-				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f){
+		case EntityState::IDLE:
+			if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
+			{
+				currentTarget = player;
+				state = EntityState::MOVE;
+			}
+		break;
+		
+		case EntityState::MOVE:
+			setMoveAnimation();
+			pathfindingMovement(currentTarget, dt);
+
+			if (currentTarget->type == EntityType::PLAYER)
+			{
+				if (PIXEL_TO_METERS(currentTarget->position.DistanceTo(this->position)) < 1.0f){
 					if (attackTimer.ReadSec() >= 2)
-					{
-						state = EntityState::ATTACK;
-					}
+						{
+							state = EntityState::ATTACK;
+						}
 				}
-				else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)){
+				else if ((PIXEL_TO_METERS(currentTarget->position.DistanceTo(this->position)) > 5.0f)){
+					currentTarget = &spawnPoint;
+				}
+			}
+			else{
+				if (currentTarget->position.DistanceTo(this->position) < 1.0f)
+				{
 					state = EntityState::IDLE;
 				}
+			}
+		break;
 
-			break;
+		case EntityState::ATTACK:
+			b2Vec2 attackDirection = {player->position.x - position.x, player->position.y - position.y};
+			attackDirection.Normalize();
 
-			case EntityState::ATTACK:
-				b2Vec2 attackDirection = {player->position.x - position.x, player->position.y - position.y};
-				attackDirection.Normalize();
+			b2Vec2 attackImpulse = {attackDirection.x, attackDirection.y};
 
-				b2Vec2 attackImpulse = {attackDirection.x, attackDirection.y};
+			pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
 
-				pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
-
-				attackTimer.Start();
-				state = EntityState::MOVE;
-			break;
+			attackTimer.Start();
+			state = EntityState::MOVE;
+		break;
 	}
 	return this->state;
 }
@@ -116,6 +124,7 @@ OwlEnemy::OwlEnemy() : Entity(EntityType::OWLENEMY)
 {
 	name.Create("OwlEnemy");
 	state = EntityState::IDLE;
+	currentTarget = nullptr;
 }
 
 OwlEnemy::~OwlEnemy() {
@@ -127,7 +136,7 @@ bool OwlEnemy::Awake() {
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
-	newPosition = spawnPosition = position;
+	newPosition = spawnPoint.position = position;
 
 	return true;
 }
@@ -191,11 +200,11 @@ bool OwlEnemy::Update(float dt)
 	return true;
 }
 
-void OwlEnemy::pathfindingMovement(float dt){
+void OwlEnemy::pathfindingMovement(Entity* target, float dt){
 	iPoint origin = app->map->WorldToMap(newPosition.x + 8, newPosition.y + 8); //añadir el tile size / 2 hace que el owl se acerque mas
 
 	if (timer.ReadMSec() > 250) {
-		iPoint destination = app->map->WorldToMap(player->position.x + 8, player->position.y + 8);  //añadir el tile size / 2 hace que el owl se acerque mas
+		iPoint destination = app->map->WorldToMap(target->position.x + 8, target->position.y + 8);  //añadir el tile size / 2 hace que el owl se acerque mas
 		app->map->pathfinding->CreatePath(origin, destination);
 		timer.Start();
 		currentPathPos = 0;
@@ -244,7 +253,7 @@ void OwlEnemy::pathfindingMovement(float dt){
 
 void OwlEnemy::moveToSpawnPoint() //Yo haria que esta funcion haga que el objetivo del Owl sea el spawnpoint y asi hace el pathfinding
 {
-	position = spawnPosition;
+	position = spawnPoint.position;
 
 	pbody->body->SetTransform({ PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y) }, 0);
 
