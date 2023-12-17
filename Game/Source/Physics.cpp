@@ -30,6 +30,7 @@ Physics::Physics() : Module()
 {
 	// Initialise all the internal class variables, at least to NULL pointer
 	world = NULL;
+	mouseJoint = NULL;
 }
 
 // Destructor
@@ -47,6 +48,8 @@ bool Physics::Start()
 
 	// Set this module as a listener for contacts
 	world->SetContactListener(this);
+
+	
 
 	return true;
 }
@@ -303,6 +306,80 @@ bool Physics::PostUpdate()
 				break;
 				}
 
+				// DONE 1: If mouse button 1 is pressed ...
+				// App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN
+				// test if the current body contains mouse position
+				if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+				{
+					// test if the current body contains mouse position
+					iPoint mousePos;
+					app->input->GetMousePosition(mousePos.x, mousePos.y);
+					b2Vec2 p = { PIXEL_TO_METERS(mousePos.x), PIXEL_TO_METERS(mousePos.y) };
+					if (f->GetShape()->TestPoint(b->GetTransform(), p) == true)
+					{
+
+						// If a body was selected we will attach a mouse joint to it
+						// so we can pull it around
+
+						// The variable "b2Body* mouse_body;" is defined in the header ModulePhysics.h 
+						// We need to keep this body throughout several game frames; you cannot define it as a local variable here. 
+						mouseBody = b;
+
+						// Get current mouse position
+						b2Vec2 mousePosition;
+						mousePosition.x = p.x;
+						mousePosition.y = p.y;
+
+						// Define new mouse joint
+						b2MouseJointDef def;
+						def.bodyA = ground; // First body must be a static ground
+						def.bodyB = mouseBody; // Second body will be the body to attach to the mouse
+						def.target = mousePosition; // The second body will be pulled towards this location
+						def.dampingRatio = 0.5f; // Play with this value
+						def.frequencyHz = 2.0f; // Play with this value
+						def.maxForce = 200.0f * mouseBody->GetMass(); // Play with this value
+
+						// Add the new mouse joint into the World
+						mouseJoint = (b2MouseJoint*)world->CreateJoint(&def);
+					}
+				}
+			}
+		}
+
+		// If a body was selected we will attach a mouse joint to it
+		// so we can pull it around
+		// DONE 2: If a body was selected, create a mouse joint
+		// using mouse_joint class property
+		if (mouseBody != nullptr && mouseJoint != nullptr)
+		{
+			if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+			{
+				// Get new mouse position and re-target mouse_joint there
+				iPoint mousePos;
+				app->input->GetMousePosition(mousePos.x, mousePos.y);
+				b2Vec2 mousePosition;
+				mousePosition.x = PIXEL_TO_METERS(mousePos.x);
+				mousePosition.y = PIXEL_TO_METERS(mousePos.y);
+				mouseJoint->SetTarget(mousePosition);
+
+				// DONE 3: If the player keeps pressing the mouse button, update
+				// target position and draw a red line between both anchor points
+				// Draw a red line between both anchor points
+				app->render->DrawLine(METERS_TO_PIXELS(mouseBody->GetPosition().x), METERS_TO_PIXELS(mouseBody->GetPosition().y), mousePos.x, mousePos.y, 255, 0, 0);
+			}
+		}
+
+		// DONE 4: If the player releases the mouse button, destroy the joint
+		if (mouseBody != nullptr && mouseJoint != nullptr)
+		{
+			if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
+			{
+				// Tell Box2D to destroy the mouse_joint
+				world->DestroyJoint(mouseJoint);
+
+				// DO NOT FORGET THIS! We need it for the "if (mouse_body != nullptr && mouse_joint != nullptr)"
+				mouseJoint = nullptr;
+				mouseBody = nullptr;
 			}
 		}
 	}
@@ -465,4 +542,53 @@ b2WeldJoint* Physics::CreateWeldJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, 
 	weldJointDef.referenceAngle = 0;
 
 	return (b2WeldJoint*)world->CreateJoint(&weldJointDef);
+}
+
+b2Body** Physics::CreateRope(int length)
+{
+	b2Body** segments = new b2Body*[length];
+	b2RevoluteJoint** joints = new b2RevoluteJoint*[length - 1];
+	b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
+
+	b2BodyDef* bodyDef = new b2BodyDef();
+	bodyDef->type = b2_dynamicBody;
+
+	float width = 0.1f, height = 0.25f;
+
+	b2PolygonShape* shape = new b2PolygonShape();
+	shape->SetAsBox(width / 2, height / 2);
+
+	for (int i = 0; i < length; i++)
+	{
+		segments[i] = world->CreateBody(bodyDef);
+		segments[i]->CreateFixture(shape, 1.0f);
+	}
+
+	delete shape;
+	shape = nullptr;
+
+	b2RevoluteJointDef* jointDef = new b2RevoluteJointDef();
+	jointDef->localAnchorA.y = -height / 2;
+	jointDef->localAnchorB.y = height / 2;
+
+	for (int i = 0; i < length - 1; i++)
+	{
+		jointDef->bodyA = segments[i];
+		jointDef->bodyB = segments[i + 1];
+		joints[i] = (b2RevoluteJoint*)world->CreateJoint(jointDef);
+	}
+
+	b2RopeJointDef* ropeJointDef = new b2RopeJointDef();
+	ropeJointDef->localAnchorA.Set(0, -height / 2);
+	ropeJointDef->localAnchorB.Set(0, height / 2);
+	ropeJointDef->maxLength = height;
+
+	for (int i = 0; i < length - 1; i++)
+	{
+		ropeJointDef->bodyA = segments[i];
+		ropeJointDef->bodyB = segments[i + 1];
+		ropeJoints[i] = (b2RopeJoint*)world->CreateJoint(ropeJointDef);
+	}
+
+	return segments;
 }
