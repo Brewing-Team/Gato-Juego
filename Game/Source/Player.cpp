@@ -423,14 +423,21 @@ bool Player::Update(float dt)
 		isAlive = false;
 	}
 
-	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+ 	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
-		bullet->pbody->body->SetTransform(pbody->body->GetWorldCenter() + b2Vec2{0, -0.5f}, 0);
-		b2Vec2 shootDir = { app->input->GetMouseX() - pbody->body->GetWorldCenter().x, app->input->GetMouseY() - pbody->body->GetWorldCenter().y };
+		b2Vec2 mouseWorldPosition = { PIXEL_TO_METERS(app->input->GetMouseX()) + PIXEL_TO_METERS(-app->render->camera.x), PIXEL_TO_METERS(app->input->GetMouseY()) + PIXEL_TO_METERS(-app->render->camera.y) };
+		b2Vec2 shootDir = {mouseWorldPosition - pbody->body->GetPosition()};
 		shootDir.Normalize();
-		LOG("Shootdir:%f, %f", shootDir.x, shootDir.y);
-		bullet->pbody->body->ApplyForce({ shootDir.x * 10, shootDir.y * 10}, bullet->pbody->body->GetWorldCenter(), true);
+		bullet->pbody->body->SetTransform(pbody->body->GetPosition() + b2Vec2{0, 0}, 0);
+		bullet->pbody->body->SetAwake(false);
+		bullet->pbody->body->ApplyForce({ shootDir.x * bulletSpeed, shootDir.y * bulletSpeed}, bullet->pbody->body->GetWorldCenter(), true);
 	}
+	//debug shootDir
+	if(debug)
+		{
+			b2Vec2 mouseWorldPosition = { PIXEL_TO_METERS(app->input->GetMouseX()) + PIXEL_TO_METERS(-app->render->camera.x), PIXEL_TO_METERS(app->input->GetMouseY()) + PIXEL_TO_METERS(-app->render->camera.y) };
+			app->render->DrawLine(METERS_TO_PIXELS(pbody->body->GetPosition().x), METERS_TO_PIXELS(pbody->body->GetPosition().y), METERS_TO_PIXELS(mouseWorldPosition.x), METERS_TO_PIXELS(mouseWorldPosition.y), 255, 0, 0);
+		}
 
 	// Update player state
 

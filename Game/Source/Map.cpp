@@ -63,7 +63,7 @@ bool Map::Start() {
 bool Map::Update(float dt)
 {
     // OPTICK PROFILIN
-    OPTICK_EVENT("a");
+    OPTICK_EVENT();
 
     if(mapLoaded == false)
         return false;

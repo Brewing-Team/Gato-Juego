@@ -57,7 +57,7 @@ bool Input::Start()
 bool Input::PreUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	static SDL_Event event;
 

@@ -102,6 +102,7 @@ public:
 	bool climbingRight = false;
 
 	FurBall* bullet;
+	float bulletSpeed = 2.0f;
 
 	// debug textures
 	SDL_Texture* debugMenuTexture;

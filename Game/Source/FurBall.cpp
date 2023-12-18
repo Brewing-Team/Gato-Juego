@@ -22,7 +22,7 @@ FurBall::~FurBall() {}
 
 bool FurBall::Awake() {
 
-	position = app->scene->player->position;
+	position = {0,0};
 	texturePath = parameters.attribute("texturepath").as_string();
 
 	return true;
@@ -44,7 +44,7 @@ bool FurBall::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x);
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y);
 
-	app->render->DrawTexture(texture, position.x, position.y);
+	//app->render->DrawTexture(texture, position.x, position.y);
 
 	return true;
 }

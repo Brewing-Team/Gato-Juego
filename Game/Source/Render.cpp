@@ -76,7 +76,7 @@ bool Render::Start()
 bool Render::PreUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	SDL_RenderClear(renderer);
 
@@ -86,7 +86,7 @@ bool Render::PreUpdate()
 bool Render::Update(float dt)
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	cameraInterpolation(camera.target, camera.lerpSpeed, dt, camera.offset);
 	return true;
@@ -95,7 +95,7 @@ bool Render::Update(float dt)
 bool Render::PostUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	SetViewPort({
 		0,

@@ -183,7 +183,7 @@ bool App::LoadConfig()
 void App::PrepareUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 	frameTime.Start();
 }
 
@@ -191,7 +191,7 @@ void App::PrepareUpdate()
 void App::FinishUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	// This is a good place to call Load / Save functions
 	double currentDt = frameTime.ReadMs();
@@ -251,7 +251,7 @@ void App::FinishUpdate()
 bool App::PreUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	bool ret = true;
 
@@ -284,7 +284,7 @@ bool App::DoUpdate()
 {
 
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	bool ret = true;
 	ListItem<Module*>* item;
@@ -310,7 +310,7 @@ bool App::PostUpdate()
 {
 
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	bool ret = true;
 	ListItem<Module*>* item;

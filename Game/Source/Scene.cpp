@@ -103,7 +103,7 @@ bool Scene::Start()
 bool Scene::PreUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	return true;
 }
@@ -112,7 +112,7 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	if(freeCam)
 	{
@@ -141,7 +141,7 @@ bool Scene::Update(float dt)
 bool Scene::PostUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	bool ret = true;
 

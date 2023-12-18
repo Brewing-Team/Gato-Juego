@@ -57,7 +57,7 @@ bool Physics::Start()
 bool Physics::PreUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	bool ret = true;
 
@@ -235,7 +235,7 @@ bool Physics::PostUpdate()
 {
 
 	// OPTICK PROFILIN
-	OPTICK_EVENT("a");
+	OPTICK_EVENT();
 
 	bool ret = true;
 	
