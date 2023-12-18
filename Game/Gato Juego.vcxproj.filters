@@ -192,4 +192,8 @@
       <UniqueIdentifier>{ec1b0eb5-db07-471e-ba76-05b273de391a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\Output\config.xml" />
+    <Xml Include="..\Output\save_game.xml" />
+  </ItemGroup>
 </Project>
