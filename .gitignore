@@ -30,6 +30,7 @@
 !Game/Source/External/SDL_mixer/libx86/SDL2_mixer.lib
 !Game/Source/External/Box2D/libx86/DebugLib/Box2D.lib
 !Game/Source/External/Box2D/libx86/ReleaseLib/Box2D.lib
+!Game/Source/External/Optick/lib/OptickCore.lib
 
 # Executables
 *.exe
