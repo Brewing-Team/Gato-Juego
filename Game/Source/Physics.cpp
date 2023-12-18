@@ -51,7 +51,8 @@ bool Physics::Start()
 	// Set this module as a listener for contacts
 	world->SetContactListener(this);
 
-	
+	b2BodyDef bd;
+	ground = world->CreateBody(&bd);
 
 	return true;
 }
@@ -321,9 +322,7 @@ bool Physics::PostUpdate()
 				if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 				{
 					// test if the current body contains mouse position
-					iPoint mousePos;
-					app->input->GetMousePosition(mousePos.x, mousePos.y);
-					b2Vec2 p = { PIXEL_TO_METERS(mousePos.x), PIXEL_TO_METERS(mousePos.y) };
+					b2Vec2 p = { PIXEL_TO_METERS(app->input->GetMouseX()) + PIXEL_TO_METERS(-app->render->camera.x), PIXEL_TO_METERS(app->input->GetMouseY()) + PIXEL_TO_METERS(-app->render->camera.y) };
 					if (f->GetShape()->TestPoint(b->GetTransform(), p) == true)
 					{
 
@@ -364,17 +363,13 @@ bool Physics::PostUpdate()
 			if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
 			{
 				// Get new mouse position and re-target mouse_joint there
-				iPoint mousePos;
-				app->input->GetMousePosition(mousePos.x, mousePos.y);
-				b2Vec2 mousePosition;
-				mousePosition.x = PIXEL_TO_METERS(mousePos.x);
-				mousePosition.y = PIXEL_TO_METERS(mousePos.y);
+				b2Vec2 mousePosition = { PIXEL_TO_METERS(app->input->GetMouseX()) + PIXEL_TO_METERS(-app->render->camera.x), PIXEL_TO_METERS(app->input->GetMouseY()) + PIXEL_TO_METERS(-app->render->camera.y) };
 				mouseJoint->SetTarget(mousePosition);
 
 				// DONE 3: If the player keeps pressing the mouse button, update
 				// target position and draw a red line between both anchor points
 				// Draw a red line between both anchor points
-				app->render->DrawLine(METERS_TO_PIXELS(mouseBody->GetPosition().x), METERS_TO_PIXELS(mouseBody->GetPosition().y), mousePos.x, mousePos.y, 255, 0, 0);
+				app->render->DrawLine(METERS_TO_PIXELS(mouseBody->GetPosition().x), METERS_TO_PIXELS(mouseBody->GetPosition().y), METERS_TO_PIXELS(mousePosition.x), METERS_TO_PIXELS(mousePosition.y), 255, 0, 0);
 			}
 		}
 
