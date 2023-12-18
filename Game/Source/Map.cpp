@@ -17,8 +17,10 @@
 #ifdef __linux__
 #include <SDL_image.h>
 #include <Box2D/Dynamics/b2Fixture.h>
+#include "External/Optick/include/optick.h"
 #elif _MSC_VER
 #include "SDL_image/include/SDL_image.h"
+#include "Optick/include/optick.h"
 #endif
 
 Map::Map() : Module(), mapLoaded(false)
@@ -60,6 +62,9 @@ bool Map::Start() {
 
 bool Map::Update(float dt)
 {
+    // OPTICK PROFILIN
+    OPTICK_EVENT();
+
     if(mapLoaded == false)
         return false;
 

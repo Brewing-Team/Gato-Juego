@@ -58,6 +58,12 @@
     <ClCompile Include="Source\OwlEnemy.cpp">
       <Filter>Game\Entities\Enemies</Filter>
     </ClCompile>
+    <ClCompile Include="Source\DogEnemy.cpp">
+      <Filter>Game\Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FurBall.cpp">
+      <Filter>Game\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Defs.h">
@@ -147,6 +153,12 @@
     <ClInclude Include="Source\OwlEnemy.h">
       <Filter>Game\Entities\Enemies</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DogEnemy.h">
+      <Filter>Game\Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FurBall.h">
+      <Filter>Game\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
@@ -185,5 +197,9 @@
     <Filter Include="Game\Modules\Core">
       <UniqueIdentifier>{ec1b0eb5-db07-471e-ba76-05b273de391a}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\Output\config.xml" />
+    <Xml Include="..\Output\save_game.xml" />
   </ItemGroup>
 </Project>

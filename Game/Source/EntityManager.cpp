@@ -2,12 +2,19 @@
 #include "Player.h"
 #include "OwlEnemy.h"
 #include "DogEnemy.h"
+#include "FurBall.h"
 #include "App.h"
 #include "Textures.h"
 #include "Scene.h"
 
 #include "Defs.h"
 #include "Log.h"
+
+#ifdef __linux__
+#include "External/Optick/include/optick.h"
+#elif _MSC_VER
+#include "Optick/include/optick.h"
+#endif
 
 EntityManager::EntityManager() : Module()
 {
@@ -95,6 +102,8 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::DOGENEMY:
 		entity = new DogEnemy();
 		break;
+	case EntityType::FURBALL:
+		entity = new FurBall();
 	default:
 		break;
 	}
@@ -121,6 +130,9 @@ void EntityManager::AddEntity(Entity* entity)
 
 bool EntityManager::Update(float dt)
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	bool ret = true;
 	ListItem<Entity*>* item;
 	Entity* pEntity = NULL;

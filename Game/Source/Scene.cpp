@@ -10,6 +10,12 @@
 #include "Defs.h"
 #include "Log.h"
 
+#ifdef __linux__
+#include "External/Optick/include/optick.h"
+#elif _MSC_VER
+#include "Optick/include/optick.h"
+#endif
+
 Scene::Scene() : Module()
 {
 	name.Create("scene");
@@ -96,13 +102,18 @@ bool Scene::Start()
 // Called each loop iteration
 bool Scene::PreUpdate()
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	return true;
 }
 
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	if(freeCam)
 	{
 		float camSpeed = 1;
@@ -129,6 +140,9 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	bool ret = true;
 
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)

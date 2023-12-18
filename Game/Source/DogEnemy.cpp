@@ -36,11 +36,11 @@ void DogEnemy::setJumpAnimation()
 	currentAnimation = &jumpAnim;
 }
 
-void DogEnemy::Move() {
+void DogEnemy::Move(float dt) {
 	// TODO move logic
 }
 
-void DogEnemy::Jump() {
+void DogEnemy::Jump(float dt) {
 	// TODO jump logic
 }
 

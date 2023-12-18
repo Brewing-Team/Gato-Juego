@@ -14,6 +14,7 @@ enum class EntityType
 	ITEM,
 	OWLENEMY,
 	DOGENEMY,
+	FURBALL,
 	UNKNOWN
 };
 
@@ -67,10 +68,10 @@ public:
 
 	virtual EntityState StateMachine(float dt) { return EntityState::NONE; };
 
-	virtual void Move() {};
-	virtual void Jump() {};
-	virtual void Climb() {};
-	virtual void Attack() {};
+	virtual void Move(float dt) {};
+	virtual void Jump(float dt) {};
+	virtual void Climb(float dt) {};
+	virtual void Attack(float dt) {};
 
 	void Enable()
 	{

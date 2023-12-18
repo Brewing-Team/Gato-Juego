@@ -13,9 +13,11 @@
 #include <SDL_keycode.h>
 #include <Box2D/Box2D.h>
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
+#include "External/Optick/include/optick.h"
 #elif _MSC_VER
 #include "SDL/include/SDL_keycode.h"
 #include "Box2D/Box2D/Box2D.h"
+#include "Optick/include/optick.h"
 
 // Tell the compiler to reference the compiled Box2D libraries
 #ifdef _DEBUG
@@ -57,6 +59,9 @@ bool Physics::Start()
 // 
 bool Physics::PreUpdate()
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	bool ret = true;
 
 	// Step (update) the World
@@ -231,6 +236,10 @@ PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
 // 
 bool Physics::PostUpdate()
 {
+
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	bool ret = true;
 	
 	//  Iterate all objects in the world and draw the bodies

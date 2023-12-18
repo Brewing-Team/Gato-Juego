@@ -22,9 +22,9 @@ public:
 	Timer movementDelay;
 
 	EntityState StateMachine(float dt) override;
-	void Idle();
-	void Move() override;
-	void Attack() override;
+	void Idle(float dt);
+	void Move(float dt) override;
+	void Attack(float dt) override;
 
 	bool SaveState(pugi::xml_node& node) override;
 	bool LoadState(pugi::xml_node& node) override;
@@ -82,6 +82,7 @@ public:
 private:
 
 	Player* player;
+	int lives = 3;
 
 };
 

@@ -36,15 +36,15 @@ void OwlEnemy::setJumpAnimation()
 	currentAnimation = &jumpAnim;
 }
 
-void OwlEnemy::Idle(){
+void OwlEnemy::Idle(float dt){
 
 }
 
-void OwlEnemy::Move() {
+void OwlEnemy::Move(float dt) {
 	// TODO move logic
 }
 
-void OwlEnemy::Attack()
+void OwlEnemy::Attack(float dt)
 {
 }
 
@@ -97,8 +97,14 @@ EntityState OwlEnemy::StateMachine(float dt) {
 
 			break;
 
+			case EntityState::DEAD:
+				setIdleAnimation();	
+				pbody->body->SetFixedRotation(false);
+				pbody->body->SetGravityScale(1);
+			break;
+
 			case EntityState::ATTACK:
-				b2Vec2 attackDirection = {player->position.x - position.x, player->position.y - position.y};
+				b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
 				attackDirection.Normalize();
 
 				b2Vec2 attackImpulse = {attackDirection.x, attackDirection.y};
@@ -168,6 +174,12 @@ bool OwlEnemy::Update(float dt)
 	StateMachine(dt);
 	//LOG("state: %d", state);
 
+	//TEMPORAL
+	if (lives <= 0)
+	{
+		state = EntityState::DEAD;
+	}
+
 	// PATHFINDING LOGIC
 	// ------------------------------
 
@@ -192,10 +204,10 @@ bool OwlEnemy::Update(float dt)
 }
 
 void OwlEnemy::pathfindingMovement(float dt){
-	iPoint origin = app->map->WorldToMap(newPosition.x + 8, newPosition.y + 8); //añadir el tile size / 2 hace que el owl se acerque mas
+	iPoint origin = app->map->WorldToMap(newPosition.x, newPosition.y); //añadir el tile size / 2 hace que el owl se acerque mas
 
 	if (timer.ReadMSec() > 250) {
-		iPoint destination = app->map->WorldToMap(player->position.x + 8, player->position.y + 8);  //añadir el tile size / 2 hace que el owl se acerque mas
+		iPoint destination = app->map->WorldToMap(player->position.x, player->position.y);  //añadir el tile size / 2 hace que el owl se acerque mas
 		app->map->pathfinding->CreatePath(origin, destination);
 		timer.Start();
 		currentPathPos = 0;
@@ -274,9 +286,11 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
-		isAlive = false;
 		break;
-
+	case ColliderType::BULLET:
+		LOG("Collision DEATH");
+		lives--;
+		break;
 	case ColliderType::LIMITS:
 		LOG("Collision LIMITS");
 		break;

@@ -7,8 +7,10 @@
 
 #ifdef __linux__
 #include <SDL.h>
+#include "External/Optick/include/optick.h"
 #elif _MSC_VER
 #include "SDL/include/SDL.h"
+#include "Optick/include/optick.h"
 #endif
 
 #define MAX_KEYS 300
@@ -54,6 +56,9 @@ bool Input::Start()
 // Called each loop iteration
 bool Input::PreUpdate()
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	static SDL_Event event;
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);

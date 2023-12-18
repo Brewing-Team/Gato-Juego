@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "App.h"
+#include "Entity.h"
 #include "Map.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -9,6 +10,7 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include "FurBall.h"
 
 #include "Window.h"
 #include <cmath>
@@ -46,7 +48,7 @@ void Player::setWinAnimation()
 	// TODO set win animation
 }
 
-void Player::Move() {
+void Player::Move(float dt) {
 	
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
@@ -71,7 +73,7 @@ void Player::Move() {
 
 }
 
-void Player::Jump() {
+void Player::Jump(float dt) {
 	
 	float impulse = pbody->body->GetMass() * 5;
 	pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
@@ -79,7 +81,7 @@ void Player::Jump() {
 	
 }
 
-void Player::Climb() {
+void Player::Climb(float dt) {
 	
 	if (startTimer) {
 		timer.Start();
@@ -90,19 +92,23 @@ void Player::Climb() {
 
 	if (timer.ReadSec() <= 5) {
 		if (isCollidingRight) {
-			angle = -90;
+			climbingLeft = false;
+			climbingRight = true;
 			flip = SDL_FLIP_NONE;
 		}
 
-		if (isCollidingLeft) {
-			angle = 90;
+		else if (isCollidingLeft) {
+			climbingRight = false;
+			climbingLeft = true;
 			flip = SDL_FLIP_HORIZONTAL;
 		}
 
-		if (angle == -90) {
+		if (climbingRight) {
+			angle = std::lerp(angle, -90, dt * 32 / 1000);
 			pbody->body->ApplyForceToCenter({ 1, 0 }, true);
 		}
-		else {
+		else if (climbingLeft) {
+			angle = std::lerp(angle, 90, dt * 32 / 1000);
 			pbody->body->ApplyForceToCenter({ -1, 0 }, true);
 		}
 
@@ -174,7 +180,7 @@ EntityState Player::StateMachine(float dt) {
 
 		case EntityState::IDLE:
 
-			angle = 0;
+			angle = std::lerp(angle, 0, dt * 32 / 1000);;
 
 			setIdleAnimation();
 
@@ -188,7 +194,7 @@ EntityState Player::StateMachine(float dt) {
 
 			if (isGrounded) {
 				if(app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN){
-					Jump();
+					Jump(dt);
 					jumpAnim.Reset();
 				}
 			}
@@ -204,7 +210,7 @@ EntityState Player::StateMachine(float dt) {
 			break;
 		case EntityState::MOVE:
 
-			angle = 0;
+			angle = std::lerp(angle, 0, dt * 32 / 1000);
 
 			if(isGrounded)
 			{
@@ -225,12 +231,12 @@ EntityState Player::StateMachine(float dt) {
 
 			if (isGrounded && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 
-				Jump();
-				Move();
+				Jump(dt);
+				Move(dt);
 
 			} else {
 
-				Move();
+				Move(dt);
 
 			}
 
@@ -264,7 +270,7 @@ EntityState Player::StateMachine(float dt) {
 				this->state = EntityState::IDLE;
 			}
 			
-			Climb();
+			Climb(dt);
 			
 
 
@@ -418,6 +424,27 @@ bool Player::Update(float dt)
 	if (lives <= 0){
 		isAlive = false;
 	}
+
+ 	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		b2Vec2 mouseWorldPosition = { PIXEL_TO_METERS(app->input->GetMouseX()) + PIXEL_TO_METERS(-app->render->camera.x), PIXEL_TO_METERS(app->input->GetMouseY()) + PIXEL_TO_METERS(-app->render->camera.y) };
+		b2Vec2 shootDir = {mouseWorldPosition - pbody->body->GetPosition()};
+		shootDir.Normalize();
+
+		FurBall* bullet = (FurBall*)app->entityManager->CreateEntity(EntityType::FURBALL);
+		bullet->Awake();
+		bullet->Start();
+
+		bullet->pbody->body->SetTransform(pbody->body->GetPosition() + b2Vec2{0, 0}, 0);
+		bullet->pbody->body->SetAwake(false);
+		bullet->pbody->body->ApplyForce({ shootDir.x * bulletSpeed, shootDir.y * bulletSpeed}, bullet->pbody->body->GetWorldCenter(), true);
+	}
+	//debug shootDir
+	if(debug)
+		{
+			b2Vec2 mouseWorldPosition = { PIXEL_TO_METERS(app->input->GetMouseX()) + PIXEL_TO_METERS(-app->render->camera.x), PIXEL_TO_METERS(app->input->GetMouseY()) + PIXEL_TO_METERS(-app->render->camera.y) };
+			app->render->DrawLine(METERS_TO_PIXELS(pbody->body->GetPosition().x), METERS_TO_PIXELS(pbody->body->GetPosition().y), METERS_TO_PIXELS(mouseWorldPosition.x), METERS_TO_PIXELS(mouseWorldPosition.y), 255, 0, 0);
+		}
 
 	// Update player state
 

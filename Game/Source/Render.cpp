@@ -8,7 +8,10 @@
 #include <iostream>
 
 #ifdef __linux__
-#include <SDL_render.h>
+#include <SDL_render.h> 
+#include "External/Optick/include/optick.h"
+#elif _MSC_VER
+#include "Optick/include/optick.h"
 #endif
 
 #define VSYNC true
@@ -72,6 +75,9 @@ bool Render::Start()
 // Called each loop iteration
 bool Render::PreUpdate()
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	SDL_RenderClear(renderer);
 
 	return true;
@@ -79,12 +85,18 @@ bool Render::PreUpdate()
 
 bool Render::Update(float dt)
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	cameraInterpolation(camera.target, camera.lerpSpeed, dt, camera.offset);
 	return true;
 }
 
 bool Render::PostUpdate()
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	SetViewPort({
 		0,
 		0,
