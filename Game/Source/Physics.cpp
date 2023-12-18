@@ -8,6 +8,7 @@
 #include "Render.h"
 #include "Player.h"
 #include "Window.h"
+#include "Optick/include/optick.h"
 
 #ifdef __linux__
 #include <SDL_keycode.h>
