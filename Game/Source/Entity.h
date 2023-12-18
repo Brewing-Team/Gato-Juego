@@ -23,6 +23,7 @@ enum class EntityState {
 	IDLE,
 	MOVE,
 	JUMP,
+	HURT,
 	CLIMB,
 	ATTACK,
 	WIN,
@@ -105,7 +106,7 @@ public:
 	EntityType type;
 	EntityState state;
 	bool active = true;
-	pugi::xml_node parameters; 
+	pugi::xml_node parameters;
 
 	// Possible properties, it depends on how generic we
 	// want our Entity class, maybe it's not renderable...

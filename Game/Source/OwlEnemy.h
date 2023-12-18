@@ -57,6 +57,8 @@ public:
 	//Animations
 	Animation idleAnim;
 	Animation flyAnim;
+	Animation hurtedAnim;
+	Animation sleepingAnim;
 	Animation jumpAnim;
 	Animation* currentAnimation = nullptr;
 

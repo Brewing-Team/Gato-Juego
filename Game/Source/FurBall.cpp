@@ -23,7 +23,7 @@ FurBall::~FurBall() {}
 bool FurBall::Awake() {
 
 	position = {0,0};
-	texturePath = parameters.attribute("texturepath").as_string();
+	texturePath = "Assets/Textures/cat-fur-ball.png";
 
 	return true;
 }
@@ -44,7 +44,7 @@ bool FurBall::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x);
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y);
 
-	//app->render->DrawTexture(texture, position.x, position.y);
+	app->render->DrawTexture(texture, position.x - 2, position.y - 2, NULL, 1.0f,  pbody->body->GetAngle()*RADTODEG);
 
 	return true;
 }

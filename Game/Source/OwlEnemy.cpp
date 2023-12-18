@@ -1,5 +1,6 @@
 #include "OwlEnemy.h"
 #include "App.h"
+#include "Entity.h"
 #include "Map.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -75,7 +76,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 	LOG("%f", PIXEL_TO_METERS(player->position.DistanceTo(this->position)));
 	switch (this->state) {
 			case EntityState::IDLE:
-				setIdleAnimation();
+				currentAnimation = &idleAnim;
 				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
 				{
 					state = EntityState::MOVE;
@@ -83,7 +84,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 			break;
 			
 			case EntityState::MOVE:
-				setMoveAnimation();
+				currentAnimation = &flyAnim;
 				pathfindingMovement(dt);
 				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f){
 					if (attackTimer.ReadSec() >= 2)
@@ -98,9 +99,18 @@ EntityState OwlEnemy::StateMachine(float dt) {
 			break;
 
 			case EntityState::DEAD:
-				setIdleAnimation();	
+				currentAnimation = &sleepingAnim;
 				pbody->body->SetFixedRotation(false);
 				pbody->body->SetGravityScale(1);
+			break;
+
+			case EntityState::HURT:
+				currentAnimation = &hurtedAnim;
+				if (currentAnimation->HasFinished()){
+					hurtedAnim.Reset();
+					hurtedAnim.ResetLoopCount();
+					state = EntityState::MOVE;
+				}
 			break;
 
 			case EntityState::ATTACK:
@@ -153,8 +163,14 @@ bool OwlEnemy::Start() {
 	idleAnim.speed = 8.0f;
 	flyAnim = *app->map->GetAnimByName("owl-1-flying");
 	flyAnim.speed = 8.0f;
+	hurtedAnim = *app->map->GetAnimByName("owl-1-hurted");
+	hurtedAnim.speed = 8.0f;
+	hurtedAnim.loop = false;
+	sleepingAnim = *app->map->GetAnimByName("owl-1-sleeping");
+	sleepingAnim.speed = 8.0f;
 
-	currentAnimation = &flyAnim;
+
+	currentAnimation = &idleAnim;
 	
 	pbody = app->physics->CreateCircle(position.x, position.y, 15, bodyType::DYNAMIC);
 	pbody->listener = this;
@@ -173,12 +189,6 @@ bool OwlEnemy::Update(float dt)
 	// Update OwlEnemie state
 	StateMachine(dt);
 	//LOG("state: %d", state);
-
-	//TEMPORAL
-	if (lives <= 0)
-	{
-		state = EntityState::DEAD;
-	}
 
 	// PATHFINDING LOGIC
 	// ------------------------------
@@ -289,7 +299,14 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::BULLET:
 		LOG("Collision DEATH");
-		lives--;
+		if (lives <= 1 and state != EntityState::DEAD)
+		{
+			state = EntityState::DEAD;
+		}
+		else{
+			state = EntityState::HURT;
+			lives--;
+		}
 		break;
 	case ColliderType::LIMITS:
 		LOG("Collision LIMITS");
