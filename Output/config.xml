@@ -1,7 +1,8 @@
 <config>
   <app>
-    <title>Game Development template</title>
+    <title>Gato-Juego Marugo</title>
     <maxFrameDuration value="16"/>
+    <icon path="Assets/Textures/icon.png"/>
   </app>
 
   <renderer>
