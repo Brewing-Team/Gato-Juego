@@ -6,10 +6,15 @@
 #include "Window.h"
 #include "Scene.h"
 #include "Map.h"
-#include "Optick/include/optick.h"
 
 #include "Defs.h"
 #include "Log.h"
+
+#ifdef __linux__
+#include "External/Optick/include/optick.h"
+#elif _MSC_VER
+#include "Optick/include/optick.h"
+#endif
 
 Scene::Scene() : Module()
 {
@@ -98,7 +103,7 @@ bool Scene::Start()
 bool Scene::PreUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	return true;
 }
@@ -107,7 +112,7 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	if(freeCam)
 	{
@@ -136,7 +141,7 @@ bool Scene::Update(float dt)
 bool Scene::PostUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	bool ret = true;
 

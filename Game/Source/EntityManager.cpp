@@ -6,10 +6,15 @@
 #include "App.h"
 #include "Textures.h"
 #include "Scene.h"
-#include "Optick/include/optick.h"
 
 #include "Defs.h"
 #include "Log.h"
+
+#ifdef __linux__
+#include "External/Optick/include/optick.h"
+#elif _MSC_VER
+#include "Optick/include/optick.h"
+#endif
 
 EntityManager::EntityManager() : Module()
 {
@@ -126,7 +131,7 @@ void EntityManager::AddEntity(Entity* entity)
 bool EntityManager::Update(float dt)
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	bool ret = true;
 	ListItem<Entity*>* item;

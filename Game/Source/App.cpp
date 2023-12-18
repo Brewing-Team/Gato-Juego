@@ -7,13 +7,18 @@
 #include "Scene.h"
 #include "Map.h"
 #include "Physics.h"
-#include "Optick/include/optick.h"
 
 #include "Defs.h"
 #include "Log.h"
 
 #include <iostream>
 #include <sstream>
+
+#ifdef __linux__
+#include "External/Optick/include/optick.h"
+#elif _MSC_VER
+#include "Optick/include/optick.h"
+#endif
 
 // Constructor
 App::App(int argc, char* args[]) : argc(argc), args(args)
@@ -178,7 +183,7 @@ bool App::LoadConfig()
 void App::PrepareUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 	frameTime.Start();
 }
 
@@ -186,7 +191,7 @@ void App::PrepareUpdate()
 void App::FinishUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	// This is a good place to call Load / Save functions
 	double currentDt = frameTime.ReadMs();
@@ -246,7 +251,7 @@ void App::FinishUpdate()
 bool App::PreUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	bool ret = true;
 
@@ -279,7 +284,7 @@ bool App::DoUpdate()
 {
 
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	bool ret = true;
 	ListItem<Module*>* item;
@@ -305,7 +310,7 @@ bool App::PostUpdate()
 {
 
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	bool ret = true;
 	ListItem<Module*>* item;

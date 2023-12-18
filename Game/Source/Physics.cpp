@@ -8,15 +8,16 @@
 #include "Render.h"
 #include "Player.h"
 #include "Window.h"
-#include "Optick/include/optick.h"
 
 #ifdef __linux__
 #include <SDL_keycode.h>
 #include <Box2D/Box2D.h>
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
+#include "External/Optick/include/optick.h"
 #elif _MSC_VER
 #include "SDL/include/SDL_keycode.h"
 #include "Box2D/Box2D/Box2D.h"
+#include "Optick/include/optick.h"
 
 // Tell the compiler to reference the compiled Box2D libraries
 #ifdef _DEBUG
@@ -56,7 +57,7 @@ bool Physics::Start()
 bool Physics::PreUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	bool ret = true;
 
@@ -234,7 +235,7 @@ bool Physics::PostUpdate()
 {
 
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	bool ret = true;
 	

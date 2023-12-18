@@ -4,12 +4,13 @@
 
 #include "Defs.h"
 #include "Log.h"
-#include "Optick/include/optick.h"
 
 #ifdef __linux__
 #include <SDL.h>
+#include "External/Optick/include/optick.h"
 #elif _MSC_VER
 #include "SDL/include/SDL.h"
+#include "Optick/include/optick.h"
 #endif
 
 #define MAX_KEYS 300
@@ -56,7 +57,7 @@ bool Input::Start()
 bool Input::PreUpdate()
 {
 	// OPTICK PROFILIN
-	OPTICK_EVENT();
+	OPTICK_EVENT("a");
 
 	static SDL_Event event;
 

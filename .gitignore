@@ -31,11 +31,13 @@
 !Game/Source/External/Box2D/libx86/DebugLib/Box2D.lib
 !Game/Source/External/Box2D/libx86/ReleaseLib/Box2D.lib
 !Game/Source/External/Optick/lib/OptickCore.lib
+!Game/Source/External/Optick/lib/libOptickCore.so
 
 # Executables
 *.exe
 *.out
 *.app
+!Game/Source/External/Optick/Optick.exe
 
 # Ignore thumbnails created by windows
 Thumbs.db
