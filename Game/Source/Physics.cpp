@@ -54,6 +54,9 @@ bool Physics::Start()
 // 
 bool Physics::PreUpdate()
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	bool ret = true;
 
 	// Step (update) the World
@@ -228,6 +231,10 @@ PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
 // 
 bool Physics::PostUpdate()
 {
+
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	bool ret = true;
 	
 	//  Iterate all objects in the world and draw the bodies

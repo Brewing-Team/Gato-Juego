@@ -8,6 +8,7 @@
 #include "Physics.h"
 #include "Window.h"
 #include "Scene.h"
+#include "Optick/include/optick.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -60,6 +61,9 @@ bool Map::Start() {
 
 bool Map::Update(float dt)
 {
+    // OPTICK PROFILIN
+    OPTICK_EVENT();
+
     if(mapLoaded == false)
         return false;
 

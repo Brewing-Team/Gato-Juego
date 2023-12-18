@@ -4,6 +4,7 @@
 
 #include "Defs.h"
 #include "Log.h"
+#include "Optick/include/optick.h"
 
 #ifdef __linux__
 #include <SDL.h>
@@ -54,6 +55,9 @@ bool Input::Start()
 // Called each loop iteration
 bool Input::PreUpdate()
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	static SDL_Event event;
 
 	const Uint8* keys = SDL_GetKeyboardState(NULL);

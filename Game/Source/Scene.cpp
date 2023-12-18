@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Scene.h"
 #include "Map.h"
+#include "Optick/include/optick.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -96,13 +97,18 @@ bool Scene::Start()
 // Called each loop iteration
 bool Scene::PreUpdate()
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	return true;
 }
 
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	if(freeCam)
 	{
 		float camSpeed = 1;
@@ -129,6 +135,9 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
+	// OPTICK PROFILIN
+	OPTICK_EVENT();
+
 	bool ret = true;
 
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
