@@ -97,6 +97,12 @@ EntityState OwlEnemy::StateMachine(float dt) {
 
 			break;
 
+			case EntityState::DEAD:
+				setIdleAnimation();	
+				pbody->body->SetFixedRotation(false);
+				pbody->body->SetGravityScale(1);
+			break;
+
 			case EntityState::ATTACK:
 				b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
 				attackDirection.Normalize();
@@ -167,6 +173,12 @@ bool OwlEnemy::Update(float dt)
 	// Update OwlEnemie state
 	StateMachine(dt);
 	//LOG("state: %d", state);
+
+	//TEMPORAL
+	if (lives <= 0)
+	{
+		state = EntityState::DEAD;
+	}
 
 	// PATHFINDING LOGIC
 	// ------------------------------
@@ -274,9 +286,11 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
-		isAlive = false;
 		break;
-
+	case ColliderType::BULLET:
+		LOG("Collision DEATH");
+		lives--;
+		break;
 	case ColliderType::LIMITS:
 		LOG("Collision LIMITS");
 		break;

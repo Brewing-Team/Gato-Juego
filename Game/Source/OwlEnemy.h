@@ -82,6 +82,7 @@ public:
 private:
 
 	Player* player;
+	int lives = 3;
 
 };
 
