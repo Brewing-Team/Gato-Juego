@@ -9,6 +9,7 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include "FurBall.h"
 
 #include "Window.h"
 #include <cmath>
@@ -360,6 +361,8 @@ bool Player::Awake() {
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
 	spawnPosition = position;
+
+	bullet = (FurBall*)app->entityManager->CreateEntity(EntityType::FURBALL);
 	
 	return true;
 }
@@ -418,6 +421,15 @@ bool Player::Update(float dt)
 	//tmp para que los enemigos le ataquen
 	if (lives <= 0){
 		isAlive = false;
+	}
+
+	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	{
+		bullet->pbody->body->SetTransform(pbody->body->GetWorldCenter() + b2Vec2{0, -0.5f}, 0);
+		b2Vec2 shootDir = { app->input->GetMouseX() - pbody->body->GetWorldCenter().x, app->input->GetMouseY() - pbody->body->GetWorldCenter().y };
+		shootDir.Normalize();
+		LOG("Shootdir:%f, %f", shootDir.x, shootDir.y);
+		bullet->pbody->body->ApplyForce({ shootDir.x * 10, shootDir.y * 10}, bullet->pbody->body->GetWorldCenter(), true);
 	}
 
 	// Update player state

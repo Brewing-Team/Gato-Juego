@@ -3,6 +3,7 @@
 
 #include "Animation.h"
 #include "Entity.h"
+#include "FurBall.h"
 #include "Point.h"
 #ifdef __linux__
 #include <SDL.h>
@@ -99,6 +100,8 @@ public:
 	bool climbingLeft = false;
 	bool isCollidingRight = false;
 	bool climbingRight = false;
+
+	FurBall* bullet;
 
 	// debug textures
 	SDL_Texture* debugMenuTexture;

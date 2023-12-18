@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "OwlEnemy.h"
 #include "DogEnemy.h"
+#include "FurBall.h"
 #include "App.h"
 #include "Textures.h"
 #include "Scene.h"
@@ -96,6 +97,8 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::DOGENEMY:
 		entity = new DogEnemy();
 		break;
+	case EntityType::FURBALL:
+		entity = new FurBall();
 	default:
 		break;
 	}
