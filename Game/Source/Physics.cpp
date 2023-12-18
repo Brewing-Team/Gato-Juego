@@ -8,6 +8,7 @@
 #include "Render.h"
 #include "Player.h"
 #include "Window.h"
+#include <Box2D/Dynamics/b2Body.h>
 
 #ifdef __linux__
 #include <SDL_keycode.h>
@@ -546,6 +547,113 @@ b2WeldJoint* Physics::CreateWeldJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, 
 	weldJointDef.referenceAngle = 0;
 
 	return (b2WeldJoint*)world->CreateJoint(&weldJointDef);
+}
+
+b2Body** Physics::CreateRope(int length){
+
+	b2Body** segments = new b2Body*[length];
+	b2RevoluteJoint** joints = new b2RevoluteJoint*[length - 1];
+	b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
+
+	b2BodyDef* bodyDef = new b2BodyDef();
+	bodyDef->type = b2_dynamicBody;
+
+	float width = 0.1f, height = 0.25f;
+
+	b2PolygonShape* shape = new b2PolygonShape();
+	shape->SetAsBox(width / 2, height / 2);
+
+	for (int i = 0; i < length; i++)
+	{
+		segments[i] = world->CreateBody(bodyDef);
+		segments[i]->CreateFixture(shape, 1.0f);
+	}
+
+	delete shape;
+	shape = nullptr;
+
+	b2RevoluteJointDef* jointDef = new b2RevoluteJointDef();
+	jointDef->localAnchorA.y = -height / 2;
+	jointDef->localAnchorB.y = height / 2;
+
+	for (int i = 0; i < length - 1; i++)
+	{
+		jointDef->bodyA = segments[i];
+		jointDef->bodyB = segments[i + 1];
+		joints[i] = (b2RevoluteJoint*)world->CreateJoint(jointDef);
+	}
+
+	b2RopeJointDef* ropeJointDef = new b2RopeJointDef();
+	ropeJointDef->localAnchorA.Set(0, -height / 2);
+	ropeJointDef->localAnchorB.Set(0, height / 2);
+	ropeJointDef->maxLength = height;
+
+	for (int i = 0; i < length - 1; i++)
+	{
+		ropeJointDef->bodyA = segments[i];
+		ropeJointDef->bodyB = segments[i + 1];
+		ropeJoints[i] = (b2RopeJoint*)world->CreateJoint(ropeJointDef);
+	}
+
+	return segments;
+}
+
+b2Body** Physics::CreateRope(int length, b2Vec2 startPos){
+	    b2Body** segments = new b2Body*[length];
+    b2RevoluteJoint** joints = new b2RevoluteJoint*[length + 1];
+    b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
+
+    b2BodyDef* bodyDef = new b2BodyDef();
+    bodyDef->type = b2_dynamicBody;
+
+    float width = 0.1f, height = height = 0.25f;
+
+    b2PolygonShape* shape = new b2PolygonShape();
+    shape->SetAsBox(width / 2, height / 2);
+
+    for (int i = 0; i < length; i++)
+    {
+        segments[i] = world->CreateBody(bodyDef);
+        segments[i]->CreateFixture(shape, 1.0f);
+    }
+
+    delete shape;
+    shape = nullptr;
+
+    b2BodyDef anchorBodyDef;
+    anchorBodyDef.type = b2_staticBody;
+
+    anchorBodyDef.position = startPos;
+    b2Body* startAnchor = world->CreateBody(&anchorBodyDef);
+
+    b2RevoluteJointDef* jointDef = new b2RevoluteJointDef();
+    jointDef->localAnchorA.y = -height / 2;
+    jointDef->localAnchorB.y = height / 2;
+
+    jointDef->bodyA = startAnchor;
+    jointDef->bodyB = segments[0];
+    joints[0] = (b2RevoluteJoint*)world->CreateJoint(jointDef);
+
+    for (int i = 0; i < length - 1; i++)
+    {
+        jointDef->bodyA = segments[i];
+        jointDef->bodyB = segments[i + 1];
+        joints[i + 1] = (b2RevoluteJoint*)world->CreateJoint(jointDef);
+    }
+
+    b2RopeJointDef* ropeJointDef = new b2RopeJointDef();
+    ropeJointDef->localAnchorA.Set(0, -height / 2);
+    ropeJointDef->localAnchorB.Set(0, height / 2);
+    ropeJointDef->maxLength = height;
+
+    for (int i = 0; i < length - 1; i++)
+    {
+        ropeJointDef->bodyA = segments[i];
+        ropeJointDef->bodyB = segments[i + 1];
+        ropeJoints[i] = (b2RopeJoint*)world->CreateJoint(ropeJointDef);
+    }
+
+    return segments;
 }
 
 b2Body** Physics::CreateRope(int length, b2Vec2 startPos, b2Vec2 endPos)
