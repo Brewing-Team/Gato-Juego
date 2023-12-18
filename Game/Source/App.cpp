@@ -11,6 +11,7 @@
 #include "Defs.h"
 #include "Log.h"
 
+#include <SDL_image.h>
 #include <iostream>
 #include <sstream>
 
@@ -96,7 +97,6 @@ bool App::Awake()
 		render->camera.w = configNode.child("resolution").attribute("width").as_int();
 		render->camera.h = configNode.child("resolution").attribute("height").as_int();
 
-
 		ListItem<Module*>* item;
 		item = modules.start;
 
@@ -109,6 +109,10 @@ bool App::Awake()
 			ret = item->data->Awake(node);
 			item = item->next;
 		}
+
+		//set app icon
+		pugi::xml_node icon = configNode.child("app").child("icon");
+		SDL_SetWindowIcon(win->window, IMG_Load(icon.attribute("path").as_string()));
 	}
 
 	LOG("Timer App Awake(): %f", timer.ReadMSec());
