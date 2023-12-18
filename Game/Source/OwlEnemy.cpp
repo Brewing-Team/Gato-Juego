@@ -93,6 +93,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 					}
 				}
 				else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)){
+					moveToSpawnPoint();
 					state = EntityState::IDLE;
 				}
 
