@@ -262,7 +262,7 @@ bool Physics::PostUpdate()
 						v = b->GetWorldPoint(polygonShape->GetVertex(i));
 						if (i > 0)
 							app->render->DrawLine(METERS_TO_PIXELS(prev.x), METERS_TO_PIXELS(prev.y), METERS_TO_PIXELS(v.x), METERS_TO_PIXELS(v.y), 255, 255, 100);
-
+							LOG("%f", METERS_TO_PIXELS(prev.x));
 						prev = v;
 					}
 

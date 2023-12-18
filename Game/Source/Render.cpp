@@ -145,8 +145,8 @@ void Render::cameraInterpolation(Entity* target, float lerpSpeed, float dt, fPoi
 	{
 		if(camera.useInterpolation)
 		{
-			camera.x = std::ceil(std::lerp(camera.x, (int)(camera.w / 2 / app->win->GetScale()) - 16 - target->position.x - offset.x, dt * lerpSpeed / 1000));
-			camera.y = std::ceil(std::lerp(camera.y, (int)(camera.h / 2 / app->win->GetScale()) - 16 - target->position.y - offset.y, dt * lerpSpeed / 1000));
+			camera.x = (std::lerp(camera.x, (camera.w / 2 / app->win->GetScale()) - 16 - target->position.x - offset.x, dt * lerpSpeed / 1000));
+			camera.y = (std::lerp(camera.y, (camera.h / 2 / app->win->GetScale()) - 16 - target->position.y - offset.y, dt * lerpSpeed / 1000));
 		}
 		else
 		{
@@ -163,8 +163,8 @@ bool Render::DrawTexture(SDL_Texture* texture, int x, int y, const SDL_Rect* sec
 	uint scale = app->win->GetScale();
 
 	SDL_Rect rect;
-	rect.x = ((int)(camera.x * speed) + x) * scale;
-	rect.y = ((int)(camera.y * speed) + y) * scale;
+	rect.x = ((camera.x * speed) + x) * scale;
+	rect.y = ((camera.y * speed) + y) * scale;
 
 	if(section != NULL)
 	{
@@ -209,8 +209,8 @@ bool Render::DrawRectangle(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint
 	SDL_Rect rec(rect);
 	if(use_camera)
 	{
-		rec.x = ((int)(camera.x + rect.x) * scale);
-		rec.y = ((int)(camera.y + rect.y) * scale);
+		rec.x = ((camera.x + rect.x) * scale);
+		rec.y = ((camera.y + rect.y) * scale);
 		rec.w *= scale;
 		rec.h *= scale;
 	}
@@ -265,8 +265,8 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 
 	for(uint i = 0; i < 360; ++i)
 	{
-		points[i].x = ((int)(x + camera.x) * scale + radius * cos(i * factor) * scale);
-		points[i].y = ((int)(y + camera.y) * scale + radius * sin(i * factor) * scale);
+		points[i].x = ((x + camera.x) * scale + radius * cos(i * factor) * scale);
+		points[i].y = ((y + camera.y) * scale + radius * sin(i * factor) * scale);
 	}
 
 	result = SDL_RenderDrawPoints(renderer, points, 360);
