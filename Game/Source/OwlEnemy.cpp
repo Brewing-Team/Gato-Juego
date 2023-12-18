@@ -107,9 +107,11 @@ EntityState OwlEnemy::StateMachine(float dt) {
 
 			case EntityState::HURT:
 				currentAnimation = &hurtedAnim;
+				invencible = true;
 				if (currentAnimation->HasFinished()){
 					hurtedAnim.Reset();
 					hurtedAnim.ResetLoopCount();
+					invencible = false;
 					state = EntityState::MOVE;
 				}
 			break;
@@ -301,7 +303,7 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::BULLET:
 		LOG("Collision DEATH");
-		if (state != EntityState::DEAD){
+		if (state != EntityState::DEAD and !invencible){
 			if (lives <= 1)
 			{
 				state = EntityState::DEAD;

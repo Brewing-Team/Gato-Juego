@@ -85,6 +85,7 @@ private:
 
 	Player* player;
 	int lives = 3;
+	bool invencible = false;
 
 };
 
