@@ -46,7 +46,7 @@ void Player::setWinAnimation()
 	// TODO set win animation
 }
 
-void Player::Move() {
+void Player::Move(float dt) {
 	
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
@@ -71,7 +71,7 @@ void Player::Move() {
 
 }
 
-void Player::Jump() {
+void Player::Jump(float dt) {
 	
 	float impulse = pbody->body->GetMass() * 5;
 	pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
@@ -79,7 +79,7 @@ void Player::Jump() {
 	
 }
 
-void Player::Climb() {
+void Player::Climb(float dt) {
 	
 	if (startTimer) {
 		timer.Start();
@@ -90,19 +90,23 @@ void Player::Climb() {
 
 	if (timer.ReadSec() <= 5) {
 		if (isCollidingRight) {
-			angle = -90;
+			climbingLeft = false;
+			climbingRight = true;
 			flip = SDL_FLIP_NONE;
 		}
 
-		if (isCollidingLeft) {
-			angle = 90;
+		else if (isCollidingLeft) {
+			climbingRight = false;
+			climbingLeft = true;
 			flip = SDL_FLIP_HORIZONTAL;
 		}
 
-		if (angle == -90) {
+		if (climbingRight) {
+			angle = std::lerp(angle, -90, dt * 32 / 1000);
 			pbody->body->ApplyForceToCenter({ 1, 0 }, true);
 		}
-		else {
+		else if (climbingLeft) {
+			angle = std::lerp(angle, 90, dt * 32 / 1000);
 			pbody->body->ApplyForceToCenter({ -1, 0 }, true);
 		}
 
@@ -174,7 +178,7 @@ EntityState Player::StateMachine(float dt) {
 
 		case EntityState::IDLE:
 
-			angle = 0;
+			angle = std::lerp(angle, 0, dt * 32 / 1000);;
 
 			setIdleAnimation();
 
@@ -188,7 +192,7 @@ EntityState Player::StateMachine(float dt) {
 
 			if (isGrounded) {
 				if(app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN){
-					Jump();
+					Jump(dt);
 					jumpAnim.Reset();
 				}
 			}
@@ -204,7 +208,7 @@ EntityState Player::StateMachine(float dt) {
 			break;
 		case EntityState::MOVE:
 
-			angle = 0;
+			angle = std::lerp(angle, 0, dt * 32 / 1000);
 
 			if(isGrounded)
 			{
@@ -225,12 +229,12 @@ EntityState Player::StateMachine(float dt) {
 
 			if (isGrounded && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 
-				Jump();
-				Move();
+				Jump(dt);
+				Move(dt);
 
 			} else {
 
-				Move();
+				Move(dt);
 
 			}
 
@@ -264,7 +268,7 @@ EntityState Player::StateMachine(float dt) {
 				this->state = EntityState::IDLE;
 			}
 			
-			Climb();
+			Climb(dt);
 			
 
 

@@ -20,9 +20,9 @@ public:
 	Timer timer;
 
 	EntityState StateMachine(float dt) override;
-	void Move() override;
-	void Jump() override;
-	void Climb() override;
+	void Move(float dt) override;
+	void Jump(float dt) override;
+	void Climb(float dt) override;
 
 	bool SaveState(pugi::xml_node& node) override;
 	bool LoadState(pugi::xml_node& node) override;
@@ -96,7 +96,9 @@ public:
 	bool isGrounded = false;
 	bool isCollidingTop = false;
 	bool isCollidingLeft = false;
+	bool climbingLeft = false;
 	bool isCollidingRight = false;
+	bool climbingRight = false;
 
 	// debug textures
 	SDL_Texture* debugMenuTexture;

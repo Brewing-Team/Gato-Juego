@@ -21,8 +21,8 @@ public:
 	Timer movementDelay;
 
 	EntityState StateMachine(float dt) override;
-	void Move() override;
-	void Jump() override;
+	void Move(float dt) override;
+	void Jump(float dt) override;
 
 	bool SaveState(pugi::xml_node& node) override;
 	bool LoadState(pugi::xml_node& node) override;
