@@ -33,7 +33,7 @@ bool FurBall::Start() {
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 	pbody = app->physics->CreateCircle(position.x, position.y, 2, bodyType::DYNAMIC);
-	pbody->ctype = ColliderType::ITEM;
+	pbody->ctype = ColliderType::BULLET;
 
 	return true;
 }

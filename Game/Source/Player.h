@@ -101,7 +101,6 @@ public:
 	bool isCollidingRight = false;
 	bool climbingRight = false;
 
-	FurBall* bullet;
 	float bulletSpeed = 2.0f;
 
 	// debug textures
