@@ -297,16 +297,19 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
+		app->entityManager->DestroyEntity(this);
 		break;
 	case ColliderType::BULLET:
 		LOG("Collision DEATH");
-		if (lives <= 1 and state != EntityState::DEAD)
-		{
-			state = EntityState::DEAD;
-		}
-		else{
-			state = EntityState::HURT;
-			lives--;
+		if (state != EntityState::DEAD){
+			if (lives <= 1)
+			{
+				state = EntityState::DEAD;
+			}
+			else{
+				state = EntityState::HURT;
+				lives--;
+			}
 		}
 		break;
 	case ColliderType::LIMITS:
