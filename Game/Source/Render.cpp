@@ -128,7 +128,7 @@ void Render::ResetViewPort()
 /// @param lerpSpeed the camera’s movement speed. Lower values result in a “lazier” camera.
 /// @param offset position of the camera relative to the target. (0,0) is the center.
 /// @param dt delta time
-void Render::cameraInterpolation(Entity* target, float lerpSpeed, float dt, iPoint offset)
+void Render::cameraInterpolation(Entity* target, float lerpSpeed, float dt, fPoint offset)
 {	
 	//DEBUG
 	if(freeCam)

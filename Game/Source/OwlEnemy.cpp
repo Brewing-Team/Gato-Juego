@@ -192,16 +192,16 @@ bool OwlEnemy::Update(float dt)
 }
 
 void OwlEnemy::pathfindingMovement(float dt){
-	iPoint origin = app->map->WorldToMap(newPosition.x + 8, newPosition.y + 8); //añadir el tile size / 2 hace que el owl se acerque mas
+	fPoint origin = app->map->WorldToMap(newPosition.x + 8, newPosition.y + 8); //añadir el tile size / 2 hace que el owl se acerque mas
 
 	if (timer.ReadMSec() > 250) {
-		iPoint destination = app->map->WorldToMap(player->position.x + 8, player->position.y + 8);  //añadir el tile size / 2 hace que el owl se acerque mas
+		fPoint destination = app->map->WorldToMap(player->position.x + 8, player->position.y + 8);  //añadir el tile size / 2 hace que el owl se acerque mas
 		app->map->pathfinding->CreatePath(origin, destination);
 		timer.Start();
 		currentPathPos = 0;
 	}
 	
-	const DynArray<iPoint>* path = app->map->pathfinding->GetLastPath();
+	const DynArray<fPoint>* path = app->map->pathfinding->GetLastPath();
 
 	if (movementDelay.ReadMSec() > 100) {
 		if (currentPathPos < path->Count())
@@ -233,8 +233,8 @@ void OwlEnemy::pathfindingMovement(float dt){
 		{
 			for (uint i = 0; i < path->Count() - 1; ++i)
 			{
-				iPoint pos1 = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-				iPoint pos2 = app->map->MapToWorld(path->At(i + 1)->x, path->At(i + 1)->y);
+				fPoint pos1 = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+				fPoint pos2 = app->map->MapToWorld(path->At(i + 1)->x, path->At(i + 1)->y);
 				app->render->DrawLine(pos1.x, pos1.y, pos2.x, pos2.y, 0, 0, 255);
 			}
 

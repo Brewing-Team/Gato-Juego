@@ -130,16 +130,16 @@ bool DogEnemy::Update(float dt)
 	// PATHFINDING LOGIC
 	// ------------------------------
 
-	iPoint origin = app->map->WorldToMap(newPosition.x + 8, newPosition.y + 8); //añadir el tile size / 2 hace que el owl se acerque mas
+	fPoint origin = app->map->WorldToMap(newPosition.x + 8, newPosition.y + 8); //añadir el tile size / 2 hace que el owl se acerque mas
 
 	if (timer.ReadMSec() > 250) {
-		iPoint destination = app->map->WorldToMap(app->scene->player->position.x + 8, app->scene->player->position.y + 8);  //añadir el tile size / 2 hace que el owl se acerque mas
+		fPoint destination = app->map->WorldToMap(app->scene->player->position.x + 8, app->scene->player->position.y + 8);  //añadir el tile size / 2 hace que el owl se acerque mas
 		app->map->pathfinding->CreatePath(origin, destination);
 		timer.Start();
 		currentPathPos = 0;
 	}
 	
-	const DynArray<iPoint>* path = app->map->pathfinding->GetLastPath();
+	const DynArray<fPoint>* path = app->map->pathfinding->GetLastPath();
 
 	if (movementDelay.ReadMSec() > 100) {
 		if (currentPathPos < path->Count())
@@ -171,8 +171,8 @@ bool DogEnemy::Update(float dt)
 		{
 			for (uint i = 0; i < path->Count() - 1; ++i)
 			{
-				iPoint pos1 = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-				iPoint pos2 = app->map->MapToWorld(path->At(i + 1)->x, path->At(i + 1)->y);
+				fPoint pos1 = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+				fPoint pos2 = app->map->MapToWorld(path->At(i + 1)->x, path->At(i + 1)->y);
 				app->render->DrawLine(pos1.x, pos1.y, pos2.x, pos2.y, 0, 0, 255);
 			}
 
@@ -192,7 +192,13 @@ bool DogEnemy::Update(float dt)
 
 	// Render OwlEnemie texture
 	//app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
-	app->render->DrawRectangle({position.x + 14,position.y + 12,20, 10}, 255, 255, 255);
+	app->render->DrawRectangle(
+		{
+			(int)position.x + 14,
+			(int)position.y + 12,
+			20, 
+			10
+		}, 255, 255, 255);
 
 	currentAnimation->Update(dt);
 	return true;

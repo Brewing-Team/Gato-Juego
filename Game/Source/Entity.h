@@ -108,8 +108,8 @@ public:
 
 	// Possible properties, it depends on how generic we
 	// want our Entity class, maybe it's not renderable...
-	iPoint position;       
-	iPoint newPosition;
+	fPoint position;       
+	fPoint newPosition;
 	bool renderable = true;
 };
 

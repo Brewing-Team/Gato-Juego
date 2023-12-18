@@ -41,14 +41,14 @@ void PathFinding::SetNavigationMap(uint w, uint h, uchar* data)
 }
 
 // Utility: return true if pos is inside the map boundaries
-bool PathFinding::CheckBoundaries(const iPoint& pos) const
+bool PathFinding::CheckBoundaries(const fPoint& pos) const
 {
 	return (pos.x >= 0 && pos.x <= (int)width &&
 			pos.y >= 0 && pos.y <= (int)height);
 }
 
 // Utility: returns true is the tile is walkable
-bool PathFinding::IsWalkable(const iPoint& pos) const
+bool PathFinding::IsWalkable(const fPoint& pos) const
 {
 	uchar walkId = GetTileAt(pos);
 	bool isWalkable = walkId != INVALID_WALK_CODE && walkId > 0;
@@ -56,16 +56,17 @@ bool PathFinding::IsWalkable(const iPoint& pos) const
 }
 
 // Utility: return the walkability value of a tile
-uchar PathFinding::GetTileAt(const iPoint& pos) const
+uchar PathFinding::GetTileAt(const fPoint& pos) const
 {
+	iPoint position = { (int)pos.x, (int)pos.y };
 	if(CheckBoundaries(pos))
-		return map[(pos.y*width) + pos.x];
+		return map[(position.y*width) + position.x];
 
 	return INVALID_WALK_CODE;
 }
 
 // To request all tiles involved in the last generated path
-const DynArray<iPoint>* PathFinding::GetLastPath() const
+const DynArray<fPoint>* PathFinding::GetLastPath() const
 {
 	return &lastPath;
 }
@@ -80,7 +81,7 @@ void PathFinding::ClearLastPath()
 // ----------------------------------------------------------------------------------
 // Actual A* algorithm: return number of steps in the creation of the path or -1 ----
 // ----------------------------------------------------------------------------------
-int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
+int PathFinding::CreatePath(const fPoint& origin, const fPoint& destination)
 {
 	int ret = -1;
 	int iterations = 0;
@@ -172,7 +173,7 @@ int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 // PathList ------------------------------------------------------------------------
 // Looks for a node in this list and returns it's list node or NULL
 // ---------------------------------------------------------------------------------
-ListItem<PathNode>* PathList::Find(const iPoint& point) const
+ListItem<PathNode>* PathList::Find(const fPoint& point) const
 {
 	ListItem<PathNode>* item = list.start;
 	while(item)
@@ -212,7 +213,7 @@ ListItem<PathNode>* PathList::GetNodeLowestScore() const
 PathNode::PathNode() : g(-1), h(-1), pos(-1, -1), parent(NULL)
 {}
 
-PathNode::PathNode(int g, int h, const iPoint& pos, const PathNode* parent) : g(g), h(h), pos(pos), parent(parent)
+PathNode::PathNode(int g, int h, const fPoint& pos, const PathNode* parent) : g(g), h(h), pos(pos), parent(parent)
 {}
 
 PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos), parent(node.parent)
@@ -223,7 +224,7 @@ PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos), 
 // ----------------------------------------------------------------------------------
 uint PathNode::FindWalkableAdjacents(PathList& listToFill) const
 {
-	iPoint tile;
+	fPoint tile;
 	uint before = listToFill.list.Count();
 
 	// top
@@ -256,7 +257,7 @@ int PathNode::Score() const
 // PathNode -------------------------------------------------------------------------
 // Calculate the F for a specific destination tile
 // ----------------------------------------------------------------------------------
-int PathNode::CalculateF(const iPoint& destination)
+int PathNode::CalculateF(const fPoint& destination)
 {
 	g = parent->g + 1;
 	h = pos.DistanceTo(destination);

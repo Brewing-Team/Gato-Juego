@@ -40,7 +40,7 @@ public:
 	void SetViewPort(const SDL_Rect& rect);
 	void ResetViewPort();
 
-	void cameraInterpolation(Entity* target, float lerpSpeed, float dt, iPoint offset = { 0,0 });
+	void cameraInterpolation(Entity* target, float lerpSpeed, float dt, fPoint offset = { 0,0 });
 
 	// Drawing
 	bool DrawTexture(SDL_Texture* texture, int x, int y, const SDL_Rect* section = NULL, float speed = 1.0f, double angle = 0, SDL_RendererFlip flip = SDL_FLIP_NONE, int pivotX = INT_MAX, int pivotY = INT_MAX) const;
@@ -69,7 +69,7 @@ public:
 		bool useInterpolation;
 		float lerpSpeed;
 		Entity* target;
-		iPoint offset;
+		fPoint offset;
 	}camera;
 
 	SDL_Renderer* renderer;

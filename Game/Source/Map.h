@@ -148,8 +148,8 @@ public:
 	// Load new map
 	bool Load(SString mapFileName);
 
-	iPoint MapToWorld(int x, int y) const;
-	iPoint WorldToMap(int x, int y);
+	fPoint MapToWorld(int x, int y) const;
+	fPoint WorldToMap(int x, int y);
 
 	Animation* GetAnimByName(SString name);
 

@@ -70,7 +70,7 @@ bool Map::Update(float dt)
 
         if (mapLayerItem->data->properties.GetProperty("Draw") != NULL && mapLayerItem->data->properties.GetProperty("Draw")->value) {
 
-            iPoint cameraPosMap = WorldToMap((int)(-app->render->camera.x), (int)(-app->render->camera.y));
+            fPoint cameraPosMap = WorldToMap((int)(-app->render->camera.x), (int)(-app->render->camera.y));
             //cameraPosMap = { 20,40 };
 
             int leftClipping = MAX(cameraPosMap.x, 0);
@@ -99,7 +99,7 @@ bool Map::Update(float dt)
                     TileSet* tileset = GetTilesetFromTileId(gid);
 
                     SDL_Rect r = tileset->GetTileRect(gid);
-                    iPoint pos = MapToWorld(x, y);
+                    fPoint pos = MapToWorld(x, y);
 
 
                     // TODO 
@@ -142,9 +142,9 @@ bool Map::Update(float dt)
     return true;
 }
 
-iPoint Map::MapToWorld(int x, int y) const
+fPoint Map::MapToWorld(int x, int y) const
 {
-    iPoint ret;
+    fPoint ret;
 
     ret.x = x * mapData.tileWidth;
     ret.y = y * mapData.tileHeight;
@@ -152,9 +152,9 @@ iPoint Map::MapToWorld(int x, int y) const
     return ret;
 }
 
-iPoint Map::WorldToMap(int x, int y) 
+fPoint Map::WorldToMap(int x, int y) 
 {
-    iPoint ret;
+    fPoint ret;
 
     ret.x = x / mapData.tileWidth;
     ret.y = y / mapData.tileHeight;

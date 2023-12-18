@@ -61,7 +61,7 @@ public:
 
 	float maxSpeed = 2.0f;
 	const char* texturePath;
-	iPoint spawnPosition;
+	fPoint spawnPosition;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
 
@@ -70,7 +70,7 @@ public:
 	//Movement
 	int moveSpeed = 2;
 	int angle;
-	iPoint movementDirection;
+	fPoint movementDirection;
 
 	int currentPathPos;
 

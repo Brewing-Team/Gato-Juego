@@ -77,7 +77,7 @@ public:
 	
 	float maxSpeed = 2.0f;
 	const char* texturePath;
-	iPoint spawnPosition;
+	fPoint spawnPosition;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
 	PhysBody* groundSensor;
