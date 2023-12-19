@@ -144589,18 +144589,18 @@
   <object id="195" type="rectangle" x="1271.85" y="1735.74" width="16" height="27.0341"/>
   <object id="196" type="rectangle" x="1268.54" y="1762.42" width="389.576" height="350.167"/>
   <object id="197" type="rectangle" x="1445.39" y="1634.67" width="212.795" height="127.5"/>
-  <object id="198" type="rectangle" x="1512.07" y="1543.92" width="31.625" height="32"/>
-  <object id="199" type="rectangle" x="1479.57" y="1479.67" width="32.5" height="32.125"/>
-  <object id="200" type="rectangle" x="1560.19" y="1447.92" width="31.625" height="32"/>
-  <object id="201" type="rectangle" x="1479.57" y="1383.8" width="32.5" height="32.25"/>
-  <object id="202" type="rectangle" x="1527.69" y="1351.98" width="32.25" height="31.875"/>
-  <object id="203" type="rectangle" x="1479.88" y="1319.61" width="32" height="32.375"/>
-  <object id="204" type="rectangle" x="1576.32" y="1239.8" width="31.75" height="79.75"/>
-  <object id="205" type="rectangle" x="1607.07" y="1239.92" width="48.625" height="16.75"/>
+  <object id="198" type="rectangle" x="1522.82" y="1552.92" width="24.875" height="29.875"/>
+  <object id="199" type="rectangle" x="1490.82" y="1473.05" width="25" height="29.75"/>
+  <object id="200" type="rectangle" x="1571.19" y="1456.92" width="24.5" height="30"/>
+  <object id="201" type="rectangle" x="1474.82" y="1392.8" width="25" height="29.875"/>
+  <object id="202" type="rectangle" x="1538.94" y="1344.98" width="25.625" height="30"/>
+  <object id="203" type="rectangle" x="1491.01" y="1297.23" width="26" height="29.375"/>
+  <object id="204" type="rectangle" x="1572.19" y="1234.92" width="23.5" height="91.75"/>
+  <object id="205" type="rectangle" x="1595.11" y="1234.94" width="64.6715" height="28.8215"/>
   <object id="206" type="rectangle" x="1633.55" y="1296.22" width="28.9545" height="338.409"/>
-  <object id="207" type="rectangle" x="1608.67" y="1367.56" width="33.6364" height="32.1818"/>
+  <object id="207" type="rectangle" x="1602.92" y="1376.81" width="24.8864" height="29.8068"/>
   <object id="208" type="rectangle" x="1661.55" y="1309.28" width="200.08" height="18.5795"/>
-  <object id="209" type="rectangle" x="1441.94" y="1280.42" width="28" height="337"/>
+  <object id="209" type="rectangle" x="1441.94" y="1280.42" width="28" height="327"/>
   <object id="210" type="rectangle" x="1908.4" y="1040.15" width="22.25" height="239.875"/>
   <object id="211" type="rectangle" x="1797.07" y="880.292" width="21.25" height="191.875"/>
   <object id="212" type="rectangle" x="1674.31" y="893.372" width="124.728" height="18.1818"/>
