@@ -61,6 +61,8 @@ public:
 
 	int isAlive = true;
 
+	bool hasJumped = false;
+
 	float maxSpeed = 2.0f;
 	const char* texturePath;
 	iPoint spawnPosition;

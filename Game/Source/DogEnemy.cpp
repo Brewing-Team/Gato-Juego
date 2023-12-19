@@ -159,9 +159,14 @@ bool DogEnemy::Update(float dt)
 
 	// Check if the dog is on the ground and apply force if it is not
 	if (isGrounded) {
-		pbody->body->ApplyForce({ movementDirection.x * 1.2f, 0 }, pbody->body->GetWorldCenter(), true);
+		pbody->body->ApplyForce({ movementDirection.x * 1.5f, 0 }, pbody->body->GetWorldCenter(), true);
+		hasJumped = false;
 	} else {
-		pbody->body->ApplyForce({ movementDirection.x * 1.2f, movementDirection.y}, pbody->body->GetWorldCenter(), true);
+		hasJumped = true;
+		if (hasJumped) {
+			pbody->body->ApplyForce({ movementDirection.x * 1.5f, movementDirection.y * 5 }, pbody->body->GetWorldCenter(), true);
+			hasJumped = false;
+		}
 	}
 
 	/*
@@ -171,6 +176,8 @@ bool DogEnemy::Update(float dt)
 	}
 	*/
 	
+
+
 	LOG("%f, %f", movementDirection);
 
 	//LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
@@ -201,6 +208,8 @@ bool DogEnemy::Update(float dt)
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 17;
 
 	// Update OwlEnemie sensors
+	groundSensor->body->SetTransform({ pbody->body->GetPosition().x, pbody->body->GetPosition().y + PIXEL_TO_METERS(pbody->width) }, 0);
+
 
 	// Render OwlEnemie texture
 	//app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
