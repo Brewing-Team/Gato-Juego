@@ -62,6 +62,7 @@ public:
 	Animation idleAnim;
 	Animation walkAnim;
 	Animation jumpAnim;
+	Animation hurtAnim;
 	Animation* currentAnimation = nullptr;
 
 	int isAlive = true;

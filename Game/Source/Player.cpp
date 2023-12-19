@@ -276,6 +276,17 @@ EntityState Player::StateMachine(float dt) {
 
 			break;
 
+		case EntityState::HURT:
+
+			currentAnimation = &hurtAnim;
+			if (currentAnimation->HasFinished()){
+					hurtAnim.Reset();
+					hurtAnim.ResetLoopCount();
+					state = EntityState::IDLE;
+			}
+
+			break;
+
 		case EntityState::WIN:
 
 			// TODO hacer cosa de ganar jugador ole ole
@@ -377,6 +388,9 @@ bool Player::Start() {
 	idleAnim.speed = 8.0f;
 	jumpAnim = *app->map->GetAnimByName("Cat-1-Run");
 	jumpAnim.speed = 8.0f;
+	hurtAnim = *app->map->GetAnimByName("Cat-1-Hurt");
+	hurtAnim.speed = 16.0f;
+	hurtAnim.loop = false;
 
 	currentAnimation = &idleAnim;
 
@@ -414,13 +428,8 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
-
+	LOG("%d", lives);
 	debugTools();
-
-	//tmp para que los enemigos le ataquen
-	if (lives <= 0){
-		isAlive = false;
-	}
 
  	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
@@ -605,8 +614,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::ENEMY:
 		LOG("Collision ENEMY");
 		if (immunityTimer.ReadSec() >= 1){
-			lives--;
-			immunityTimer.Start();
+			if (lives <= 1)
+			{
+				state = EntityState::DEAD;
+			}
+			else{
+				lives--;
+				state = EntityState::HURT;
+				immunityTimer.Start();
+			}
 		}
 		break;
 
