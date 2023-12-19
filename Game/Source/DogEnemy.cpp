@@ -1,5 +1,6 @@
 #include "DogEnemy.h"
 #include "App.h"
+#include "Entity.h"
 #include "Map.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -11,6 +12,7 @@
 #include "Physics.h"
 
 #include "Window.h"
+#include <SDL_render.h>
 #include <cmath>
 #include <iostream>
 
@@ -67,8 +69,46 @@ bool DogEnemy::LoadState(pugi::xml_node& node)
 }
 
 EntityState DogEnemy::StateMachine(float dt) {
-	// TODO state machine logic
-	return EntityState::IDLE;
+	switch (this->state) {
+		case EntityState::IDLE:
+			setIdleAnimation();
+			if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
+				{
+					state = EntityState::MOVE;
+				}
+		break;
+		case EntityState::MOVE:
+			setMoveAnimation();
+			pathfindingMovement(dt);
+			if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f){
+				if (attackTimer.ReadSec() >= 2)
+				{
+					state = EntityState::ATTACK;
+				}
+			}
+			else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)){
+				state = EntityState::IDLE;
+			}
+		break;
+		case EntityState::DEAD:
+			setIdleAnimation();	
+			pbody->body->SetFixedRotation(false);
+		break;
+
+		case EntityState::ATTACK:
+			b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
+			attackDirection.Normalize();
+
+			b2Vec2 attackImpulse = {attackDirection.x / 4, attackDirection.y / 4};
+
+			pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
+
+			attackTimer.Start();
+			state = EntityState::MOVE;
+		break;
+	}
+
+	return this->state;
 }
 
 DogEnemy::DogEnemy() : Entity(EntityType::DOGENEMY)
@@ -98,6 +138,8 @@ bool DogEnemy::Start() {
 
 	movementDelay = Timer();
 	timer.Start();
+
+	player = app->scene->player;
 
 	//load Animations
 	idleAnim = *app->map->GetAnimByName("dog-idle-1");
@@ -134,6 +176,44 @@ bool DogEnemy::Update(float dt)
 	// PATHFINDING LOGIC
 	// ------------------------------
 
+	// ------------------------------
+
+	//Update OwlEnemie position in pixels
+	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 24;
+	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 17;
+
+	// Update OwlEnemie sensors
+	groundSensor->body->SetTransform({ pbody->body->GetPosition().x, pbody->body->GetPosition().y + PIXEL_TO_METERS(pbody->width) }, 0);
+
+
+	// Render OwlEnemie texture
+	app->render->DrawTexture(currentAnimation->texture, position.x, position.y - 12, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
+	//app->render->DrawRectangle({position.x + 14,position.y + 12,20, 10}, 255, 255, 255);
+
+	currentAnimation->Update(dt);
+	return true;
+}
+
+void DogEnemy::moveToSpawnPoint() //Yo haria que esta funcion haga que el objetivo del Owl sea el spawnpoint y asi hace el pathfinding
+{
+	position = spawnPosition;
+
+	pbody->body->SetTransform({ PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y) }, 0);
+
+	// reset OwlEnemie physics
+	pbody->body->SetAwake(false);
+	pbody->body->SetAwake(true);
+}
+
+bool DogEnemy::CleanUp() {
+
+	app->tex->UnLoad(texture);
+
+	return true;
+}
+
+void DogEnemy::pathfindingMovement(float dt){
+
 	iPoint origin = app->map->WorldToMap(newPosition.x + 8, newPosition.y + 8); //añadir el tile size / 2 hace que el owl se acerque mas
 
 	if (timer.ReadMSec() > 250) {
@@ -162,6 +242,16 @@ bool DogEnemy::Update(float dt)
 		if (abs(pbody->body->GetLinearVelocity().x) <= maxSpeed)
 		{
 			pbody->body->ApplyForce({ movementDirection.x * 1.5f, 0 }, pbody->body->GetWorldCenter(), true);
+			if (pbody->body->GetLinearVelocity().x < -0.5f)
+			{
+				flip = SDL_FLIP_HORIZONTAL;
+			}
+			else if (pbody->body->GetLinearVelocity().x > 0.5f){
+				flip = SDL_FLIP_NONE;
+			}
+
+			//flip = signbit(pbody->body->GetLinearVelocity().x) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+			
 		}
 		canJump = true;
 	} else {
@@ -202,41 +292,6 @@ bool DogEnemy::Update(float dt)
 	//Debug: Render the line between Owl and Player
 	app->render->DrawLine(position.x + 27, position.y + 17, app->scene->player->position.x + 20, app->scene->player->position.y + 10, 0, 0, 255);
 	}
-
-	// ------------------------------
-
-	//Update OwlEnemie position in pixels
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 24;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 17;
-
-	// Update OwlEnemie sensors
-	groundSensor->body->SetTransform({ pbody->body->GetPosition().x, pbody->body->GetPosition().y + PIXEL_TO_METERS(pbody->width) }, 0);
-
-
-	// Render OwlEnemie texture
-	app->render->DrawTexture(currentAnimation->texture, position.x, position.y - 12, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
-	//app->render->DrawRectangle({position.x + 14,position.y + 12,20, 10}, 255, 255, 255);
-
-	currentAnimation->Update(dt);
-	return true;
-}
-
-void DogEnemy::moveToSpawnPoint() //Yo haria que esta funcion haga que el objetivo del Owl sea el spawnpoint y asi hace el pathfinding
-{
-	position = spawnPosition;
-
-	pbody->body->SetTransform({ PIXEL_TO_METERS(position.x), PIXEL_TO_METERS(position.y) }, 0);
-
-	// reset OwlEnemie physics
-	pbody->body->SetAwake(false);
-	pbody->body->SetAwake(true);
-}
-
-bool DogEnemy::CleanUp() {
-
-	app->tex->UnLoad(texture);
-
-	return true;
 }
 
 void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {

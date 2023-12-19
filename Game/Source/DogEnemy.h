@@ -4,6 +4,7 @@
 #include "Animation.h"
 #include "Entity.h"
 #include "Point.h"
+#include "Player.h"
 #ifdef __linux__
 #include <SDL.h>
 #include <Box2D/Box2D.h>
@@ -51,6 +52,7 @@ public:
 	void setJumpAnimation();
 
 	void moveToSpawnPoint();
+	void pathfindingMovement(float dt);
 
 public:
 	//Animations
@@ -81,6 +83,11 @@ public:
 	bool isGrounded = false;
 
 	int currentPathPos;
+
+	Timer attackTimer;
+
+private:
+	Player* player;
 
 };
 
