@@ -8,10 +8,9 @@
 	<scene />
 	<:anonymous />
 	<entitymanager>
-		<player x="879" y="1963" angle="0" />
-		<owlenemy x="931" y="1871" angle="0" />
+		<player x="818" y="2033" angle="0" />
 	</entitymanager>
 	<renderer>
-		<camera x="-767" y="-1867" />
+		<camera x="-699" y="-1939" />
 	</renderer>
 </game_state>

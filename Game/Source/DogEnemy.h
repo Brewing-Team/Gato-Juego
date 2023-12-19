@@ -6,8 +6,10 @@
 #include "Point.h"
 #ifdef __linux__
 #include <SDL.h>
+#include <Box2D/Box2D.h>
 #elif _MSC_VER
 #include "SDL/include/SDL.h"
+#include "Box2D/Box2D/Box2D.h"
 #endif
 
 struct SDL_Texture;
@@ -59,18 +61,22 @@ public:
 
 	int isAlive = true;
 
+	bool canJump = false;
+
 	float maxSpeed = 2.0f;
 	const char* texturePath;
 	iPoint spawnPosition;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
+	PhysBody* groundSensor;
 
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 
 	//Movement
 	int moveSpeed = 2;
 	int angle;
-	iPoint movementDirection;
+	b2Vec2 movementDirection;
+	bool isGrounded = false;
 
 	int currentPathPos;
 

@@ -423,6 +423,15 @@ bool Player::Start() {
 	// load debug menu texture
 	debugMenuTexture = app->tex->Load("Assets/Textures/debug_menu.png");
 
+
+	// TODO test ropes
+	/*
+	app->physics->CreateRope(20, {21,28}, {25, 32});
+	//app->physics->CreateRope(20, {5,0}, {10, 0});
+	app->physics->CreateRope(20);
+	app->physics->CreateRope(20, {0,0});
+	*/
+
 	return true;
 }
 

@@ -113,8 +113,12 @@ bool DogEnemy::Start() {
 
 	//si quieres dar vueltos como la helice de un helicoptero Boeing AH-64 Apache pon en false la siguiente funcion
 	pbody->body->SetFixedRotation(true);
-	pbody->body->GetFixtureList()->SetFriction(25.0f);
+	pbody->body->GetFixtureList()->SetFriction(1.0f);
 	pbody->body->SetLinearDamping(1);
+
+	// TODO revisar este sensor, creo que no está funcionando
+	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 10, 5, bodyType::DYNAMIC);
+	groundSensor->listener = this;
 
 	return true;
 }
@@ -146,22 +150,39 @@ bool DogEnemy::Update(float dt)
 		{
 			newPosition = app->map->MapToWorld(path->At(currentPathPos)->x, path->At(currentPathPos)->y);
 			currentPathPos++;
-			LOG("%d", currentPathPos);
 			movementDelay.Start();
 		}
 	}
 
-	pbody->body->SetTransform(
+	movementDirection = b2Vec2{(float32)newPosition.x, (float32)newPosition.y} - b2Vec2{(float32)position.x, (float32)position.y};
+	movementDirection.Normalize();
+
+	// Check if the dog is on the ground and apply force if it is not
+	if (isGrounded) {
+		if (abs(pbody->body->GetLinearVelocity().x) <= maxSpeed)
 		{
-			std::lerp(pbody->body->GetPosition().x, PIXEL_TO_METERS(newPosition.x), dt * moveSpeed / 1000),
-			std::lerp(pbody->body->GetPosition().y, PIXEL_TO_METERS(newPosition.y), dt * moveSpeed / 1000)
+			pbody->body->ApplyForce({ movementDirection.x * 1.5f, 0 }, pbody->body->GetWorldCenter(), true);
+		}
+		canJump = true;
+	} else {
+		if (canJump) {
+			canJump = false;
+			pbody->body->ApplyLinearImpulse({ 0, movementDirection.y }, pbody->body->GetWorldCenter(), true);
+		}
+	}
 
-		},
-
-		angle * DEGTORAD
-	);
+	/*
+	if (isGrounded and movementDirection.y != 0){
+		float impulse = pbody->body->GetMass() * 5;
+		pbody->body->ApplyLinearImpulse({0,impulse}, pbody->body->GetWorldCenter(), true);
+	}
+	*/
 	
-	LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
+
+
+	LOG("%f, %f", movementDirection);
+
+	//LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
 
 
 	if (debug)
@@ -189,6 +210,8 @@ bool DogEnemy::Update(float dt)
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 17;
 
 	// Update OwlEnemie sensors
+	groundSensor->body->SetTransform({ pbody->body->GetPosition().x, pbody->body->GetPosition().y + PIXEL_TO_METERS(pbody->width) }, 0);
+
 
 	// Render OwlEnemie texture
 	//app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
@@ -217,6 +240,15 @@ bool DogEnemy::CleanUp() {
 }
 
 void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
+
+	if (physA->body->GetFixtureList()->IsSensor()) {
+		if (physB->ctype == ColliderType::PLATFORM) {
+			if (physA == groundSensor) {
+				LOG("Ground collision");
+				isGrounded = true;
+			}
+		}
+	}
 
 	switch (physB->ctype) {
 
@@ -249,5 +281,12 @@ void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 }
 
 void DogEnemy::EndCollision(PhysBody* physA, PhysBody* physB) {
-
+	if (physA->body->GetFixtureList()->IsSensor()) {
+		if (physB->ctype == ColliderType::PLATFORM) {
+			if (physA == groundSensor) {
+				LOG("Ground collision");
+				isGrounded = false;
+			}
+		}
+	}
 }
