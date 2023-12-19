@@ -27,7 +27,7 @@ void DogEnemy::setIdleAnimation()
 
 void DogEnemy::setMoveAnimation()
 {
-	currentAnimation = &flyAnim;
+	currentAnimation = &runAnim;
 	jumpAnim.Reset();
 }
 
@@ -100,14 +100,14 @@ bool DogEnemy::Start() {
 	timer.Start();
 
 	//load Animations
-	idleAnim = *app->map->GetAnimByName("owl-1-idle");
+	idleAnim = *app->map->GetAnimByName("dog-idle-1");
 	idleAnim.speed = 8.0f;
-	flyAnim = *app->map->GetAnimByName("owl-1-flying");
-	flyAnim.speed = 8.0f;
+	runAnim = *app->map->GetAnimByName("dog-run-1");
+	runAnim.speed = 8.0f;
 
-	currentAnimation = &flyAnim;
+	currentAnimation = &idleAnim;
 	
-	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 10, bodyType::DYNAMIC);
+	pbody = app->physics->CreateRectangle(position.x, position.y, 20, 14, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::ENEMY;
 
@@ -214,8 +214,8 @@ bool DogEnemy::Update(float dt)
 
 
 	// Render OwlEnemie texture
-	//app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
-	app->render->DrawRectangle({position.x + 14,position.y + 12,20, 10}, 255, 255, 255);
+	app->render->DrawTexture(currentAnimation->texture, position.x, position.y - 12, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
+	//app->render->DrawRectangle({position.x + 14,position.y + 12,20, 10}, 255, 255, 255);
 
 	currentAnimation->Update(dt);
 	return true;
