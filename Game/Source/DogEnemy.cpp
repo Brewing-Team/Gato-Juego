@@ -87,13 +87,25 @@ EntityState DogEnemy::StateMachine(float dt) {
 				}
 			}
 			else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)){
+				moveToSpawnPoint();
 				state = EntityState::IDLE;
 			}
 		break;
 		case EntityState::DEAD:
-			setIdleAnimation();	
+			currentAnimation = &dieAnim;
 			pbody->body->SetFixedRotation(false);
 		break;
+
+		case EntityState::HURT:
+				currentAnimation = &hurtAnim;
+				invencible = true;
+				if (currentAnimation->HasFinished()){
+					hurtAnim.Reset();
+					hurtAnim.ResetLoopCount();
+					invencible = false;
+					state = EntityState::IDLE;
+				}
+			break;
 
 		case EntityState::ATTACK:
 			b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
@@ -146,6 +158,13 @@ bool DogEnemy::Start() {
 	idleAnim.speed = 8.0f;
 	runAnim = *app->map->GetAnimByName("dog-run-1");
 	runAnim.speed = 8.0f;
+	hurtAnim = *app->map->GetAnimByName("dog-hurt-1");
+	hurtAnim.speed = 8.0f;
+	hurtAnim.loop = false;
+
+	dieAnim = *app->map->GetAnimByName("dog-die-1");
+	dieAnim.speed = 8.0f;
+	dieAnim.loop = false;
 
 	currentAnimation = &idleAnim;
 	
@@ -170,13 +189,6 @@ bool DogEnemy::Update(float dt)
 
 	// Update OwlEnemie state
 	StateMachine(dt);
-	LOG("Owl Enemie state: %d", state);
-
-
-	// PATHFINDING LOGIC
-	// ------------------------------
-
-	// ------------------------------
 
 	//Update OwlEnemie position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 24;
@@ -188,13 +200,12 @@ bool DogEnemy::Update(float dt)
 
 	// Render OwlEnemie texture
 	app->render->DrawTexture(currentAnimation->texture, position.x, position.y - 12, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
-	//app->render->DrawRectangle({position.x + 14,position.y + 12,20, 10}, 255, 255, 255);
 
 	currentAnimation->Update(dt);
 	return true;
 }
 
-void DogEnemy::moveToSpawnPoint() //Yo haria que esta funcion haga que el objetivo del Owl sea el spawnpoint y asi hace el pathfinding
+void DogEnemy::moveToSpawnPoint()
 {
 	position = spawnPosition;
 
@@ -317,7 +328,20 @@ void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
-		isAlive = false;
+		app->entityManager->DestroyEntity(this);
+		break;
+	case ColliderType::BULLET:
+		LOG("Collision DEATH");
+		if (state != EntityState::DEAD and !invencible){
+			if (lives <= 1)
+			{
+				state = EntityState::DEAD;
+			}
+			else{
+				state = EntityState::HURT;
+				lives--;
+			}
+		}
 		break;
 
 	case ColliderType::LIMITS:

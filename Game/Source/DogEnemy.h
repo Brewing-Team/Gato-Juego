@@ -88,6 +88,8 @@ public:
 
 private:
 	Player* player;
+	int lives = 5;
+	bool invencible = false;
 
 };
 

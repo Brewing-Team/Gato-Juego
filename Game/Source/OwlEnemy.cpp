@@ -192,9 +192,6 @@ bool OwlEnemy::Update(float dt)
 	StateMachine(dt);
 	//LOG("state: %d", state);
 
-	// PATHFINDING LOGIC
-	// ------------------------------
-
 	//Debug: Render the line between Owl and Player
 	if (debug){
 		app->render->DrawLine(position.x + 27, position.y + 17, player->position.x + 20, player->position.y + 10, 0, 0, 255);
@@ -266,7 +263,7 @@ void OwlEnemy::pathfindingMovement(float dt){
 	}
 }
 
-void OwlEnemy::moveToSpawnPoint() //Yo haria que esta funcion haga que el objetivo del Owl sea el spawnpoint y asi hace el pathfinding
+void OwlEnemy::moveToSpawnPoint()
 {
 	position = spawnPosition;
 
