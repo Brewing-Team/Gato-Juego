@@ -11,14 +11,15 @@
 #include "Defs.h"
 #include "Log.h"
 
-#include <SDL_image.h>
 #include <iostream>
 #include <sstream>
 
 #ifdef __linux__
 #include "External/Optick/include/optick.h"
+#include <SDL_image.h>
 #elif _MSC_VER
 #include "Optick/include/optick.h"
+#include "SDL_image/include/SDL_image.h"
 #endif
 
 // Constructor
