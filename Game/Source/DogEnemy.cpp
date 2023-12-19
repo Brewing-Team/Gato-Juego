@@ -116,6 +116,7 @@ bool DogEnemy::Start() {
 	pbody->body->GetFixtureList()->SetFriction(25.0f);
 	pbody->body->SetLinearDamping(1);
 
+	// TODO revisar este sensor, creo que no está funcionando
 	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 10, 5, bodyType::DYNAMIC);
 	groundSensor->listener = this;
 
@@ -156,13 +157,20 @@ bool DogEnemy::Update(float dt)
 	movementDirection = b2Vec2{(float32)newPosition.x, (float32)newPosition.y} - b2Vec2{(float32)position.x, (float32)position.y};
 	movementDirection.Normalize();
 
-	pbody->body->ApplyForce({movementDirection.x * 2, 0}, pbody->body->GetWorldCenter(), true);
+	// Check if the dog is on the ground and apply force if it is not
+	if (isGrounded) {
+		pbody->body->ApplyForce({ movementDirection.x * 1.2f, 0 }, pbody->body->GetWorldCenter(), true);
+	} else {
+		pbody->body->ApplyForce({ movementDirection.x * 1.2f, movementDirection.y}, pbody->body->GetWorldCenter(), true);
+	}
 
+	/*
 	if (isGrounded and movementDirection.y != 0){
 		float impulse = pbody->body->GetMass() * 5;
 		pbody->body->ApplyLinearImpulse({0,impulse}, pbody->body->GetWorldCenter(), true);
 	}
-
+	*/
+	
 	LOG("%f, %f", movementDirection);
 
 	//LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
