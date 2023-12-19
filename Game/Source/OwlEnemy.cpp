@@ -274,34 +274,36 @@ bool OwlEnemy::CleanUp() {
 
 void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
-	switch (physB->ctype) {
+	if (physA != NULL && physB != NULL) {
+		switch (physB->ctype) {
 
-	case ColliderType::PLAYER:
-		LOG("Collision PLAYER");
-		break;
+		case ColliderType::PLAYER:
+			LOG("Collision PLAYER");
+			break;
 
-	case ColliderType::PLATFORM:
-		LOG("Collision PLATFORM");
-		break;
+		case ColliderType::PLATFORM:
+			LOG("Collision PLATFORM");
+			break;
 
-	case ColliderType::DEATH:
-		LOG("Collision DEATH");
-		break;
-	case ColliderType::BULLET:
-		LOG("Collision DEATH");
-		lives--;
-		break;
-	case ColliderType::LIMITS:
-		LOG("Collision LIMITS");
-		break;
-	case ColliderType::WIN:
-		state = EntityState::WIN;
-		LOG("Collision WIN");
-		break;
-	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
-		break;
+		case ColliderType::DEATH:
+			LOG("Collision DEATH");
+			break;
+		case ColliderType::BULLET:
+			LOG("Collision DEATH");
+			lives--;
+			break;
+		case ColliderType::LIMITS:
+			LOG("Collision LIMITS");
+			break;
+		case ColliderType::WIN:
+			state = EntityState::WIN;
+			LOG("Collision WIN");
+			break;
+		case ColliderType::UNKNOWN:
+			LOG("Collision UNKNOWN");
+			break;
 
+		}
 	}
 
 }
