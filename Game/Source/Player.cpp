@@ -513,27 +513,28 @@ void Player::debugTools()
 		if (app->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
 			freeCam = !freeCam;
 		}
+		// Save game state
+		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) app->SaveRequest();
+
+		// Load game state
+		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) app->LoadRequest();
 
 		// Toggle god mode on/off
-		if (app->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
+		if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
 			godMode = !godMode;
 		}
 
 		// Toggle no-clip mode on/off
-		if (app->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
+		if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
 			noClip = !noClip;
 			state = EntityState::NO_CLIP;
 			this->pbody->body->GetFixtureList()->SetSensor(true);
 		}
 
 		// Toggle FPS cap on/off
-		if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
+		if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
 			fpsLimiter = !fpsLimiter;
 		}
-
-		// TODO cambiar teclas
-		if (app->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) app->SaveRequest();
-		if (app->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN) app->LoadRequest();
 	}
 
 	// END OF DEBUG TOOLS -----------------------------------------
@@ -615,8 +616,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
+
+		if (!godMode){	
 		lives = 0;
 		isAlive = false;
+		}
 		break;
 
 	case ColliderType::LIMITS:
