@@ -137,7 +137,7 @@ void Player::Climb(float dt) {
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 
 			float impulse = pbody->body->GetMass() * 5;
-			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_sin(angle), 0 }, pbody->body->GetWorldCenter(), true);
+			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_sin(DEGTORAD*angle), 0 }, pbody->body->GetWorldCenter(), true);
 
 			flip = (flip == SDL_FLIP_HORIZONTAL) ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
 
@@ -598,7 +598,7 @@ bool Player::CleanUp() {
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	if (physA->body->GetFixtureList()->IsSensor()) {
-		if (physB->ctype == ColliderType::PLATFORM) {
+		if (physB->ctype == ColliderType::PLATFORM) { //Condicion temporal
 			if (physA == groundSensor) {
 				LOG("Ground collision");
 				isGrounded = true;
@@ -610,6 +610,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			else if (physA == rightSensor) {
 				LOG("Right collision");
 				isCollidingRight = true;
+			}
+		}
+		else if(physB->ctype == ColliderType::ENEMY or physB->ctype == ColliderType::BULLET){
+			if (physA == groundSensor) {
+				LOG("Ground collision");
+				isGrounded = true;
 			}
 		}
 	}

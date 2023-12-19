@@ -201,7 +201,7 @@
    </animation>
   </tile>
  </tileset>
- <layer id="1" name="Background" width="164" height="176" visible="0" parallaxx="0.5" parallaxy="0.5">
+ <layer id="1" name="Background" width="164" height="176" parallaxx="0.5" parallaxy="0.5">
   <properties>
    <property name="Draw" type="bool" value="true"/>
   </properties>
@@ -29072,7 +29072,7 @@
    <tile gid="24"/>
   </data>
  </layer>
- <layer id="8" name="Void" width="164" height="176" visible="0">
+ <layer id="8" name="Void" width="164" height="176">
   <properties>
    <property name="Draw" type="bool" value="true"/>
   </properties>
@@ -57945,7 +57945,7 @@
  </layer>
  <layer id="2" name="Platforms" width="164" height="176" visible="0">
   <properties>
-   <property name="Draw" type="bool" value="true"/>
+   <property name="Draw" type="bool" value="false"/>
   </properties>
   <data>
    <tile/>
@@ -86814,7 +86814,10 @@
    <tile/>
   </data>
  </layer>
- <layer id="12" name="Tile Layer 5" width="164" height="176">
+ <layer id="12" name="terrain" width="164" height="176">
+  <properties>
+   <property name="Draw" type="bool" value="true"/>
+  </properties>
   <data>
    <tile/>
    <tile/>
@@ -99378,12 +99381,12 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="884"/>
+   <tile gid="1329"/>
+   <tile gid="1328"/>
+   <tile gid="1329"/>
+   <tile gid="1330"/>
+   <tile gid="1331"/>
    <tile/>
    <tile/>
    <tile/>
@@ -99542,12 +99545,12 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="948"/>
+   <tile gid="1393"/>
+   <tile gid="1392"/>
+   <tile gid="1393"/>
+   <tile gid="1394"/>
+   <tile gid="951"/>
    <tile/>
    <tile/>
    <tile/>
@@ -99706,12 +99709,12 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="1140"/>
+   <tile gid="439"/>
+   <tile gid="432"/>
+   <tile gid="433"/>
+   <tile gid="434"/>
+   <tile gid="759"/>
    <tile/>
    <tile/>
    <tile/>
@@ -99870,12 +99873,12 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="1204"/>
+   <tile gid="503"/>
+   <tile gid="496"/>
+   <tile gid="497"/>
+   <tile gid="498"/>
+   <tile gid="499"/>
    <tile/>
    <tile/>
    <tile/>
@@ -100029,13 +100032,13 @@
    <tile gid="490"/>
    <tile gid="491"/>
    <tile/>
+   <tile gid="884"/>
+   <tile gid="887"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="1268"/>
+   <tile gid="1271"/>
    <tile/>
    <tile/>
    <tile/>
@@ -100193,13 +100196,13 @@
    <tile gid="554"/>
    <tile gid="555"/>
    <tile/>
+   <tile gid="948"/>
+   <tile gid="951"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="1332"/>
+   <tile gid="1335"/>
    <tile/>
    <tile/>
    <tile gid="490"/>
@@ -100357,13 +100360,13 @@
    <tile gid="618"/>
    <tile gid="619"/>
    <tile/>
+   <tile gid="756"/>
+   <tile gid="759"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="756"/>
+   <tile gid="759"/>
    <tile/>
    <tile/>
    <tile gid="554"/>
@@ -100521,13 +100524,13 @@
    <tile gid="1194"/>
    <tile gid="1195"/>
    <tile/>
+   <tile gid="820"/>
+   <tile gid="823"/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="884"/>
+   <tile gid="887"/>
+   <tile gid="820"/>
+   <tile gid="823"/>
    <tile/>
    <tile/>
    <tile gid="618"/>
@@ -100688,8 +100691,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="948"/>
+   <tile gid="951"/>
    <tile/>
    <tile/>
    <tile/>
@@ -100852,12 +100855,12 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="756"/>
+   <tile gid="759"/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="884"/>
+   <tile gid="887"/>
    <tile gid="1258"/>
    <tile gid="1259"/>
    <tile/>
@@ -101012,16 +101015,16 @@
    <tile/>
    <tile gid="490"/>
    <tile gid="491"/>
+   <tile gid="884"/>
+   <tile gid="887"/>
    <tile/>
    <tile/>
+   <tile gid="820"/>
+   <tile gid="823"/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="948"/>
+   <tile gid="951"/>
    <tile gid="1322"/>
    <tile gid="1323"/>
    <tile/>
@@ -101176,16 +101179,16 @@
    <tile/>
    <tile gid="554"/>
    <tile gid="555"/>
+   <tile gid="948"/>
+   <tile gid="951"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="756"/>
+   <tile gid="759"/>
    <tile gid="490"/>
    <tile gid="491"/>
    <tile/>
@@ -101340,16 +101343,16 @@
    <tile/>
    <tile gid="618"/>
    <tile gid="619"/>
+   <tile gid="756"/>
+   <tile gid="759"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="820"/>
+   <tile gid="823"/>
    <tile gid="554"/>
    <tile gid="555"/>
    <tile/>
@@ -101504,8 +101507,8 @@
    <tile/>
    <tile gid="1194"/>
    <tile gid="1195"/>
-   <tile/>
-   <tile/>
+   <tile gid="820"/>
+   <tile gid="823"/>
    <tile/>
    <tile/>
    <tile/>
@@ -101674,8 +101677,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="884"/>
+   <tile gid="887"/>
    <tile/>
    <tile/>
    <tile gid="1194"/>
@@ -101833,13 +101836,13 @@
    <tile gid="1322"/>
    <tile gid="1323"/>
    <tile/>
+   <tile gid="884"/>
+   <tile gid="887"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="948"/>
+   <tile gid="951"/>
    <tile/>
    <tile/>
    <tile gid="1258"/>
@@ -101997,13 +102000,13 @@
    <tile gid="490"/>
    <tile gid="491"/>
    <tile/>
+   <tile gid="948"/>
+   <tile gid="951"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="756"/>
+   <tile gid="759"/>
    <tile/>
    <tile/>
    <tile gid="1322"/>
@@ -102161,13 +102164,13 @@
    <tile gid="554"/>
    <tile gid="555"/>
    <tile/>
+   <tile gid="756"/>
+   <tile gid="759"/>
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="820"/>
+   <tile gid="823"/>
    <tile/>
    <tile/>
    <tile gid="490"/>
@@ -102325,8 +102328,8 @@
    <tile gid="618"/>
    <tile gid="619"/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="820"/>
+   <tile gid="823"/>
    <tile/>
    <tile/>
    <tile/>
@@ -102655,8 +102658,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="884"/>
+   <tile gid="887"/>
    <tile/>
    <tile/>
    <tile/>
@@ -102819,8 +102822,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="948"/>
+   <tile gid="951"/>
    <tile/>
    <tile/>
    <tile/>
@@ -102983,8 +102986,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="756"/>
+   <tile gid="759"/>
    <tile/>
    <tile/>
    <tile/>
@@ -103147,8 +103150,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="820"/>
+   <tile gid="823"/>
    <tile/>
    <tile/>
    <tile/>
@@ -144555,21 +144558,21 @@
   </data>
  </layer>
  <objectgroup id="4" name="Collisions" class="platforms">
-  <object id="167" type="rectangle" x="655.938" y="2064.17" width="112" height="47"/>
-  <object id="168" type="rectangle" x="823.688" y="2055.55" width="16.125" height="56.5"/>
-  <object id="169" type="rectangle" x="872.063" y="2055.92" width="15.5" height="55.75"/>
-  <object id="170" type="rectangle" x="919.688" y="2055.92" width="16" height="56"/>
-  <object id="171" type="rectangle" x="967.938" y="2023.8" width="15.625" height="88"/>
-  <object id="172" type="rectangle" x="1032.27" y="1943.92" width="31.3333" height="168.667"/>
-  <object id="173" type="rectangle" x="1063.94" y="1751.59" width="32.3333" height="240.333"/>
-  <object id="174" type="rectangle" x="776.438" y="1751.92" width="255.25" height="32.25"/>
-  <object id="175" type="rectangle" x="839.938" y="1703.65" width="31.9091" height="32.2727"/>
-  <object id="176" type="rectangle" x="935.664" y="1671.56" width="32.0909" height="32.2727"/>
-  <object id="177" type="rectangle" x="840.211" y="1608.19" width="31.6364" height="31.3636"/>
-  <object id="178" type="rectangle" x="903.823" y="1544.24" width="32.2727" height="32.0909"/>
-  <object id="179" type="rectangle" x="791.029" y="1527.65" width="33" height="32.2727"/>
-  <object id="180" type="rectangle" x="855.482" y="1495.47" width="32.3636" height="32.2727"/>
-  <object id="181" type="rectangle" x="1000.07" y="1512.05" width="63.625" height="31.375"/>
+  <object id="167" type="rectangle" x="656.063" y="2066.17" width="112" height="29.875"/>
+  <object id="168" type="rectangle" x="800.313" y="2066.8" width="31.625" height="29"/>
+  <object id="169" type="rectangle" x="863.938" y="2066.8" width="31.875" height="29.25"/>
+  <object id="170" type="rectangle" x="928.313" y="2066.8" width="31.625" height="29.125"/>
+  <object id="171" type="rectangle" x="992.188" y="2067.05" width="53.875" height="28.875"/>
+  <object id="172" type="rectangle" x="1044.27" y="1955.01" width="55.1515" height="141.065"/>
+  <object id="173" type="rectangle" x="1075.88" y="1746.92" width="55.3333" height="249.583"/>
+  <object id="174" type="rectangle" x="772.62" y="1747.19" width="261.068" height="42.7955"/>
+  <object id="175" type="rectangle" x="836.12" y="1683.29" width="23.1818" height="27.9091"/>
+  <object id="176" type="rectangle" x="932.209" y="1667.01" width="23.3636" height="27.9091"/>
+  <object id="177" type="rectangle" x="852.211" y="1602.92" width="23.2728" height="27.9091"/>
+  <object id="178" type="rectangle" x="916.005" y="1539.15" width="23.5454" height="28.2727"/>
+  <object id="179" type="rectangle" x="803.756" y="1523.1" width="23.1818" height="27.9091"/>
+  <object id="180" type="rectangle" x="867.846" y="1491.11" width="23.6363" height="27.7272"/>
+  <object id="181" type="rectangle" x="996.07" y="1522.8" width="71.5" height="44.25"/>
   <object id="182" type="rectangle" x="1063.94" y="1527.05" width="15.375" height="32.75"/>
   <object id="183" type="rectangle" x="1079.32" y="1542.92" width="16.5" height="34"/>
   <object id="184" type="rectangle" x="1095.85" y="1560.01" width="16.2727" height="33"/>
@@ -144583,9 +144586,9 @@
   <object id="192" type="rectangle" x="1223.76" y="1686.47" width="16.2727" height="36.8182"/>
   <object id="193" type="rectangle" x="1240.03" y="1703.92" width="15.7273" height="32"/>
   <object id="194" type="rectangle" x="1255.67" y="1719.83" width="16.4545" height="32"/>
-  <object id="195" type="rectangle" x="1271.85" y="1735.74" width="16" height="16.9091"/>
-  <object id="196" type="rectangle" x="1273.27" y="1751.92" width="382.667" height="360.667"/>
-  <object id="197" type="rectangle" x="1447.94" y="1639.17" width="207.75" height="112"/>
+  <object id="195" type="rectangle" x="1271.85" y="1735.74" width="16" height="27.0341"/>
+  <object id="196" type="rectangle" x="1268.54" y="1762.42" width="389.576" height="350.167"/>
+  <object id="197" type="rectangle" x="1445.39" y="1634.67" width="212.795" height="127.5"/>
   <object id="198" type="rectangle" x="1512.07" y="1543.92" width="31.625" height="32"/>
   <object id="199" type="rectangle" x="1479.57" y="1479.67" width="32.5" height="32.125"/>
   <object id="200" type="rectangle" x="1560.19" y="1447.92" width="31.625" height="32"/>
@@ -144594,26 +144597,26 @@
   <object id="203" type="rectangle" x="1479.88" y="1319.61" width="32" height="32.375"/>
   <object id="204" type="rectangle" x="1576.32" y="1239.8" width="31.75" height="79.75"/>
   <object id="205" type="rectangle" x="1607.07" y="1239.92" width="48.625" height="16.75"/>
-  <object id="206" type="rectangle" x="1640.3" y="1304.47" width="15.4545" height="334.909"/>
+  <object id="206" type="rectangle" x="1633.55" y="1296.22" width="28.9545" height="338.409"/>
   <object id="207" type="rectangle" x="1608.67" y="1367.56" width="33.6364" height="32.1818"/>
-  <object id="208" type="rectangle" x="1654.3" y="1304.28" width="193.455" height="15.4545"/>
-  <object id="209" type="rectangle" x="1447.94" y="1304.42" width="16.5" height="303.5"/>
-  <object id="210" type="rectangle" x="1911.9" y="1080.15" width="16" height="191.75"/>
-  <object id="211" type="rectangle" x="1800.44" y="887.917" width="14.75" height="191.25"/>
-  <object id="212" type="rectangle" x="1655.58" y="887.917" width="147.455" height="15.8182"/>
-  <object id="213" type="rectangle" x="1560.32" y="824.058" width="31.625" height="32.125"/>
-  <object id="215" type="rectangle" x="1303.94" y="823.917" width="32" height="366.5"/>
-  <object id="216" type="rectangle" x="1096.44" y="903.917" width="30.5" height="415"/>
-  <object id="217" type="rectangle" x="888.482" y="983.735" width="31.0909" height="399.818"/>
-  <object id="218" type="rectangle" x="656" y="816" width="128" height="255.667"/>
-  <object id="224" type="rectangle" x="1480.13" y="760.125" width="47.375" height="31.625"/>
+  <object id="208" type="rectangle" x="1661.55" y="1309.28" width="200.08" height="18.5795"/>
+  <object id="209" type="rectangle" x="1441.94" y="1280.42" width="28" height="337"/>
+  <object id="210" type="rectangle" x="1908.4" y="1040.15" width="22.25" height="239.875"/>
+  <object id="211" type="rectangle" x="1797.07" y="880.292" width="21.25" height="191.875"/>
+  <object id="212" type="rectangle" x="1674.31" y="893.372" width="124.728" height="18.1818"/>
+  <object id="213" type="rectangle" x="1569.96" y="834.603" width="59.4432" height="22.3068"/>
+  <object id="215" type="rectangle" x="1300.69" y="818.917" width="53.6667" height="381.045"/>
+  <object id="216" type="rectangle" x="1076.19" y="898.917" width="54.5" height="428.25"/>
+  <object id="217" type="rectangle" x="884.3" y="963.19" width="55.2727" height="428.636"/>
+  <object id="218" type="rectangle" x="661.75" y="819.636" width="114.5" height="252.031"/>
+  <object id="224" type="rectangle" x="1474.13" y="770.489" width="60.1023" height="21.4432"/>
  </objectgroup>
  <objectgroup id="6" name="VoidColliders" class="death">
   <object id="94" type="rectangle" x="672" y="2162.67" width="1261.33" height="345.333"/>
   <object id="95" type="rectangle" x="1672" y="1661.33" width="262.667" height="220"/>
-  <object id="99" type="rectangle" x="1337.83" y="1141" width="225.333" height="30.6667"/>
-  <object id="102" type="rectangle" x="661.667" y="1360.67" width="226" height="31"/>
-  <object id="221" type="rectangle" x="1096.67" y="1920" width="175.333" height="209.333"/>
+  <object id="99" type="rectangle" x="1353.33" y="1115.5" width="225.333" height="30.6667"/>
+  <object id="102" type="rectangle" x="661.667" y="1360.67" width="223" height="31"/>
+  <object id="221" type="rectangle" x="1131" y="1921.33" width="138.666" height="209.333"/>
  </objectgroup>
  <objectgroup id="9" name="WinCollider" class="win">
   <object id="225" type="rectangle" x="675.667" y="785.667" width="87" height="28"/>
