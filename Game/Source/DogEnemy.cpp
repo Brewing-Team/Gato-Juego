@@ -48,10 +48,10 @@ void DogEnemy::Jump(float dt) {
 
 bool DogEnemy::SaveState(pugi::xml_node& node) {
 
-	//pugi::xml_node playerAttributes = node.append_child("player");
-	//playerAttributes.append_attribute("x").set_value(this->position.x);
-	//playerAttributes.append_attribute("y").set_value(this->position.y);
-	//playerAttributes.append_attribute("angle").set_value(this->angle);
+	pugi::xml_node dogEnemyAttributes = node.append_child("dogenemy");
+	dogEnemyAttributes.append_attribute("x").set_value(this->position.x);
+	dogEnemyAttributes.append_attribute("y").set_value(this->position.y);
+	dogEnemyAttributes.append_attribute("angle").set_value(this->angle);
 
 	return true;
 
@@ -59,7 +59,7 @@ bool DogEnemy::SaveState(pugi::xml_node& node) {
 
 bool DogEnemy::LoadState(pugi::xml_node& node)
 {
-	//pbody->body->SetTransform({ PIXEL_TO_METERS(node.child("player").attribute("x").as_int()), PIXEL_TO_METERS(node.child("player").attribute("y").as_int()) }, node.child("player").attribute("angle").as_int());
+	pbody->body->SetTransform({ PIXEL_TO_METERS(node.child("dogenemy").attribute("x").as_int()), PIXEL_TO_METERS(node.child("dogenemy").attribute("y").as_int()) }, node.child("dogenemy").attribute("angle").as_int());
 
 	// reset enemy physics
 	//pbody->body->SetAwake(false);
