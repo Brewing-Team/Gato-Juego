@@ -116,6 +116,9 @@ bool DogEnemy::Start() {
 	pbody->body->GetFixtureList()->SetFriction(25.0f);
 	pbody->body->SetLinearDamping(1);
 
+	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 10, 5, bodyType::DYNAMIC);
+	groundSensor->listener = this;
+
 	return true;
 }
 
@@ -146,22 +149,23 @@ bool DogEnemy::Update(float dt)
 		{
 			newPosition = app->map->MapToWorld(path->At(currentPathPos)->x, path->At(currentPathPos)->y);
 			currentPathPos++;
-			LOG("%d", currentPathPos);
 			movementDelay.Start();
 		}
 	}
 
-	pbody->body->SetTransform(
-		{
-			std::lerp(pbody->body->GetPosition().x, PIXEL_TO_METERS(newPosition.x), dt * moveSpeed / 1000),
-			std::lerp(pbody->body->GetPosition().y, PIXEL_TO_METERS(newPosition.y), dt * moveSpeed / 1000)
+	movementDirection = b2Vec2{newPosition.x ,newPosition.y} - b2Vec2{position.x, position.y};
+	movementDirection.Normalize();
 
-		},
+	pbody->body->ApplyForce({movementDirection.x,0}, pbody->body->GetWorldCenter(), true);
 
-		angle * DEGTORAD
-	);
-	
-	LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
+	if (isGrounded and movementDirection.y != 0){
+		float impulse = pbody->body->GetMass() * 5;
+		pbody->body->ApplyLinearImpulse({0,impulse}, pbody->body->GetWorldCenter(), true);
+	}
+
+	LOG("%f, %f", movementDirection);
+
+	//LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
 
 
 	if (debug)
@@ -218,6 +222,15 @@ bool DogEnemy::CleanUp() {
 
 void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
+	if (physA->body->GetFixtureList()->IsSensor()) {
+		if (physB->ctype == ColliderType::PLATFORM) {
+			if (physA == groundSensor) {
+				LOG("Ground collision");
+				isGrounded = true;
+			}
+		}
+	}
+
 	switch (physB->ctype) {
 
 	case ColliderType::ITEM:
@@ -249,5 +262,12 @@ void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 }
 
 void DogEnemy::EndCollision(PhysBody* physA, PhysBody* physB) {
-
+	if (physA->body->GetFixtureList()->IsSensor()) {
+		if (physB->ctype == ColliderType::PLATFORM) {
+			if (physA == groundSensor) {
+				LOG("Ground collision");
+				isGrounded = false;
+			}
+		}
+	}
 }

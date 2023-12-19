@@ -6,6 +6,7 @@
 #include "Point.h"
 #ifdef __linux__
 #include <SDL.h>
+#include <Box2D/Box2D.h>
 #elif _MSC_VER
 #include "SDL/include/SDL.h"
 #endif
@@ -64,13 +65,15 @@ public:
 	iPoint spawnPosition;
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
+	PhysBody* groundSensor;
 
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 
 	//Movement
 	int moveSpeed = 2;
 	int angle;
-	iPoint movementDirection;
+	b2Vec2 movementDirection;
+	bool isGrounded = false;
 
 	int currentPathPos;
 
