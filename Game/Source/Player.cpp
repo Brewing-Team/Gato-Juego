@@ -40,7 +40,7 @@ void Player::setJumpAnimation()
 
 void Player::setClimbAnimation()
 {
-	currentAnimation = &idleAnim;
+	currentAnimation = &walkAnim;
 }
 
 void Player::setWinAnimation()
@@ -246,15 +246,17 @@ EntityState Player::StateMachine(float dt) {
 
 			if(isGrounded)
 			{
-				setClimbAnimation();
+				if ((int)pbody->body->GetLinearVelocity().y == 0) //esto rarete pero buenop
+				{
+					setIdleAnimation();
+				}
+				else{
+					setClimbAnimation();
+				}
 			}
 			else
 			{
 				setJumpAnimation();
-			}
-			if (pbody->body->GetLinearVelocity().y == 0) //esto rarete pero buenop
-			{
-				setIdleAnimation();
 			}
 			
 
