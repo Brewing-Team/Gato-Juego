@@ -1,5 +1,6 @@
 #include "OwlEnemy.h"
 #include "App.h"
+#include "Entity.h"
 #include "Map.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -50,10 +51,10 @@ void OwlEnemy::Attack(float dt)
 
 bool OwlEnemy::SaveState(pugi::xml_node& node) {
 
-	//pugi::xml_node playerAttributes = node.append_child("player");
-	//playerAttributes.append_attribute("x").set_value(this->position.x);
-	//playerAttributes.append_attribute("y").set_value(this->position.y);
-	//playerAttributes.append_attribute("angle").set_value(this->angle);
+	pugi::xml_node owlEnemyAttributes = node.append_child("owlenemy");
+	owlEnemyAttributes.append_attribute("x").set_value(this->position.x);
+	owlEnemyAttributes.append_attribute("y").set_value(this->position.y);
+	owlEnemyAttributes.append_attribute("angle").set_value(this->angle);
 
 	return true;
 
@@ -61,8 +62,7 @@ bool OwlEnemy::SaveState(pugi::xml_node& node) {
 
 bool OwlEnemy::LoadState(pugi::xml_node& node)
 {
-	//pbody->body->SetTransform({ PIXEL_TO_METERS(node.child("player").attribute("x").as_int()), PIXEL_TO_METERS(node.child("player").attribute("y").as_int()) }, node.child("player").attribute("angle").as_int());
-
+	pbody->body->SetTransform({ PIXEL_TO_METERS(node.child("owlenemy").attribute("x").as_int()), PIXEL_TO_METERS(node.child("owlenemy").attribute("y").as_int()) }, node.child("owlenemy").attribute("angle").as_int());
 	// reset enemy physics
 	//pbody->body->SetAwake(false);
 	//pbody->body->SetAwake(true);
@@ -75,7 +75,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 	LOG("%f", PIXEL_TO_METERS(player->position.DistanceTo(this->position)));
 	switch (this->state) {
 			case EntityState::IDLE:
-				setIdleAnimation();
+				currentAnimation = &idleAnim;
 				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
 				{
 					state = EntityState::MOVE;
@@ -83,7 +83,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 			break;
 			
 			case EntityState::MOVE:
-				setMoveAnimation();
+				currentAnimation = &flyAnim;
 				pathfindingMovement(dt);
 				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f){
 					if (attackTimer.ReadSec() >= 2)
@@ -92,15 +92,27 @@ EntityState OwlEnemy::StateMachine(float dt) {
 					}
 				}
 				else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)){
+					moveToSpawnPoint();
 					state = EntityState::IDLE;
 				}
 
 			break;
 
 			case EntityState::DEAD:
-				setIdleAnimation();	
+				currentAnimation = &sleepingAnim;
 				pbody->body->SetFixedRotation(false);
 				pbody->body->SetGravityScale(1);
+			break;
+
+			case EntityState::HURT:
+				currentAnimation = &hurtedAnim;
+				invencible = true;
+				if (currentAnimation->HasFinished()){
+					hurtedAnim.Reset();
+					hurtedAnim.ResetLoopCount();
+					invencible = false;
+					state = EntityState::MOVE;
+				}
 			break;
 
 			case EntityState::ATTACK:
@@ -153,8 +165,14 @@ bool OwlEnemy::Start() {
 	idleAnim.speed = 8.0f;
 	flyAnim = *app->map->GetAnimByName("owl-1-flying");
 	flyAnim.speed = 8.0f;
+	hurtedAnim = *app->map->GetAnimByName("owl-1-hurted");
+	hurtedAnim.speed = 8.0f;
+	hurtedAnim.loop = false;
+	sleepingAnim = *app->map->GetAnimByName("owl-1-sleeping");
+	sleepingAnim.speed = 8.0f;
 
-	currentAnimation = &flyAnim;
+
+	currentAnimation = &idleAnim;
 	
 	pbody = app->physics->CreateCircle(position.x, position.y, 15, bodyType::DYNAMIC);
 	pbody->listener = this;
@@ -173,12 +191,6 @@ bool OwlEnemy::Update(float dt)
 	// Update OwlEnemie state
 	StateMachine(dt);
 	//LOG("state: %d", state);
-
-	//TEMPORAL
-	if (lives <= 0)
-	{
-		state = EntityState::DEAD;
-	}
 
 	// PATHFINDING LOGIC
 	// ------------------------------
@@ -274,36 +286,44 @@ bool OwlEnemy::CleanUp() {
 
 void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
-	if (physA != NULL && physB != NULL) {
-		switch (physB->ctype) {
+	switch (physB->ctype) {
 
-		case ColliderType::PLAYER:
-			LOG("Collision PLAYER");
-			break;
+	case ColliderType::PLAYER:
+		LOG("Collision PLAYER");
+		break;
 
-		case ColliderType::PLATFORM:
-			LOG("Collision PLATFORM");
-			break;
+	case ColliderType::PLATFORM:
+		LOG("Collision PLATFORM");
+		break;
 
-		case ColliderType::DEATH:
-			LOG("Collision DEATH");
-			break;
-		case ColliderType::BULLET:
-			LOG("Collision DEATH");
-			lives--;
-			break;
-		case ColliderType::LIMITS:
-			LOG("Collision LIMITS");
-			break;
-		case ColliderType::WIN:
-			state = EntityState::WIN;
-			LOG("Collision WIN");
-			break;
-		case ColliderType::UNKNOWN:
-			LOG("Collision UNKNOWN");
-			break;
-
+	case ColliderType::DEATH:
+		LOG("Collision DEATH");
+		app->entityManager->DestroyEntity(this);
+		break;
+	case ColliderType::BULLET:
+		LOG("Collision DEATH");
+		if (state != EntityState::DEAD and !invencible){
+			if (lives <= 1)
+			{
+				state = EntityState::DEAD;
+			}
+			else{
+				state = EntityState::HURT;
+				lives--;
+			}
 		}
+		break;
+	case ColliderType::LIMITS:
+		LOG("Collision LIMITS");
+		break;
+	case ColliderType::WIN:
+		state = EntityState::WIN;
+		LOG("Collision WIN");
+		break;
+	case ColliderType::UNKNOWN:
+		LOG("Collision UNKNOWN");
+		break;
+
 	}
 
 }
