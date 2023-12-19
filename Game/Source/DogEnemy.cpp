@@ -113,7 +113,7 @@ bool DogEnemy::Start() {
 
 	//si quieres dar vueltos como la helice de un helicoptero Boeing AH-64 Apache pon en false la siguiente funcion
 	pbody->body->SetFixedRotation(true);
-	pbody->body->GetFixtureList()->SetFriction(25.0f);
+	pbody->body->GetFixtureList()->SetFriction(1.0f);
 	pbody->body->SetLinearDamping(1);
 
 	// TODO revisar este sensor, creo que no está funcionando
@@ -159,13 +159,15 @@ bool DogEnemy::Update(float dt)
 
 	// Check if the dog is on the ground and apply force if it is not
 	if (isGrounded) {
-		pbody->body->ApplyForce({ movementDirection.x * 1.5f, 0 }, pbody->body->GetWorldCenter(), true);
-		hasJumped = false;
+		if (abs(pbody->body->GetLinearVelocity().x) <= maxSpeed)
+		{
+			pbody->body->ApplyForce({ movementDirection.x * 1.5f, 0 }, pbody->body->GetWorldCenter(), true);
+		}
+		canJump = true;
 	} else {
-		hasJumped = true;
-		if (hasJumped) {
-			pbody->body->ApplyForce({ movementDirection.x * 1.5f, movementDirection.y * 5 }, pbody->body->GetWorldCenter(), true);
-			hasJumped = false;
+		if (canJump) {
+			canJump = false;
+			pbody->body->ApplyLinearImpulse({ 0, movementDirection.y }, pbody->body->GetWorldCenter(), true);
 		}
 	}
 

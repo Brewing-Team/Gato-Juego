@@ -61,7 +61,7 @@ public:
 
 	int isAlive = true;
 
-	bool hasJumped = false;
+	bool canJump = false;
 
 	float maxSpeed = 2.0f;
 	const char* texturePath;
