@@ -103,6 +103,8 @@ public:
 	bool climbingRight = false;
 
 	float bulletSpeed = 2.0f;
+	int shootCooldownTime = 0;
+	Timer shootCooldown;
 
 	// debug textures
 	SDL_Texture* debugMenuTexture;

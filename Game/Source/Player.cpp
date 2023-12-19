@@ -444,17 +444,21 @@ bool Player::Update(float dt)
 
  	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 	{
-		b2Vec2 mouseWorldPosition = { PIXEL_TO_METERS(app->input->GetMouseX()) + PIXEL_TO_METERS(-app->render->camera.x), PIXEL_TO_METERS(app->input->GetMouseY()) + PIXEL_TO_METERS(-app->render->camera.y) };
-		b2Vec2 shootDir = {mouseWorldPosition - pbody->body->GetPosition()};
-		shootDir.Normalize();
+		if (shootCooldown.ReadMSec() > shootCooldownTime)
+		{
+			b2Vec2 mouseWorldPosition = { PIXEL_TO_METERS(app->input->GetMouseX()) + PIXEL_TO_METERS(-app->render->camera.x), PIXEL_TO_METERS(app->input->GetMouseY()) + PIXEL_TO_METERS(-app->render->camera.y) };
+			b2Vec2 shootDir = {mouseWorldPosition - pbody->body->GetPosition()};
+			shootDir.Normalize();
 
-		FurBall* bullet = (FurBall*)app->entityManager->CreateEntity(EntityType::FURBALL);
-		bullet->Awake();
-		bullet->Start();
+			FurBall* bullet = (FurBall*)app->entityManager->CreateEntity(EntityType::FURBALL);
+			bullet->Awake();
+			bullet->Start();
 
-		bullet->pbody->body->SetTransform(pbody->body->GetPosition() + b2Vec2{0, 0}, 0);
-		bullet->pbody->body->SetAwake(false);
-		bullet->pbody->body->ApplyForce({ shootDir.x * bulletSpeed, shootDir.y * bulletSpeed}, bullet->pbody->body->GetWorldCenter(), true);
+			bullet->pbody->body->SetTransform(pbody->body->GetPosition() + b2Vec2{0, 0}, 0);
+			bullet->pbody->body->SetAwake(false);
+			bullet->pbody->body->ApplyForce({ shootDir.x * bulletSpeed, shootDir.y * bulletSpeed}, bullet->pbody->body->GetWorldCenter(), true);
+			shootCooldown.Start();
+		}
 	}
 	//debug shootDir
 	if(debug)
