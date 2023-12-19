@@ -9,6 +9,7 @@
 #include <Box2D/Box2D.h>
 #elif _MSC_VER
 #include "SDL/include/SDL.h"
+#include "Box2D/Box2D/Box2D.h"
 #endif
 
 struct SDL_Texture;

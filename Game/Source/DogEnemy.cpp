@@ -153,10 +153,10 @@ bool DogEnemy::Update(float dt)
 		}
 	}
 
-	movementDirection = b2Vec2{newPosition.x ,newPosition.y} - b2Vec2{position.x, position.y};
+	movementDirection = b2Vec2{(float32)newPosition.x, (float32)newPosition.y} - b2Vec2{(float32)position.x, (float32)position.y};
 	movementDirection.Normalize();
 
-	pbody->body->ApplyForce({movementDirection.x,0}, pbody->body->GetWorldCenter(), true);
+	pbody->body->ApplyForce({movementDirection.x * 2, 0}, pbody->body->GetWorldCenter(), true);
 
 	if (isGrounded and movementDirection.y != 0){
 		float impulse = pbody->body->GetMass() * 5;
