@@ -1,7 +1,7 @@
 <config>
   <app>
     <title>Gato-Juego Marugo</title>
-    <maxFrameDuration value="16"/>
+    <maxFrameDuration value="17"/>
     <icon path="Assets/Textures/icon.png"/>
   </app>
 

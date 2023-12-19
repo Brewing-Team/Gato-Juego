@@ -78,10 +78,10 @@ bool Map::Update(float dt)
             iPoint cameraPosMap = WorldToMap((int)(-app->render->camera.x), (int)(-app->render->camera.y));
             //cameraPosMap = { 20,40 };
 
-            int leftClipping = MAX(cameraPosMap.x, 0);
+            int leftClipping = MAX(cameraPosMap.x - clippingMargin, 0);
             int rightClipping = MIN(((cameraPosMap.x + (int)(app->render->camera.w / mapData.tileWidth) / app->win->GetScale()) + clippingMargin), mapLayerItem->data->width);
             
-            int topClipping = MAX(cameraPosMap.y, 0);
+            int topClipping = MAX(cameraPosMap.y - clippingMargin, 0);
             int bottomClipping = MIN(((cameraPosMap.y + (int)(app->render->camera.h / mapData.tileHeight) / app->win->GetScale()) + clippingMargin), mapLayerItem->data->height);
 
 
@@ -134,7 +134,7 @@ bool Map::Update(float dt)
                         pos.x,
                         pos.y,
                         &r,
-                        1.0f);
+                        mapLayerItem->data->parallaxFactor);
                       
                         
                 }
