@@ -68,7 +68,7 @@ bool Scene::Awake(pugi::xml_node& config)
 	app->render->camera.useInterpolation = true;
 	app->render->camera.lerpSpeed = 4.0f;
 	app->render->camera.offset = { 0,0 };
-	app->LoadRequest();
+	//app->LoadRequest(); Mario, de momento lo dejo comentado porque rompe cosas
 
 	return ret;
 }
