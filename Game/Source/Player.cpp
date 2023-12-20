@@ -88,9 +88,9 @@ bool Player::Start() {
 	playerDeath = app->audio->LoadFx("Assets/Audio/Fx/CatDeath.wav");
 	playerHit = app->audio->LoadFx("Assets/Audio/Fx/CatHit.wav");
 	playerJump = app->audio->LoadFx("Assets/Audio/Fx/CatJump.wav");
-	playerWalk = app->audio->LoadFx("Assets/Audio/Fx/CatWalk.wav");
+	playerWalk = app->audio->LoadFx("Assets/Audio/Fx/CatWalk.ogg");
 	playerMeow = app->audio->LoadFx("Assets/Audio/Fx/CatMeow.wav");
-	playerWin = app->audio->LoadFx("Assets/Audio/Fx/Win.wav");
+	playerWin = app->audio->LoadFx("Assets/Audio/Fx/Win.ogg");
 	pickItem = app->audio->LoadFx("Assets/Audio/Fx/PickItem.wav");
 
 	// TODO load debug menu texture from xml
@@ -268,10 +268,10 @@ void Player::setWinAnimation()
 
 void Player::Move(float dt) {
 
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+	// AUDIO TODO player walk
 
-		// AUDIO TODO player walk
-		app->audio->PlayFx(playerWalk);
+	app->audio->PlayFx(playerWalk);
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 
 		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
 		{
@@ -365,7 +365,7 @@ void Player::Climb(float dt) {
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-			
+
 			app->audio->PlayFx(playerJump);
 			float impulse = pbody->body->GetMass() * 5;
 			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_sin(DEGTORAD * angle), 0 }, pbody->body->GetWorldCenter(), true);
@@ -527,7 +527,7 @@ EntityState Player::StateMachine(float dt) {
 
 		// TODO hacer cosa de ganar jugador ole ole
 
-		// AUDIO TODO player win
+		// AUDIO DONE player win
 		app->audio->PlayFx(playerWin);
 
 		moveToSpawnPoint();

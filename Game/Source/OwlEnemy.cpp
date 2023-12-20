@@ -68,6 +68,7 @@ bool OwlEnemy::Start() {
 	owlDeath = app->audio->LoadFx("Assets/Audio/Fx/OwlDeath.wav");
 	owlHit = app->audio->LoadFx("Assets/Audio/Fx/OwlHit.wav");
 	owlIdle = app->audio->LoadFx("Assets/Audio/Fx/OwlIdle.wav");
+	owlDeath = app->audio->LoadFx("Assets/Audio/Fx/OwlDead.ogg");
 
 
 
@@ -197,7 +198,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 		break;
 
 	case EntityState::DEAD:
-		// AUDIO TODO owl death
+		// AUDIO DONE owl death
 		app->audio->PlayFx(owlDeath);
 
 		currentAnimation = &sleepingAnim;
