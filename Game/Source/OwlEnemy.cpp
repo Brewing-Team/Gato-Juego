@@ -198,9 +198,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 		break;
 
 	case EntityState::DEAD:
-		// AUDIO DONE owl death
-		app->audio->PlayFx(owlDeath);
-
+		
 		currentAnimation = &sleepingAnim;
 		pbody->body->SetFixedRotation(false);
 		pbody->body->SetGravityScale(1);
@@ -333,6 +331,8 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		if (state != EntityState::DEAD and !invencible){
 			if (lives <= 1)
 			{
+				// AUDIO DONE owl death
+				app->audio->PlayFx(owlDeath);
 				state = EntityState::DEAD;
 				reviveTimer.Start();
 			}

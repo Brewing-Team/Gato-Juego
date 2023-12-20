@@ -90,7 +90,9 @@ public:
 	// Audio FX
 	int playerJump;
 	int playerWalk;
+	Timer playerWalkSound;
 	int playerAttack;
+	int playerAttack2;
 	int playerDeath;
 	int playerHit;
 	int playerMeow;

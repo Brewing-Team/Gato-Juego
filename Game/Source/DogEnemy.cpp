@@ -42,9 +42,9 @@ bool DogEnemy::Awake() {
 	// Load audios
 	dogBark = app->audio->LoadFx("Assets/Audio/Fx/dogBark.wav");
 	dogHit = app->audio->LoadFx("Assets/Audio/Fx/dogHit.wav");
-	dogAttack = app->audio->LoadFx("Assets/Audio/Fx/dogAttack.wav");
+	dogAttack = app->audio->LoadFx("Assets/Audio/Fx/DogAttack.ogg");
 	dogDeath = app->audio->LoadFx("Assets/Audio/Fx/dogDeath.wav");
-
+	
 	return true;
 }
 
@@ -188,8 +188,6 @@ EntityState DogEnemy::StateMachine(float dt) {
 		}
 		break;
 	case EntityState::DEAD:
-		// AUDIO TODO dog death
-		app->audio->PlayFx(dogDeath);
 
 		currentAnimation = &dieAnim;
 		pbody->body->SetFixedRotation(false);
@@ -214,7 +212,7 @@ EntityState DogEnemy::StateMachine(float dt) {
 
 	case EntityState::ATTACK:
 
-		// AUDIO TODO dog attack
+		// AUDIO DONE dog attack
 		app->audio->PlayFx(dogAttack);
 
 		b2Vec2 attackDirection = { (float32)player->position.x - position.x, (float32)player->position.y - position.y };
@@ -363,6 +361,8 @@ void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		if (state != EntityState::DEAD and !invencible){
 			if (lives <= 1)
 			{
+				// AUDIO TODO dog death
+				app->audio->PlayFx(dogDeath);
 				state = EntityState::DEAD;
 				reviveTimer.Start();
 			}

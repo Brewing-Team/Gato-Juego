@@ -85,6 +85,7 @@ bool Player::Start() {
 	
 	// Load audios
 	playerAttack = app->audio->LoadFx("Assets/Audio/Fx/CatAttack.wav");
+	playerAttack2 = app->audio->LoadFx("Assets/Audio/Fx/CatAttack2.wav");
 	playerDeath = app->audio->LoadFx("Assets/Audio/Fx/CatDeath.wav");
 	playerHit = app->audio->LoadFx("Assets/Audio/Fx/CatHit.wav");
 	playerJump = app->audio->LoadFx("Assets/Audio/Fx/CatJump.wav");
@@ -121,6 +122,7 @@ bool Player::Update(float dt)
 
 			// AUDIO DONE player attack
 			app->audio->PlayFx(playerAttack);
+			app->audio->PlayFx(playerAttack2);
 
 			b2Vec2 mouseWorldPosition = { PIXEL_TO_METERS(app->input->GetMouseX()) + PIXEL_TO_METERS(-app->render->camera.x), PIXEL_TO_METERS(app->input->GetMouseY()) + PIXEL_TO_METERS(-app->render->camera.y) };
 			b2Vec2 shootDir = {mouseWorldPosition - pbody->body->GetPosition()};
@@ -268,9 +270,13 @@ void Player::setWinAnimation()
 
 void Player::Move(float dt) {
 
-	// AUDIO TODO player walk
+	// AUDIO DONE player walk
 
-	app->audio->PlayFx(playerWalk);
+	if (playerWalkSound.ReadMSec() > 245 and isGrounded)
+	{
+		app->audio->PlayFx(playerWalk);
+		playerWalkSound.Start();
+	}
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 
 		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
@@ -310,8 +316,12 @@ void Player::Jump(float dt) {
 void Player::Climb(float dt) {
 
 
-	// AUDIO TODO player walk (climb)
-	app->audio->PlayFx(playerWalk);
+	// AUDIO DONE player walk (climb)
+	if (playerWalkSound.ReadMSec() > 245 and isGrounded)
+	{
+		app->audio->PlayFx(playerWalk);
+		playerWalkSound.Start();
+	}
 
 	if (startTimer) {
 		timer.Start();
