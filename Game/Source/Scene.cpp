@@ -46,7 +46,7 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	//hacerlo con bucles pero esk ahora me daba palo
 	
-	if (config.child("enemies").child("owl_enemy")) {
+/* 	if (config.child("enemies").child("owl_enemy")) {
 		OwlEnemy* owlEnemy = (OwlEnemy*)app->entityManager->CreateEntity(EntityType::OWLENEMY);
 		owlEnemy->parameters = config.child("enemies").child("owl_enemy");
 	}
@@ -55,9 +55,24 @@ bool Scene::Awake(pugi::xml_node& config)
 	if (config.child("enemies").child("dog_enemy")) {
 		DogEnemy* dogEnemy = (DogEnemy*)app->entityManager->CreateEntity(EntityType::DOGENEMY);
 		dogEnemy->parameters = config.child("enemies").child("dog_enemy");
-	} 
+	}  */
 	
+	if (config.child("enemies"))
+	{
+		pugi::xml_node enemies = config.child("enemies");
+		for (pugi::xml_node enemyNode = enemies.child("owl_enemy"); enemyNode; enemyNode = enemyNode.next_sibling("owl_enemy"))
+		{
+			OwlEnemy* owlEnemy = (OwlEnemy*)app->entityManager->CreateEntity(EntityType::OWLENEMY);
+			owlEnemy->parameters = enemyNode;
+		}
 
+		for (pugi::xml_node enemyNode = enemies.child("dog_enemy"); enemyNode; enemyNode = enemyNode.next_sibling("dog_enemy"))
+		{
+			DogEnemy* dogEnemy = (DogEnemy*)app->entityManager->CreateEntity(EntityType::DOGENEMY);
+			dogEnemy->parameters = enemyNode;
+		}
+	}
+	
 	if (config.child("map")) {
 		//Get the map name from the config file and assigns the value in the module
 		app->map->name = config.child("map").attribute("name").as_string();
