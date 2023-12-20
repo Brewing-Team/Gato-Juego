@@ -101,7 +101,7 @@
   </tile>
  </tileset>
  <tileset firstgid="297" name="terrain" tilewidth="16" tileheight="16" tilecount="4096" columns="64">
-  <image source="../test-autotile/mainlevbuild.png" width="1024" height="1024"/>
+  <image source="mainlevbuild.png" width="1024" height="1024"/>
   <wangsets>
    <wangset name="Unnamed Set" type="mixed" tile="-1">
     <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
@@ -202,13 +202,13 @@
   </tile>
  </tileset>
  <tileset firstgid="4437" name="bakcground_day1" tilewidth="16" tileheight="16" tilecount="920" columns="40">
-  <image source="../../../../Assets/Third-Party/platformer-fantasy-set1/PFantasy_SET1_v1.0/bakcground_day1.png" width="640" height="368"/>
+  <image source="background/bakcground_day1.png" width="640" height="368"/>
  </tileset>
  <tileset firstgid="5357" name="bakcground_day2" tilewidth="16" tileheight="16" tilecount="920" columns="40">
-  <image source="../../../../Assets/Third-Party/platformer-fantasy-set1/PFantasy_SET1_v1.0/bakcground_day2.png" width="640" height="368"/>
+  <image source="background/bakcground_day2.png" width="640" height="368"/>
  </tileset>
  <tileset firstgid="6277" name="bakcground_day3" tilewidth="16" tileheight="16" tilecount="920" columns="40">
-  <image source="../../../../Assets/Third-Party/platformer-fantasy-set1/PFantasy_SET1_v1.0/bakcground_day3.png" width="640" height="368"/>
+  <image source="background/bakcground_day3.png" width="640" height="368"/>
  </tileset>
  <layer id="1" name="BackgroundLayer1" width="164" height="176" parallaxx="0.5" parallaxy="0.5">
   <properties>
