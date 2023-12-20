@@ -175,7 +175,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 		if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
 		{
 			// AUDIO DONE owl idle
-			app->audio->PlayFx(owlIdle);
+ 			app->audio->PlayFx(owlIdle);
 			state = EntityState::MOVE;
 		}
 		break;

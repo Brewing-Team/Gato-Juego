@@ -365,7 +365,8 @@ void Player::Climb(float dt) {
 		}
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-
+			
+			app->audio->PlayFx(playerJump);
 			float impulse = pbody->body->GetMass() * 5;
 			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_sin(DEGTORAD * angle), 0 }, pbody->body->GetWorldCenter(), true);
 
