@@ -12,7 +12,6 @@
 #include "Physics.h"
 
 #include "Window.h"
-#include <SDL_render.h>
 #include <cmath>
 #include <iostream>
 
@@ -20,6 +19,7 @@
 #include <Box2D/Common/b2Math.h>
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
+#include <SDL_render.h>
 #endif
 
 void DogEnemy::setIdleAnimation()
