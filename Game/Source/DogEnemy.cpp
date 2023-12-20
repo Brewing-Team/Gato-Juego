@@ -102,10 +102,8 @@ EntityState DogEnemy::StateMachine(float dt) {
 		case EntityState::DEAD:
 			// AUDIO TODO dog death
 			currentAnimation = &dieAnim;
-			pbody->body->SetFixedRotation(false);
 			if (reviveTimer.ReadSec() >= 5)
 			{
-				pbody->body->SetFixedRotation(true);
 				state = EntityState::IDLE;
 				lives = 5;
 			}
