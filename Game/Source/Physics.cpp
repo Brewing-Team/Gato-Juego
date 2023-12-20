@@ -549,7 +549,7 @@ b2WeldJoint* Physics::CreateWeldJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, 
 	return (b2WeldJoint*)world->CreateJoint(&weldJointDef);
 }
 
-b2Body** Physics::CreateRope(int length){
+b2Body** Physics::CreateRope(int x, int y, int length){
 
 	b2Body** segments = new b2Body*[length];
 	b2RevoluteJoint** joints = new b2RevoluteJoint*[length - 1];
@@ -557,6 +557,7 @@ b2Body** Physics::CreateRope(int length){
 
 	b2BodyDef* bodyDef = new b2BodyDef();
 	bodyDef->type = b2_dynamicBody;
+	bodyDef->position.Set(x, y);
 
 	float width = 0.1f, height = 0.25f;
 
@@ -598,13 +599,15 @@ b2Body** Physics::CreateRope(int length){
 	return segments;
 }
 
-b2Body** Physics::CreateRope(int length, b2Vec2 startPos){
+b2Body** Physics::CreateRope(b2Vec2 startPos, int length) {
 	    b2Body** segments = new b2Body*[length];
     b2RevoluteJoint** joints = new b2RevoluteJoint*[length + 1];
     b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
 
     b2BodyDef* bodyDef = new b2BodyDef();
     bodyDef->type = b2_dynamicBody;
+	bodyDef->position.Set(startPos.x, startPos.y);
+
 
     float width = 0.1f, height = height = 0.25f;
 
@@ -656,7 +659,7 @@ b2Body** Physics::CreateRope(int length, b2Vec2 startPos){
     return segments;
 }
 
-b2Body** Physics::CreateRope(int length, b2Vec2 startPos, b2Vec2 endPos)
+b2Body** Physics::CreateRope(b2Vec2 startPos, b2Vec2 endPos, int length)
 {
     b2Body** segments = new b2Body*[length];
     b2RevoluteJoint** joints = new b2RevoluteJoint*[length + 1];
@@ -664,6 +667,7 @@ b2Body** Physics::CreateRope(int length, b2Vec2 startPos, b2Vec2 endPos)
 
     b2BodyDef* bodyDef = new b2BodyDef();
     bodyDef->type = b2_dynamicBody;
+
 
     float width = 0.1f, height = (endPos - startPos).Length() / length;
 
@@ -674,7 +678,7 @@ b2Body** Physics::CreateRope(int length, b2Vec2 startPos, b2Vec2 endPos)
     {
 
         bodyDef->position = startPos + (endPos - startPos);
-		bodyDef->position *= (i / (float)length);
+		//bodyDef->position *= (i / (float)length);
         segments[i] = world->CreateBody(bodyDef);
         segments[i]->CreateFixture(shape, 1.0f);
     }
