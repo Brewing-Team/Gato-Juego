@@ -62,6 +62,12 @@ public:
 	Animation jumpAnim;
 	Animation* currentAnimation = nullptr;
 
+	//audios
+	int owlDeath;
+	int owlHit;
+	int owlAttack;
+	int owlIdle;
+
 	int isAlive = true;
 
 	float maxSpeed = 2.0f;

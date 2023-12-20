@@ -84,7 +84,8 @@ EntityState OwlEnemy::StateMachine(float dt) {
 				currentAnimation = &idleAnim;
 				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
 				{
-					// AUDIO TODO owl idle
+					// AUDIO DONE owl idle
+					app->audio->PlayFx(owlIdle);
 					state = EntityState::MOVE;
 				}
 			break;
@@ -132,7 +133,8 @@ EntityState OwlEnemy::StateMachine(float dt) {
 
 			case EntityState::ATTACK:
 
-				// AUDIO TODO owl attack
+				// AUDIO DONE owl attack
+				app->audio->PlayFx(owlAttack);
 
 				b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
 				attackDirection.Normalize();
@@ -188,6 +190,13 @@ bool OwlEnemy::Start() {
 	hurtedAnim.loop = false;
 	sleepingAnim = *app->map->GetAnimByName("owl-1-sleeping");
 	sleepingAnim.speed = 8.0f;
+
+	// load audios
+	owlAttack = app->audio->LoadFx("Assets/Audio/Fx/OwlAttack.wav");
+	//owlDeath = app->audio->LoadFx("Assets/Audio/Fx/OwlDeath.wav");
+	owlHit = app->audio->LoadFx("Assets/Audio/Fx/OwlHit.wav");
+	owlIdle = app->audio->LoadFx("Assets/Audio/Fx/OwlIdle.wav");
+
 
 
 	currentAnimation = &idleAnim;
@@ -324,7 +333,8 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 				reviveTimer.Start();
 			}
 			else{
-				// AUDIO TODO owl hit
+				// AUDIO DONE owl hit
+				app->audio->PlayFx(owlHit);
 				state = EntityState::HURT;
 				lives--;
 			}

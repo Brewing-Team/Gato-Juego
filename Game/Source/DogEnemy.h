@@ -63,6 +63,10 @@ public:
 	Animation jumpAnim;
 	Animation* currentAnimation = nullptr;
 
+	//Audios
+	int dogBark;
+	int dogHit;
+
 	int isAlive = true;
 
 	bool canJump = false;

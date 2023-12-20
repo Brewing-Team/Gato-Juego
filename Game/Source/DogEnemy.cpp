@@ -81,7 +81,8 @@ EntityState DogEnemy::StateMachine(float dt) {
 			if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
 				{
 					state = EntityState::MOVE;
-					// AUDIO TODO dog idle
+					// AUDIO DONE dog idle
+					app->audio->PlayFx(dogBark);
 				}
 		break;
 		case EntityState::MOVE:
@@ -157,6 +158,10 @@ bool DogEnemy::Awake() {
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
 	newPosition = spawnPosition = position;
+
+	// Load audios
+	dogBark = app->audio->LoadFx("Assets/Audio/Fx/dogBark.wav");
+	dogHit = app->audio->LoadFx("Assets/Audio/Fx/dogHit.wav");
 
 	return true;
 }
@@ -357,7 +362,8 @@ void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 				reviveTimer.Start();
 			}
 			else{
-				// AUDIO TODO dog hit
+				// AUDIO DONE dog hit
+				app->audio->PlayFx(dogHit);
 				state = EntityState::HURT;
 				lives--;
 			}
