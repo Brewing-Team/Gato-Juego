@@ -101,6 +101,8 @@ EntityState DogEnemy::StateMachine(float dt) {
 		break;
 		case EntityState::DEAD:
 			// AUDIO TODO dog death
+			app->audio->PlayFx(dogDeath);
+
 			currentAnimation = &dieAnim;
 			pbody->body->SetFixedRotation(false);
 			if (reviveTimer.ReadSec() >= 5)
@@ -125,6 +127,7 @@ EntityState DogEnemy::StateMachine(float dt) {
 		case EntityState::ATTACK:
 
 			// AUDIO TODO dog attack
+			app->audio->PlayFx(dogAttack);
 
 			b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
 			attackDirection.Normalize();
@@ -162,6 +165,8 @@ bool DogEnemy::Awake() {
 	// Load audios
 	dogBark = app->audio->LoadFx("Assets/Audio/Fx/dogBark.wav");
 	dogHit = app->audio->LoadFx("Assets/Audio/Fx/dogHit.wav");
+	dogAttack = app->audio->LoadFx("Assets/Audio/Fx/dogAttack.wav");
+	dogDeath = app->audio->LoadFx("Assets/Audio/Fx/dogDeath.wav");
 
 	return true;
 }

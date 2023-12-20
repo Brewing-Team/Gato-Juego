@@ -94,6 +94,8 @@ public:
 	int playerDeath;
 	int playerHit;
 	int playerMeow;
+	int playerWin;
+	int pickItem;
 
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 

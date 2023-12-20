@@ -53,6 +53,7 @@ void Player::Move(float dt) {
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 
 		// AUDIO TODO player walk
+		app->audio->PlayFx(playerWalk);
 
 		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
 		{
@@ -92,6 +93,7 @@ void Player::Climb(float dt) {
 	
 
 	// AUDIO TODO player walk (climb)
+	app->audio->PlayFx(playerWalk);
 
 	if (startTimer) {
 		timer.Start();
@@ -305,6 +307,7 @@ EntityState Player::StateMachine(float dt) {
 			// TODO hacer cosa de ganar jugador ole ole
 			
 			// AUDIO TODO player win
+			app->audio->PlayFx(playerWin);
 
 			moveToSpawnPoint();
 
@@ -441,8 +444,10 @@ bool Player::Start() {
 	playerDeath = app->audio->LoadFx("Assets/Audio/Fx/CatDeath.wav");
 	playerHit = app->audio->LoadFx("Assets/Audio/Fx/CatHit.wav");
 	playerJump = app->audio->LoadFx("Assets/Audio/Fx/CatJump.wav");
-	// playerWalk = app->audio->LoadFx("Assets/Audio/Fx/CatWalk");
-	// playerWalk = app->audio->LoadFx("Assets/Audio/Fx/CatMeow");
+	playerWalk = app->audio->LoadFx("Assets/Audio/Fx/CatWalk");
+	playerMeow = app->audio->LoadFx("Assets/Audio/Fx/CatMeow");
+	playerWin = app->audio->LoadFx("Assets/Audio/Fx/Win");
+	pickItem = app->audio->LoadFx("Assets/Audio/Fx/PickItem");
 
 	// TODO load debug menu texture from xml
 	// load debug menu texture
@@ -656,6 +661,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision ITEM");
 
 		// AUDIO TODO pick item
+		app->audio->PlayFx(pickItem);
 		break;
 
 	case ColliderType::ENEMY:

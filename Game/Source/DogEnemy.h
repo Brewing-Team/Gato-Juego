@@ -66,6 +66,8 @@ public:
 	//Audios
 	int dogBark;
 	int dogHit;
+	int dogAttack;
+	int dogDeath;
 
 	int isAlive = true;
 

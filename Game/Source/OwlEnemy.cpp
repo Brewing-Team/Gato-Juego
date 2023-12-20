@@ -8,6 +8,7 @@
 #include "Render.h"
 #include "Scene.h"
 #include "Log.h"
+#include "Log.h"
 #include "Point.h"
 #include "Physics.h"
 
@@ -108,6 +109,8 @@ EntityState OwlEnemy::StateMachine(float dt) {
 
 			case EntityState::DEAD:
 				// AUDIO TODO owl death
+				app->audio->PlayFx(owlDeath);
+
 				currentAnimation = &sleepingAnim;
 				pbody->body->SetFixedRotation(false);
 				pbody->body->SetGravityScale(1);
@@ -193,7 +196,7 @@ bool OwlEnemy::Start() {
 
 	// load audios
 	owlAttack = app->audio->LoadFx("Assets/Audio/Fx/OwlAttack.wav");
-	//owlDeath = app->audio->LoadFx("Assets/Audio/Fx/OwlDeath.wav");
+	owlDeath = app->audio->LoadFx("Assets/Audio/Fx/OwlDeath.wav");
 	owlHit = app->audio->LoadFx("Assets/Audio/Fx/OwlHit.wav");
 	owlIdle = app->audio->LoadFx("Assets/Audio/Fx/OwlIdle.wav");
 
