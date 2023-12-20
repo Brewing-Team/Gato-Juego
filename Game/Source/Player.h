@@ -103,7 +103,7 @@ public:
 	bool climbingRight = false;
 
 	float bulletSpeed = 2.0f;
-	int shootCooldownTime = 0;
+	int shootCooldownTime = 1000;
 	Timer shootCooldown;
 
 	// debug textures

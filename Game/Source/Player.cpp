@@ -383,6 +383,7 @@ bool Player::Awake() {
 bool Player::Start() {
 
 	timer = Timer();
+	shootCooldown = Timer(5);
 
 	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)
 	walkAnim = *app->map->GetAnimByName("Cat-1-Walk");
