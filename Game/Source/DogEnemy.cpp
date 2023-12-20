@@ -77,9 +77,11 @@ EntityState DogEnemy::StateMachine(float dt) {
 	switch (this->state) {
 		case EntityState::IDLE:
 			setIdleAnimation();
+
 			if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
 				{
 					state = EntityState::MOVE;
+					// AUDIO TODO dog idle
 				}
 		break;
 		case EntityState::MOVE:
@@ -97,22 +99,26 @@ EntityState DogEnemy::StateMachine(float dt) {
 			}
 		break;
 		case EntityState::DEAD:
+			// AUDIO TODO dog death
 			currentAnimation = &dieAnim;
 			pbody->body->SetFixedRotation(false);
 		break;
 
 		case EntityState::HURT:
-				currentAnimation = &hurtAnim;
-				invencible = true;
-				if (currentAnimation->HasFinished()){
-					hurtAnim.Reset();
-					hurtAnim.ResetLoopCount();
-					invencible = false;
-					state = EntityState::IDLE;
-				}
-			break;
+			currentAnimation = &hurtAnim;
+			invencible = true;
+			if (currentAnimation->HasFinished()){
+				hurtAnim.Reset();
+				hurtAnim.ResetLoopCount();
+				invencible = false;
+				state = EntityState::IDLE;
+			}
+		break;
 
 		case EntityState::ATTACK:
+
+			// AUDIO TODO dog attack
+
 			b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
 			attackDirection.Normalize();
 
@@ -121,6 +127,7 @@ EntityState DogEnemy::StateMachine(float dt) {
 			pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
 
 			attackTimer.Start();
+
 			state = EntityState::MOVE;
 		break;
 	}
@@ -343,6 +350,7 @@ void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 				state = EntityState::DEAD;
 			}
 			else{
+				// AUDIO TODO dog hit
 				state = EntityState::HURT;
 				lives--;
 			}

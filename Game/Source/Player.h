@@ -86,7 +86,14 @@ public:
 	PhysBody* topSensor;
 	PhysBody* leftSensor;
 	PhysBody* rightSensor;
-	int pickCoinFxId;
+	
+	// Audio FX
+	int playerJump;
+	int playerWalk;
+	int playerAttack;
+	int playerDeath;
+	int playerHit;
+	int playerMeow;
 
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 

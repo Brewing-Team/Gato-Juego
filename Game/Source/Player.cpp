@@ -51,6 +51,9 @@ void Player::setWinAnimation()
 void Player::Move(float dt) {
 	
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+
+		// AUDIO TODO player walk
+
 		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
@@ -66,6 +69,7 @@ void Player::Move(float dt) {
 			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
 		}
 		flip = SDL_FLIP_NONE;
+
 	}
 	else if(isGrounded){
 		state = EntityState::IDLE;
@@ -75,6 +79,9 @@ void Player::Move(float dt) {
 
 void Player::Jump(float dt) {
 	
+	// AUDIO DONE player jump
+	app->audio->PlayFx(playerJump);
+
 	float impulse = pbody->body->GetMass() * 5;
 	pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
 	isGrounded = false;
@@ -83,6 +90,9 @@ void Player::Jump(float dt) {
 
 void Player::Climb(float dt) {
 	
+
+	// AUDIO TODO player walk (climb)
+
 	if (startTimer) {
 		timer.Start();
 		startTimer = false;
@@ -293,6 +303,8 @@ EntityState Player::StateMachine(float dt) {
 		case EntityState::WIN:
 
 			// TODO hacer cosa de ganar jugador ole ole
+			
+			// AUDIO TODO player win
 
 			moveToSpawnPoint();
 
@@ -305,6 +317,9 @@ EntityState Player::StateMachine(float dt) {
 			setWinAnimation();
 
 			// TODO resetear mundo, restar vidas, etc
+
+			// AUDIO DONE player death
+			app->audio->PlayFx(playerDeath);
 
 			moveToSpawnPoint();
 
@@ -420,7 +435,13 @@ bool Player::Start() {
 	rightSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 1, 5, bodyType::DYNAMIC);
 	rightSensor->listener = this;
 	
-	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
+	// Load audios
+	playerAttack = app->audio->LoadFx("Assets/Audio/Fx/CatAttack.wav");
+	playerDeath = app->audio->LoadFx("Assets/Audio/Fx/CatDeath.wav");
+	playerHit = app->audio->LoadFx("Assets/Audio/Fx/CatHit.wav");
+	playerJump = app->audio->LoadFx("Assets/Audio/Fx/CatJump.wav");
+	// playerWalk = app->audio->LoadFx("Assets/Audio/Fx/CatWalk");
+	// playerWalk = app->audio->LoadFx("Assets/Audio/Fx/CatMeow");
 
 	// TODO load debug menu texture from xml
 	// load debug menu texture
@@ -447,6 +468,10 @@ bool Player::Update(float dt)
 	{
 		if (shootCooldown.ReadMSec() > shootCooldownTime)
 		{
+
+			// AUDIO DONE player attack
+			app->audio->PlayFx(playerAttack);
+
 			b2Vec2 mouseWorldPosition = { PIXEL_TO_METERS(app->input->GetMouseX()) + PIXEL_TO_METERS(-app->render->camera.x), PIXEL_TO_METERS(app->input->GetMouseY()) + PIXEL_TO_METERS(-app->render->camera.y) };
 			b2Vec2 shootDir = {mouseWorldPosition - pbody->body->GetPosition()};
 			shootDir.Normalize();
@@ -595,9 +620,7 @@ bool Player::CleanUp() {
 	app->tex->UnLoad(debugMenuTexture);
 	app->tex->UnLoad(texture);
 
-
 	// Theres no need to unload audio fx because they are unloaded when te audio module is cleaned up
-	// app->audio->UnloadFx(pickCoinFxId);
 
 	return true;
 }
@@ -630,7 +653,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
-		app->audio->PlayFx(pickCoinFxId);
+
+		// AUDIO TODO pick item
 		break;
 
 	case ColliderType::ENEMY:
@@ -641,6 +665,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				state = EntityState::DEAD;
 			}
 			else{
+				// AUDIO DONE player hit
+				app->audio->PlayFx(playerHit);
 				lives--;
 				state = EntityState::HURT;
 				immunityTimer.Start();
@@ -655,9 +681,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::DEATH:
 		LOG("Collision DEATH");
 
-		if (!godMode){	
-		lives = 0;
-		isAlive = false;
+		if (!godMode) {
+			lives = 0;
+			isAlive = false;
 		}
 		break;
 

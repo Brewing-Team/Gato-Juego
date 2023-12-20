@@ -84,6 +84,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 				currentAnimation = &idleAnim;
 				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
 				{
+					// AUDIO TODO owl idle
 					state = EntityState::MOVE;
 				}
 			break;
@@ -105,6 +106,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 			break;
 
 			case EntityState::DEAD:
+				// AUDIO TODO owl death
 				currentAnimation = &sleepingAnim;
 				pbody->body->SetFixedRotation(false);
 				pbody->body->SetGravityScale(1);
@@ -122,6 +124,9 @@ EntityState OwlEnemy::StateMachine(float dt) {
 			break;
 
 			case EntityState::ATTACK:
+
+				// AUDIO TODO owl attack
+
 				b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
 				attackDirection.Normalize();
 
@@ -311,6 +316,7 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 				state = EntityState::DEAD;
 			}
 			else{
+				// AUDIO TODO owl hit
 				state = EntityState::HURT;
 				lives--;
 			}
