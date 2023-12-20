@@ -29,7 +29,9 @@
     <player x="672" y="2032" texturepath="Assets/Textures/Cat-1-Walk.png"/>
 	<enemies>
 		<owl_enemy x="750" y="1900" texturepath=""/>
-        <dog_enemy x="1344" y="1728" texturepath=""/>
+    <dog_enemy x="1344" y="1728" texturepath=""/>
+    <owl_enemy x="1790" y="1287" texturepath=""/>
+    <dog_enemy x="886" y="1725" texturepath=""/>
 	</enemies>
     <item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/>
   </scene>

@@ -113,6 +113,7 @@ bool Player::Start() {
 bool Player::Update(float dt)
 {
 	LOG("%d", lives);
+
 	debugTools();
 
  	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
