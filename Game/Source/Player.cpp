@@ -88,10 +88,10 @@ bool Player::Start() {
 	playerDeath = app->audio->LoadFx("Assets/Audio/Fx/CatDeath.wav");
 	playerHit = app->audio->LoadFx("Assets/Audio/Fx/CatHit.wav");
 	playerJump = app->audio->LoadFx("Assets/Audio/Fx/CatJump.wav");
-	playerWalk = app->audio->LoadFx("Assets/Audio/Fx/CatWalk");
-	playerMeow = app->audio->LoadFx("Assets/Audio/Fx/CatMeow");
-	playerWin = app->audio->LoadFx("Assets/Audio/Fx/Win");
-	pickItem = app->audio->LoadFx("Assets/Audio/Fx/PickItem");
+	playerWalk = app->audio->LoadFx("Assets/Audio/Fx/CatWalk.wav");
+	playerMeow = app->audio->LoadFx("Assets/Audio/Fx/CatMeow.wav");
+	playerWin = app->audio->LoadFx("Assets/Audio/Fx/Win.wav");
+	pickItem = app->audio->LoadFx("Assets/Audio/Fx/PickItem.wav");
 
 	// TODO load debug menu texture from xml
 	// load debug menu texture
