@@ -158,6 +158,7 @@ bool Player::SaveState(pugi::xml_node& node) {
 	playerAttributes.append_attribute("x").set_value(this->position.x);
 	playerAttributes.append_attribute("y").set_value(this->position.y);
 	playerAttributes.append_attribute("angle").set_value(this->angle);
+	playerAttributes.append_attribute("lives").set_value(lives);
 
 	return true;
 
@@ -166,7 +167,7 @@ bool Player::SaveState(pugi::xml_node& node) {
 bool Player::LoadState(pugi::xml_node& node)
 {
 	pbody->body->SetTransform({ PIXEL_TO_METERS(node.child("player").attribute("x").as_int()), PIXEL_TO_METERS(node.child("player").attribute("y").as_int()) }, node.child("player").attribute("angle").as_int());
-
+	lives = node.child("player").attribute("lives").as_int();
 	// reset player physics
 	pbody->body->SetAwake(false);
 	pbody->body->SetAwake(true);

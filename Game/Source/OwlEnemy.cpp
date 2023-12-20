@@ -55,6 +55,8 @@ bool OwlEnemy::SaveState(pugi::xml_node& node) {
 	owlEnemyAttributes.append_attribute("x").set_value(this->position.x);
 	owlEnemyAttributes.append_attribute("y").set_value(this->position.y);
 	owlEnemyAttributes.append_attribute("angle").set_value(this->angle);
+	owlEnemyAttributes.append_attribute("state").set_value((int)this->state);
+	owlEnemyAttributes.append_attribute("lives").set_value(lives);
 
 	return true;
 
@@ -62,7 +64,11 @@ bool OwlEnemy::SaveState(pugi::xml_node& node) {
 
 bool OwlEnemy::LoadState(pugi::xml_node& node)
 {
-	pbody->body->SetTransform({ PIXEL_TO_METERS(node.child("owlenemy").attribute("x").as_int()), PIXEL_TO_METERS(node.child("owlenemy").attribute("y").as_int()) }, node.child("owlenemy").attribute("angle").as_int());
+	pugi::xml_node OwlEnemyNode = node.child("owlenemy");
+
+	pbody->body->SetTransform({ PIXEL_TO_METERS(OwlEnemyNode.attribute("x").as_int()), PIXEL_TO_METERS(OwlEnemyNode.attribute("y").as_int()) }, OwlEnemyNode.attribute("angle").as_int());
+	lives = OwlEnemyNode.attribute("lives").as_int();
+	this->state = (EntityState)OwlEnemyNode.attribute("state").as_int();
 	// reset enemy physics
 	//pbody->body->SetAwake(false);
 	//pbody->body->SetAwake(true);

@@ -52,6 +52,8 @@ bool DogEnemy::SaveState(pugi::xml_node& node) {
 	dogEnemyAttributes.append_attribute("x").set_value(this->position.x);
 	dogEnemyAttributes.append_attribute("y").set_value(this->position.y);
 	dogEnemyAttributes.append_attribute("angle").set_value(this->angle);
+	dogEnemyAttributes.append_attribute("state").set_value((int)this->state);
+	dogEnemyAttributes.append_attribute("lives").set_value(lives);
 
 	return true;
 
@@ -59,8 +61,11 @@ bool DogEnemy::SaveState(pugi::xml_node& node) {
 
 bool DogEnemy::LoadState(pugi::xml_node& node)
 {
-	pbody->body->SetTransform({ PIXEL_TO_METERS(node.child("dogenemy").attribute("x").as_int()), PIXEL_TO_METERS(node.child("dogenemy").attribute("y").as_int()) }, node.child("dogenemy").attribute("angle").as_int());
+	pugi::xml_node dogEnemyNode = node.child("dogenemy");
 
+	pbody->body->SetTransform({ PIXEL_TO_METERS(dogEnemyNode.attribute("x").as_int()), PIXEL_TO_METERS(dogEnemyNode.attribute("y").as_int()) }, dogEnemyNode.attribute("angle").as_int());
+	lives = dogEnemyNode.attribute("lives").as_int();
+	this->state = (EntityState)dogEnemyNode.attribute("state").as_int();
 	// reset enemy physics
 	//pbody->body->SetAwake(false);
 	//pbody->body->SetAwake(true);
