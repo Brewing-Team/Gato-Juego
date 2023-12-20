@@ -14,6 +14,10 @@ Timer::Timer()
 	Start();
 }
 
+Timer::Timer(uint32_t startTime) {
+	this->startTime = startTime;
+}
+
 void Timer::Start()
 {
 	startTime = SDL_GetTicks();
