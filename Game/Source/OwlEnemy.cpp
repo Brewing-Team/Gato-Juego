@@ -22,137 +22,6 @@
 #include <Box2D/Dynamics/b2Fixture.h>
 #endif
 
-void OwlEnemy::setIdleAnimation()
-{
-	currentAnimation = &idleAnim;
-}
-
-void OwlEnemy::setMoveAnimation()
-{
-	currentAnimation = &flyAnim;
-	jumpAnim.Reset();
-}
-
-void OwlEnemy::setJumpAnimation()
-{
-	currentAnimation = &jumpAnim;
-}
-
-void OwlEnemy::Idle(float dt){
-
-}
-
-void OwlEnemy::Move(float dt) {
-	// TODO move logic
-}
-
-void OwlEnemy::Attack(float dt)
-{
-}
-
-bool OwlEnemy::SaveState(pugi::xml_node& node) {
-
-	pugi::xml_node owlEnemyAttributes = node.append_child("owlenemy");
-	owlEnemyAttributes.append_attribute("x").set_value(this->position.x);
-	owlEnemyAttributes.append_attribute("y").set_value(this->position.y);
-	owlEnemyAttributes.append_attribute("angle").set_value(this->angle);
-	owlEnemyAttributes.append_attribute("state").set_value((int)this->state);
-	owlEnemyAttributes.append_attribute("lives").set_value(lives);
-
-	return true;
-
-}
-
-bool OwlEnemy::LoadState(pugi::xml_node& node)
-{
-	pugi::xml_node OwlEnemyNode = node.child("owlenemy");
-
-	pbody->body->SetTransform({ PIXEL_TO_METERS(OwlEnemyNode.attribute("x").as_int()), PIXEL_TO_METERS(OwlEnemyNode.attribute("y").as_int()) }, OwlEnemyNode.attribute("angle").as_int());
-	lives = OwlEnemyNode.attribute("lives").as_int();
-	this->state = (EntityState)OwlEnemyNode.attribute("state").as_int();
-	// reset enemy physics
-	//pbody->body->SetAwake(false);
-	//pbody->body->SetAwake(true);
-
-	return true;
-}
-
-EntityState OwlEnemy::StateMachine(float dt) {
-	// TODO state machine logic
-	LOG("%f", PIXEL_TO_METERS(player->position.DistanceTo(this->position)));
-	switch (this->state) {
-			case EntityState::IDLE:
-				currentAnimation = &idleAnim;
-				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
-				{
-					// AUDIO DONE owl idle
-					app->audio->PlayFx(owlIdle);
-					state = EntityState::MOVE;
-				}
-			break;
-			
-			case EntityState::MOVE:
-				currentAnimation = &flyAnim;
-				pathfindingMovement(dt);
-				if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f){
-					if (attackTimer.ReadSec() >= 2)
-					{
-						state = EntityState::ATTACK;
-					}
-				}
-				else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)){
-					moveToSpawnPoint();
-					state = EntityState::IDLE;
-				}
-
-			break;
-
-			case EntityState::DEAD:
-				// AUDIO TODO owl death
-				app->audio->PlayFx(owlDeath);
-
-				currentAnimation = &sleepingAnim;
-				pbody->body->SetFixedRotation(false);
-				pbody->body->SetGravityScale(1);
-				if (reviveTimer.ReadSec() >= 5)
-				{
-					pbody->body->SetFixedRotation(true);
-					pbody->body->SetGravityScale(0);
-					state = EntityState::IDLE;
-					lives = 3;
-				}
-			break;
-
-			case EntityState::HURT:
-				currentAnimation = &hurtedAnim;
-				invencible = true;
-				if (currentAnimation->HasFinished()){
-					hurtedAnim.Reset();
-					hurtedAnim.ResetLoopCount();
-					invencible = false;
-					state = EntityState::MOVE;
-				}
-			break;
-
-			case EntityState::ATTACK:
-
-				// AUDIO DONE owl attack
-				app->audio->PlayFx(owlAttack);
-
-				b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
-				attackDirection.Normalize();
-
-				b2Vec2 attackImpulse = {attackDirection.x, attackDirection.y};
-
-				pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
-
-				attackTimer.Start();
-				state = EntityState::MOVE;
-			break;
-	}
-	return this->state;
-}
-
 OwlEnemy::OwlEnemy() : Entity(EntityType::OWLENEMY)
 {
 	name.Create("OwlEnemy");
@@ -240,6 +109,137 @@ bool OwlEnemy::Update(float dt)
 
 	currentAnimation->Update(dt);
 	return true;
+}
+
+void OwlEnemy::setIdleAnimation()
+{
+	currentAnimation = &idleAnim;
+}
+
+void OwlEnemy::setMoveAnimation()
+{
+	currentAnimation = &flyAnim;
+	jumpAnim.Reset();
+}
+
+void OwlEnemy::setJumpAnimation()
+{
+	currentAnimation = &jumpAnim;
+}
+
+void OwlEnemy::Idle(float dt) {
+
+}
+
+void OwlEnemy::Move(float dt) {
+	// TODO move logic
+}
+
+void OwlEnemy::Attack(float dt)
+{
+}
+
+bool OwlEnemy::SaveState(pugi::xml_node& node) {
+
+	pugi::xml_node owlEnemyAttributes = node.append_child("owlenemy");
+	owlEnemyAttributes.append_attribute("x").set_value(this->position.x);
+	owlEnemyAttributes.append_attribute("y").set_value(this->position.y);
+	owlEnemyAttributes.append_attribute("angle").set_value(this->angle);
+	owlEnemyAttributes.append_attribute("state").set_value((int)this->state);
+	owlEnemyAttributes.append_attribute("lives").set_value(lives);
+
+	return true;
+
+}
+
+bool OwlEnemy::LoadState(pugi::xml_node& node)
+{
+	pugi::xml_node OwlEnemyNode = node.child("owlenemy");
+
+	pbody->body->SetTransform({ PIXEL_TO_METERS(OwlEnemyNode.attribute("x").as_int()), PIXEL_TO_METERS(OwlEnemyNode.attribute("y").as_int()) }, OwlEnemyNode.attribute("angle").as_int());
+	lives = OwlEnemyNode.attribute("lives").as_int();
+	this->state = (EntityState)OwlEnemyNode.attribute("state").as_int();
+	// reset enemy physics
+	//pbody->body->SetAwake(false);
+	//pbody->body->SetAwake(true);
+
+	return true;
+}
+
+EntityState OwlEnemy::StateMachine(float dt) {
+	// TODO state machine logic
+	LOG("%f", PIXEL_TO_METERS(player->position.DistanceTo(this->position)));
+	switch (this->state) {
+	case EntityState::IDLE:
+		currentAnimation = &idleAnim;
+		if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
+		{
+			// AUDIO DONE owl idle
+			app->audio->PlayFx(owlIdle);
+			state = EntityState::MOVE;
+		}
+		break;
+
+	case EntityState::MOVE:
+		currentAnimation = &flyAnim;
+		pathfindingMovement(dt);
+		if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f) {
+			if (attackTimer.ReadSec() >= 2)
+			{
+				state = EntityState::ATTACK;
+			}
+		}
+		else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)) {
+			moveToSpawnPoint();
+			state = EntityState::IDLE;
+		}
+
+		break;
+
+	case EntityState::DEAD:
+		// AUDIO TODO owl death
+		app->audio->PlayFx(owlDeath);
+
+		currentAnimation = &sleepingAnim;
+		pbody->body->SetFixedRotation(false);
+		pbody->body->SetGravityScale(1);
+		if (reviveTimer.ReadSec() >= 5)
+		{
+			pbody->body->SetFixedRotation(true);
+			pbody->body->SetGravityScale(0);
+			state = EntityState::IDLE;
+			lives = 3;
+		}
+		break;
+
+	case EntityState::HURT:
+		currentAnimation = &hurtedAnim;
+		invencible = true;
+		if (currentAnimation->HasFinished()) {
+			hurtedAnim.Reset();
+			hurtedAnim.ResetLoopCount();
+			invencible = false;
+			state = EntityState::MOVE;
+		}
+		break;
+
+	case EntityState::ATTACK:
+
+		// AUDIO DONE owl attack
+		app->audio->PlayFx(owlAttack);
+
+		b2Vec2 attackDirection = { (float32)player->position.x - position.x, (float32)player->position.y - position.y };
+		attackDirection.Normalize();
+
+		b2Vec2 attackImpulse = { attackDirection.x, attackDirection.y };
+
+		pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
+
+		attackTimer.Start();
+		state = EntityState::MOVE;
+		break;
+	}
+	return this->state;
 }
 
 void OwlEnemy::pathfindingMovement(float dt){

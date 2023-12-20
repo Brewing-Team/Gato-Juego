@@ -22,129 +22,6 @@
 #include <SDL_render.h>
 #endif
 
-void DogEnemy::setIdleAnimation()
-{
-	currentAnimation = &idleAnim;
-}
-
-void DogEnemy::setMoveAnimation()
-{
-	currentAnimation = &runAnim;
-	jumpAnim.Reset();
-}
-
-void DogEnemy::setJumpAnimation()
-{
-	currentAnimation = &jumpAnim;
-}
-
-void DogEnemy::Move(float dt) {
-	// TODO move logic
-}
-
-void DogEnemy::Jump(float dt) {
-	// TODO jump logic
-}
-
-bool DogEnemy::SaveState(pugi::xml_node& node) {
-
-	pugi::xml_node dogEnemyAttributes = node.append_child("dogenemy");
-	dogEnemyAttributes.append_attribute("x").set_value(this->position.x);
-	dogEnemyAttributes.append_attribute("y").set_value(this->position.y);
-	dogEnemyAttributes.append_attribute("angle").set_value(this->angle);
-	dogEnemyAttributes.append_attribute("state").set_value((int)this->state);
-	dogEnemyAttributes.append_attribute("lives").set_value(lives);
-
-	return true;
-
-}
-
-bool DogEnemy::LoadState(pugi::xml_node& node)
-{
-	pugi::xml_node dogEnemyNode = node.child("dogenemy");
-
-	pbody->body->SetTransform({ PIXEL_TO_METERS(dogEnemyNode.attribute("x").as_int()), PIXEL_TO_METERS(dogEnemyNode.attribute("y").as_int()) }, dogEnemyNode.attribute("angle").as_int());
-	lives = dogEnemyNode.attribute("lives").as_int();
-	this->state = (EntityState)dogEnemyNode.attribute("state").as_int();
-	// reset enemy physics
-	//pbody->body->SetAwake(false);
-	//pbody->body->SetAwake(true);
-
-	return true;
-}
-
-EntityState DogEnemy::StateMachine(float dt) {
-	switch (this->state) {
-		case EntityState::IDLE:
-			setIdleAnimation();
-
-			if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
-				{
-					state = EntityState::MOVE;
-					// AUDIO DONE dog idle
-					app->audio->PlayFx(dogBark);
-				}
-		break;
-		case EntityState::MOVE:
-			setMoveAnimation();
-			pathfindingMovement(dt);
-			if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f){
-				if (attackTimer.ReadSec() >= 2)
-				{
-					state = EntityState::ATTACK;
-				}
-			}
-			else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)){
-				moveToSpawnPoint();
-				state = EntityState::IDLE;
-			}
-		break;
-		case EntityState::DEAD:
-			// AUDIO TODO dog death
-			app->audio->PlayFx(dogDeath);
-
-			currentAnimation = &dieAnim;
-			pbody->body->SetFixedRotation(false);
-			if (reviveTimer.ReadSec() >= 5)
-			{
-				pbody->body->SetFixedRotation(true);
-				state = EntityState::IDLE;
-				lives = 5;
-			}
-		break;
-
-		case EntityState::HURT:
-			currentAnimation = &hurtAnim;
-			invencible = true;
-			if (currentAnimation->HasFinished()){
-				hurtAnim.Reset();
-				hurtAnim.ResetLoopCount();
-				invencible = false;
-				state = EntityState::IDLE;
-			}
-		break;
-
-		case EntityState::ATTACK:
-
-			// AUDIO TODO dog attack
-			app->audio->PlayFx(dogAttack);
-
-			b2Vec2 attackDirection = {(float32)player->position.x - position.x, (float32)player->position.y - position.y};
-			attackDirection.Normalize();
-
-			b2Vec2 attackImpulse = {attackDirection.x / 4, attackDirection.y / 4};
-
-			pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
-
-			attackTimer.Start();
-
-			state = EntityState::MOVE;
-		break;
-	}
-
-	return this->state;
-}
-
 DogEnemy::DogEnemy() : Entity(EntityType::DOGENEMY)
 {
 	name.Create("DogEnemy");
@@ -231,6 +108,129 @@ bool DogEnemy::Update(float dt)
 
 	currentAnimation->Update(dt);
 	return true;
+}
+
+void DogEnemy::setIdleAnimation()
+{
+	currentAnimation = &idleAnim;
+}
+
+void DogEnemy::setMoveAnimation()
+{
+	currentAnimation = &runAnim;
+	jumpAnim.Reset();
+}
+
+void DogEnemy::setJumpAnimation()
+{
+	currentAnimation = &jumpAnim;
+}
+
+void DogEnemy::Move(float dt) {
+	// TODO move logic
+}
+
+void DogEnemy::Jump(float dt) {
+	// TODO jump logic
+}
+
+bool DogEnemy::SaveState(pugi::xml_node& node) {
+
+	pugi::xml_node dogEnemyAttributes = node.append_child("dogenemy");
+	dogEnemyAttributes.append_attribute("x").set_value(this->position.x);
+	dogEnemyAttributes.append_attribute("y").set_value(this->position.y);
+	dogEnemyAttributes.append_attribute("angle").set_value(this->angle);
+	dogEnemyAttributes.append_attribute("state").set_value((int)this->state);
+	dogEnemyAttributes.append_attribute("lives").set_value(lives);
+
+	return true;
+
+}
+
+bool DogEnemy::LoadState(pugi::xml_node& node)
+{
+	pugi::xml_node dogEnemyNode = node.child("dogenemy");
+
+	pbody->body->SetTransform({ PIXEL_TO_METERS(dogEnemyNode.attribute("x").as_int()), PIXEL_TO_METERS(dogEnemyNode.attribute("y").as_int()) }, dogEnemyNode.attribute("angle").as_int());
+	lives = dogEnemyNode.attribute("lives").as_int();
+	this->state = (EntityState)dogEnemyNode.attribute("state").as_int();
+	// reset enemy physics
+	//pbody->body->SetAwake(false);
+	//pbody->body->SetAwake(true);
+
+	return true;
+}
+
+EntityState DogEnemy::StateMachine(float dt) {
+	switch (this->state) {
+	case EntityState::IDLE:
+		setIdleAnimation();
+
+		if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
+		{
+			state = EntityState::MOVE;
+			// AUDIO DONE dog idle
+			app->audio->PlayFx(dogBark);
+		}
+		break;
+	case EntityState::MOVE:
+		setMoveAnimation();
+		pathfindingMovement(dt);
+		if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f) {
+			if (attackTimer.ReadSec() >= 2)
+			{
+				state = EntityState::ATTACK;
+			}
+		}
+		else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)) {
+			moveToSpawnPoint();
+			state = EntityState::IDLE;
+		}
+		break;
+	case EntityState::DEAD:
+		// AUDIO TODO dog death
+		app->audio->PlayFx(dogDeath);
+
+		currentAnimation = &dieAnim;
+		pbody->body->SetFixedRotation(false);
+		if (reviveTimer.ReadSec() >= 5)
+		{
+			pbody->body->SetFixedRotation(true);
+			state = EntityState::IDLE;
+			lives = 5;
+		}
+		break;
+
+	case EntityState::HURT:
+		currentAnimation = &hurtAnim;
+		invencible = true;
+		if (currentAnimation->HasFinished()) {
+			hurtAnim.Reset();
+			hurtAnim.ResetLoopCount();
+			invencible = false;
+			state = EntityState::IDLE;
+		}
+		break;
+
+	case EntityState::ATTACK:
+
+		// AUDIO TODO dog attack
+		app->audio->PlayFx(dogAttack);
+
+		b2Vec2 attackDirection = { (float32)player->position.x - position.x, (float32)player->position.y - position.y };
+		attackDirection.Normalize();
+
+		b2Vec2 attackImpulse = { attackDirection.x / 4, attackDirection.y / 4 };
+
+		pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
+
+		attackTimer.Start();
+
+		state = EntityState::MOVE;
+		break;
+	}
+
+	return this->state;
 }
 
 void DogEnemy::moveToSpawnPoint()
