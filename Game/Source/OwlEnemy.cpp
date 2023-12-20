@@ -110,6 +110,13 @@ EntityState OwlEnemy::StateMachine(float dt) {
 				currentAnimation = &sleepingAnim;
 				pbody->body->SetFixedRotation(false);
 				pbody->body->SetGravityScale(1);
+				if (reviveTimer.ReadSec() >= 5)
+				{
+					pbody->body->SetFixedRotation(true);
+					pbody->body->SetGravityScale(0);
+					state = EntityState::IDLE;
+					lives = 3;
+				}
 			break;
 
 			case EntityState::HURT:
@@ -314,6 +321,7 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (lives <= 1)
 			{
 				state = EntityState::DEAD;
+				reviveTimer.Start();
 			}
 			else{
 				// AUDIO TODO owl hit

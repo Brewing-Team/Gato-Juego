@@ -34,6 +34,7 @@ bool FurBall::Start() {
 	texture = app->tex->Load(texturePath);
 	pbody = app->physics->CreateCircle(position.x, position.y, 2, bodyType::DYNAMIC);
 	pbody->ctype = ColliderType::BULLET;
+	pbody->listener = this;
 
 	return true;
 }
@@ -54,4 +55,14 @@ bool FurBall::CleanUp()
 
 	app->tex->UnLoad(texture);
 	return true;
+}
+
+void FurBall::OnCollision(PhysBody* physA, PhysBody* physB)
+{
+	switch (physB->ctype) {
+
+	case ColliderType::ENEMY:
+		pbody->ctype = ColliderType::UNKNOWN;
+		break;
+	}
 }

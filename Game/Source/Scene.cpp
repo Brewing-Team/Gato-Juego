@@ -63,6 +63,12 @@ bool Scene::Awake(pugi::xml_node& config)
 		app->map->name = config.child("map").attribute("name").as_string();
 		app->map->path = config.child("map").attribute("path").as_string();
 	}
+
+	if (config.child("camera")) {
+		//Get the map name from the config file and assigns the value in the module
+		app->render->camera.x = config.child("camera").attribute("x").as_int();
+		app->render->camera.y = config.child("camera").attribute("y").as_int();
+	}
 	
 	app->render->camera.target = player;
 	app->render->camera.useInterpolation = true;

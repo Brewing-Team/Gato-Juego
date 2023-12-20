@@ -9,6 +9,7 @@ public:
 
 	// Constructor
 	Timer();
+	Timer(uint32_t startTime);
 
 	void Start();
 	uint32_t ReadSec() const;

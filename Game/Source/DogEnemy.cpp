@@ -102,6 +102,12 @@ EntityState DogEnemy::StateMachine(float dt) {
 			// AUDIO TODO dog death
 			currentAnimation = &dieAnim;
 			pbody->body->SetFixedRotation(false);
+			if (reviveTimer.ReadSec() >= 5)
+			{
+				pbody->body->SetFixedRotation(true);
+				state = EntityState::IDLE;
+				lives = 5;
+			}
 		break;
 
 		case EntityState::HURT:
@@ -348,6 +354,7 @@ void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (lives <= 1)
 			{
 				state = EntityState::DEAD;
+				reviveTimer.Start();
 			}
 			else{
 				// AUDIO TODO dog hit

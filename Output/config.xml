@@ -25,6 +25,7 @@
 
   <scene>
     <map path="Assets/Maps/Level-1/" name="Level-1-map.tmx"/>
+	<camera x="-530" y="-1949" />
     <player x="672" y="2032" texturepath="Assets/Textures/Cat-1-Walk.png"/>
 	<enemies>
 		<owl_enemy x="750" y="1900" texturepath=""/>

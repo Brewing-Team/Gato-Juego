@@ -56,8 +56,8 @@ bool Render::Awake(pugi::xml_node& config)
 		// camera.h = app->win->screenSurface->h;
 		SDL_RendererInfo info;
 		SDL_GetRendererOutputSize(renderer, &camera.w, &camera.h);
-		camera.x = 0;
-		camera.y = 0;
+		//camera.x = 0;
+		//camera.y = 0;
 	}
 
 	return ret;
