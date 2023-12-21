@@ -409,7 +409,7 @@ bool Player::Start() {
 	// load debug menu texture
 	debugMenuTexture = app->tex->Load("Assets/Textures/debug_menu.png");
 
-	app->physics->CreateRope({22,31}, {25, 34}, 15);
+	//app->physics->CreateRope({22,31}, {25, 34}, 15);
 	//app->physics->CreateRope(20, {5,0}, {10, 0});
 	app->physics->CreateRope(16,40,20);
 	app->physics->CreateRope({16,30}, 20);
@@ -421,6 +421,10 @@ bool Player::Update(float dt)
 {
 
 	debugTools();
+
+	if (app->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN){
+		app->physics->CreateRope({22,31}, {25, 34}, 100);
+	}
 
 	//tmp para que los enemigos le ataquen
 	if (lives <= 0){

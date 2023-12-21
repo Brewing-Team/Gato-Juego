@@ -8,6 +8,7 @@
 #include "Render.h"
 #include "Player.h"
 #include "Window.h"
+#include <Box2D/Common/b2Math.h>
 
 #ifdef __linux__
 #include <SDL_keycode.h>
@@ -671,22 +672,21 @@ b2Body** Physics::CreateRope(b2Vec2 startPos, b2Vec2 endPos, int length)
 
     float width = 0.1f, height = (endPos - startPos).Length() / length;
 
-    b2PolygonShape* shape = new b2PolygonShape();
-    shape->SetAsBox(width / 2, height / 2);
+b2PolygonShape* shape = new b2PolygonShape();
+shape->SetAsBox(width / 2, height / 2);
 
-    for (int i = 0; i < length; i++)
-    {
+for (int i = 0; i < length; i++)
+{
+	bodyDef->position = {startPos.x + (endPos.x - startPos.x) * i / length, startPos.y + (endPos.y - startPos.y) * i / length};
+	//bodyDef->position = {startPos.x + width * i, startPos.y + height * i};
+	segments[i] = world->CreateBody(bodyDef);
+	segments[i]->CreateFixture(shape, 1.0f);
+}
 
-        bodyDef->position = startPos + (endPos - startPos);
-		//bodyDef->position *= (i / (float)length);
-        segments[i] = world->CreateBody(bodyDef);
-        segments[i]->CreateFixture(shape, 1.0f);
-    }
+delete shape;
+shape = nullptr;
 
-    delete shape;
-    shape = nullptr;
-
-    b2BodyDef anchorBodyDef;
+b2BodyDef anchorBodyDef;
     anchorBodyDef.type = b2_staticBody;
 
     anchorBodyDef.position = startPos;
