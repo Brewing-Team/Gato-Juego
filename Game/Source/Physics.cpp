@@ -558,7 +558,7 @@ b2Body** Physics::CreateRope(int x, int y, int length){
 
 	b2BodyDef* bodyDef = new b2BodyDef();
 	bodyDef->type = b2_dynamicBody;
-	bodyDef->position.Set(x, y);
+	//bodyDef->position.Set(x, y);
 
 	float width = 0.1f, height = 0.25f;
 
@@ -567,6 +567,7 @@ b2Body** Physics::CreateRope(int x, int y, int length){
 
 	for (int i = 0; i < length; i++)
 	{
+		bodyDef->position.Set(x + height * i, y);
 		segments[i] = world->CreateBody(bodyDef);
 		segments[i]->CreateFixture(shape, 1.0f);
 	}
@@ -607,7 +608,7 @@ b2Body** Physics::CreateRope(b2Vec2 startPos, int length) {
 
     b2BodyDef* bodyDef = new b2BodyDef();
     bodyDef->type = b2_dynamicBody;
-	bodyDef->position.Set(startPos.x, startPos.y);
+	//bodyDef->position.Set(startPos.x, startPos.y);
 
 
     float width = 0.1f, height = height = 0.25f;
@@ -617,6 +618,7 @@ b2Body** Physics::CreateRope(b2Vec2 startPos, int length) {
 
     for (int i = 0; i < length; i++)
     {
+		bodyDef->position = {startPos.x + width * i, startPos.y + height * i};
         segments[i] = world->CreateBody(bodyDef);
         segments[i]->CreateFixture(shape, 1.0f);
     }
