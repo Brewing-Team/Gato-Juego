@@ -2,6 +2,7 @@
 #define __SCENE_H__
 
 #include "Module.h"
+#include "Physics.h"
 #include "Player.h"
 #include "OwlEnemy.h"
 #include "DogEnemy.h"
@@ -45,6 +46,8 @@ private:
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;
+
+	PhysBody* rope1;
 };
 
 #endif // __SCENE_H__

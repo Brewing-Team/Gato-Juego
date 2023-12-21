@@ -411,7 +411,7 @@ bool Player::Start() {
 
 	//app->physics->CreateRope({22,31}, {25, 34}, 15);
 	app->physics->CreateRope({21.4f,30.5}, {25.5, 35}, 25);
-	//app->physics->CreateRope(16,40,20);
+	//app->physics->CreateRope(13,40,20);
 	//app->physics->CreateRope({16,30}, 20);
 
 	return true;

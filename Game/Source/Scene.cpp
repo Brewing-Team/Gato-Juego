@@ -12,6 +12,8 @@
 
 #ifdef __linux__
 #include "External/Optick/include/optick.h"
+#include <Box2D/Dynamics/b2Body.h>
+
 #elif _MSC_VER
 #include "Optick/include/optick.h"
 #endif
@@ -95,6 +97,8 @@ bool Scene::Start()
 		app->map->mapData.tileWidth,
 		app->map->mapData.tileHeight,
 		app->map->mapData.tilesets.Count());
+	
+	rope1 = app->physics->CreateRope(13,40,20);
 
 	return true;
 }
@@ -133,6 +137,11 @@ bool Scene::Update(float dt)
 
 	// Renders the image in the center of the screen 
 	//app->render->DrawTexture(img, (int)textPosX, (int)textPosY);
+
+	/* for (int i = 0; rope1[i + 1] != NULL; i++)
+	{
+		app->render->DrawLine(rope1[i].body->GetPosition().x * 100, rope1[i].body->GetPosition().y * 100, rope1[i + 1].body->GetPosition().x * 100, rope1[i + 1].body->GetPosition().y * 100, 255, 255, 255);
+	}  */
 
 	return true;
 }

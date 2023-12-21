@@ -550,11 +550,12 @@ b2WeldJoint* Physics::CreateWeldJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, 
 	return (b2WeldJoint*)world->CreateJoint(&weldJointDef);
 }
 
-b2Body** Physics::CreateRope(int x, int y, int length){
+PhysBody* Physics::CreateRope(int x, int y, int length){
 
 	b2Body** segments = new b2Body*[length];
 	b2RevoluteJoint** joints = new b2RevoluteJoint*[length - 1];
 	b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
+	PhysBody* bodies = new PhysBody[length];
 
 	b2BodyDef* bodyDef = new b2BodyDef();
 	bodyDef->type = b2_dynamicBody;
@@ -571,11 +572,10 @@ b2Body** Physics::CreateRope(int x, int y, int length){
 		segments[i] = world->CreateBody(bodyDef);
 		segments[i]->CreateFixture(shape, 1.0f);
 
-		PhysBody* pbody = new PhysBody();
-		pbody->body = segments[i];
-		segments[i]->SetUserData(pbody);
-		pbody->width = width;
-		pbody->height = height;
+		bodies[i].body = segments[i];
+		segments[i]->SetUserData(&bodies[i]);
+		bodies[i].width = width;
+		bodies[i].height = height;
 	}
 
 	delete shape;
@@ -604,7 +604,7 @@ b2Body** Physics::CreateRope(int x, int y, int length){
 		ropeJoints[i] = (b2RopeJoint*)world->CreateJoint(ropeJointDef);
 	}
 
-	return segments;
+	return bodies;
 }
 
 b2Body** Physics::CreateRope(b2Vec2 startPos, int length) {
