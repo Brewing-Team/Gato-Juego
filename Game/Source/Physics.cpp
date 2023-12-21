@@ -570,6 +570,12 @@ b2Body** Physics::CreateRope(int x, int y, int length){
 		bodyDef->position.Set(x + height * i, y);
 		segments[i] = world->CreateBody(bodyDef);
 		segments[i]->CreateFixture(shape, 1.0f);
+
+		PhysBody* pbody = new PhysBody();
+		pbody->body = segments[i];
+		segments[i]->SetUserData(pbody);
+		pbody->width = width;
+		pbody->height = height;
 	}
 
 	delete shape;
@@ -602,7 +608,7 @@ b2Body** Physics::CreateRope(int x, int y, int length){
 }
 
 b2Body** Physics::CreateRope(b2Vec2 startPos, int length) {
-	    b2Body** segments = new b2Body*[length];
+	b2Body** segments = new b2Body*[length];
     b2RevoluteJoint** joints = new b2RevoluteJoint*[length + 1];
     b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
 
@@ -621,6 +627,12 @@ b2Body** Physics::CreateRope(b2Vec2 startPos, int length) {
 		bodyDef->position = {startPos.x + width * i, startPos.y + height * i};
         segments[i] = world->CreateBody(bodyDef);
         segments[i]->CreateFixture(shape, 1.0f);
+
+		PhysBody* pbody = new PhysBody();
+		pbody->body = segments[i];
+		segments[i]->SetUserData(pbody);
+		pbody->width = width;
+		pbody->height = height;
     }
 
     delete shape;
@@ -683,6 +695,12 @@ for (int i = 0; i < length; i++)
 	//bodyDef->position = {startPos.x + width * i, startPos.y + height * i};
 	segments[i] = world->CreateBody(bodyDef);
 	segments[i]->CreateFixture(shape, 1.0f);
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = segments[i];
+	segments[i]->SetUserData(pbody);
+	pbody->width = width;
+	pbody->height = height;
 }
 
 delete shape;
