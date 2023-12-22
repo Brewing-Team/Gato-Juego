@@ -64,11 +64,17 @@ bool RopeEntity::Start() {
 
 bool RopeEntity::Update(float dt)
 {
-	for (int i = 0; i < ropeLength - 1; i++)
+	for (int i = 0; i < ropeLength; i++)
+	{
+		app->render->DrawTexture(texture, METERS_TO_PIXELS(pbody[i].body->GetPosition().x), METERS_TO_PIXELS(pbody[i].body->GetPosition().y - pbody->height / 2), NULL, 1.0f, pbody[i].body->GetAngle() * RADTODEG);
+	}
+
+	//debug draw of ropes
+/* 	for (int i = 0; i < ropeLength - 1; i++)
 	{
 		LOG("pbody[%d] x: %f y: %f", i, METERS_TO_PIXELS(pbody[i].body->GetPosition().x), pbody[i].body->GetPosition().y);
 		app->render->DrawLine(METERS_TO_PIXELS(pbody[i].body->GetPosition().x - pbody->width / 2), METERS_TO_PIXELS(pbody[i].body->GetPosition().y), METERS_TO_PIXELS(pbody[i + 1].body->GetPosition().x - pbody->width / 2), METERS_TO_PIXELS(pbody[i + 1].body->GetPosition().y), (i * 14) % 256, (i * 28) % 256, (i * 56) % 256);
-	}
+	} */
 
 	return true;
 }

@@ -29,9 +29,9 @@
 		<owl_enemy x="750" y="1900" texturepath=""/>
     <dog_enemy x="700" y="2000" texturepath=""/>
 	  </enemies>
-    <rope x="13" y="40" length="20" texturepath="Assets/Textures/goldCoin.png"/>
-    <rope startPosX="16" startPosY="30" length="20" texturepath="Assets/Textures/goldCoin.png"/>
-    <rope startPosX="21.4" startPosY="30.5" endPosX="25.5" endPosY="35" length="25" texturepath="Assets/Textures/goldCoin.png"/>
+    <rope x="13" y="40" length="20" texturepath="Assets/Textures/bridge.png"/>
+    <rope startPosX="16" startPosY="30" length="20" texturepath="Assets/Textures/bridge.png"/>
+    <rope startPosX="21.4" startPosY="30.5" endPosX="25.5" endPosY="35" length="25" texturepath="Assets/Textures/bridge.png"/>
   </scene>
   
 </config>
