@@ -13,6 +13,8 @@
 #include "FurBall.h"
 
 #include "Window.h"
+#include <Box2D/Common/b2Settings.h>
+#include <SDL_stdinc.h>
 #include <cmath>
 #include <iostream>
 
@@ -405,6 +407,8 @@ bool Player::Start() {
 	
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
 
+	raycastTest = app->physics->CreateRaycast(this, pbody->body->GetPosition(), {pbody->body->GetPosition().x, pbody->body->GetPosition().y + 1});
+
 	// TODO load debug menu texture from xml
 	// load debug menu texture
 	debugMenuTexture = app->tex->Load("Assets/Textures/debug_menu.png");
@@ -459,6 +463,12 @@ bool Player::Update(float dt)
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+
+	//Update Raycast position
+	raycastTest->rayStart = pbody->body->GetPosition();
+	float32 rotatedX = pbody->body->GetPosition().x + 1.0f * SDL_cos(pbody->body->GetAngle() + DEGTORAD * 90);
+	float32 rotatedY = pbody->body->GetPosition().y + 1.0f * SDL_sin(pbody->body->GetAngle() + DEGTORAD * 90);
+	raycastTest->rayEnd = { rotatedX, rotatedY };
 
 	// Update player sensors
 	CopyParentRotation(pbody, groundSensor, -12, -2, 270);
@@ -653,4 +663,11 @@ void Player::EndCollision(PhysBody* physA, PhysBody* physB){
 		}
 	}
 	
+}
+
+void Player::OnRaycastHit(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction){
+	LOG("Raycast hit");
+    std::cout << "Point: " << point.x << ", " << point.y << std::endl;
+    std::cout << "Normal: " << normal.x << ", " << normal.y << std::endl;
+    std::cout << "Fraction: " << fraction << std::endl;
 }

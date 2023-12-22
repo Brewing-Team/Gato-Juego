@@ -87,6 +87,12 @@ bool Physics::PreUpdate()
 		}
 	}
 
+	//Update Raycasts
+	for (int i = 0; i < raycasts.Count(); i++)
+	{
+		world->RayCast(raycasts[i]->callback, raycasts[i]->rayStart, raycasts[i]->rayEnd);
+	}
+
 	return ret;
 }
 
@@ -387,6 +393,12 @@ bool Physics::PostUpdate()
 				mouseJoint = nullptr;
 				mouseBody = nullptr;
 			}
+		}
+
+		// Draw all raycasts
+		for (int i = 0; i < raycasts.Count(); i++)
+		{
+			app->render->DrawLine(METERS_TO_PIXELS(raycasts[i]->rayStart.x), METERS_TO_PIXELS(raycasts[i]->rayStart.y), METERS_TO_PIXELS(raycasts[i]->rayEnd.x), METERS_TO_PIXELS(raycasts[i]->rayEnd.y), 255, 0, 0);
 		}
 	}
 
@@ -745,4 +757,23 @@ b2BodyDef anchorBodyDef;
     }
 
     return bodies;
+}
+
+Raycast* Physics::CreateRaycast(Entity* listener, b2Vec2 rayStart, b2Vec2 rayEnd){
+	RaycastCallback* callback = new RaycastCallback();
+	callback->listener = listener;
+
+	Raycast* raycast = new Raycast();
+	raycast->callback = callback;
+	raycast->rayStart = rayStart;
+	raycast->rayEnd = rayEnd;
+	raycasts.PushBack(raycast);
+
+	return raycast;
+}
+
+float32 RaycastCallback::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction){
+        
+	listener->OnRaycastHit(fixture, point, normal, fraction);
+	return float32();
 }

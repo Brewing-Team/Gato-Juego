@@ -2,6 +2,9 @@
 #define __DYNARRAY_H__
 
 #include "Defs.h"
+#ifdef __linux__
+#include <cassert>
+#endif
 
 #define DYN_ARRAY_BLOCK_SIZE 16
 
