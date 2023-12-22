@@ -14,6 +14,7 @@ enum class EntityType
 	ITEM,
 	OWLENEMY,
 	DOGENEMY,
+	ROPE,
 	FURBALL,
 	UNKNOWN
 };

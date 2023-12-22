@@ -1,5 +1,6 @@
 #include "App.h"
 #include "Input.h"
+#include "RopeEntity.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "Render.h"
@@ -63,6 +64,13 @@ bool Scene::Awake(pugi::xml_node& config)
 		app->map->name = config.child("map").attribute("name").as_string();
 		app->map->path = config.child("map").attribute("path").as_string();
 	}
+
+	for (pugi::xml_node ropeNode = config.child("rope"); ropeNode; ropeNode = ropeNode.next_sibling("rope"))
+{
+		RopeEntity* rope = new RopeEntity();
+		app->entityManager->AddEntity(rope);
+		rope->parameters = ropeNode;
+	}
 	
 	app->render->camera.target = player;
 	app->render->camera.useInterpolation = true;
@@ -97,8 +105,6 @@ bool Scene::Start()
 		app->map->mapData.tileWidth,
 		app->map->mapData.tileHeight,
 		app->map->mapData.tilesets.Count());
-	
-	rope1 = app->physics->CreateRope(13,40,20);
 
 	return true;
 }

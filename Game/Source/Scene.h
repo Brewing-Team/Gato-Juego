@@ -46,8 +46,6 @@ private:
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;
-
-	PhysBody* rope1;
 };
 
 #endif // __SCENE_H__

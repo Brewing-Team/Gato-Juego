@@ -574,8 +574,8 @@ PhysBody* Physics::CreateRope(int x, int y, int length){
 
 		bodies[i].body = segments[i];
 		segments[i]->SetUserData(&bodies[i]);
-		bodies[i].width = width;
-		bodies[i].height = height;
+		bodies[i].width = METERS_TO_PIXELS(width);
+		bodies[i].height = METERS_TO_PIXELS(height);
 	}
 
 	delete shape;
@@ -607,15 +607,15 @@ PhysBody* Physics::CreateRope(int x, int y, int length){
 	return bodies;
 }
 
-b2Body** Physics::CreateRope(b2Vec2 startPos, int length) {
+PhysBody* Physics::CreateRope(b2Vec2 startPos, int length) {
 	b2Body** segments = new b2Body*[length];
     b2RevoluteJoint** joints = new b2RevoluteJoint*[length + 1];
     b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
+	PhysBody* bodies = new PhysBody[length];
 
     b2BodyDef* bodyDef = new b2BodyDef();
     bodyDef->type = b2_dynamicBody;
 	//bodyDef->position.Set(startPos.x, startPos.y);
-
 
     float width = 0.1f, height = height = 0.25f;
 
@@ -628,13 +628,11 @@ b2Body** Physics::CreateRope(b2Vec2 startPos, int length) {
         segments[i] = world->CreateBody(bodyDef);
         segments[i]->CreateFixture(shape, 1.0f);
 
-		PhysBody* pbody = new PhysBody();
-		pbody->body = segments[i];
-		segments[i]->SetUserData(pbody);
-		pbody->width = width;
-		pbody->height = height;
-    }
-
+		bodies[i].body = segments[i];
+		segments[i]->SetUserData(&bodies[i]);
+		bodies[i].width = METERS_TO_PIXELS(width);
+		bodies[i].height = METERS_TO_PIXELS(height);
+	}
     delete shape;
     shape = nullptr;
 
@@ -671,14 +669,15 @@ b2Body** Physics::CreateRope(b2Vec2 startPos, int length) {
         ropeJoints[i] = (b2RopeJoint*)world->CreateJoint(ropeJointDef);
     }
 
-    return segments;
+    return bodies;
 }
 
-b2Body** Physics::CreateRope(b2Vec2 startPos, b2Vec2 endPos, int length)
+PhysBody* Physics::CreateRope(b2Vec2 startPos, b2Vec2 endPos, int length)
 {
     b2Body** segments = new b2Body*[length];
     b2RevoluteJoint** joints = new b2RevoluteJoint*[length + 1];
     b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
+	PhysBody* bodies = new PhysBody[length];
 
     b2BodyDef* bodyDef = new b2BodyDef();
     bodyDef->type = b2_dynamicBody;
@@ -696,11 +695,10 @@ for (int i = 0; i < length; i++)
 	segments[i] = world->CreateBody(bodyDef);
 	segments[i]->CreateFixture(shape, 1.0f);
 
-	PhysBody* pbody = new PhysBody();
-	pbody->body = segments[i];
-	segments[i]->SetUserData(pbody);
-	pbody->width = width;
-	pbody->height = height;
+	bodies[i].body = segments[i];
+	segments[i]->SetUserData(&bodies[i]);
+	bodies[i].width = METERS_TO_PIXELS(width);
+	bodies[i].height = METERS_TO_PIXELS(height);
 }
 
 delete shape;
@@ -746,5 +744,5 @@ b2BodyDef anchorBodyDef;
         ropeJoints[i] = (b2RopeJoint*)world->CreateJoint(ropeJointDef);
     }
 
-    return segments;
+    return bodies;
 }
