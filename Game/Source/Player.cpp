@@ -407,7 +407,7 @@ bool Player::Start() {
 	
 	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
 
-	raycastTest = app->physics->CreateRaycast(this, pbody->body->GetPosition(), {pbody->body->GetPosition().x, pbody->body->GetPosition().y + 1});
+	raycastTest = app->physics->CreateRaycast(this, pbody->body->GetPosition(), {pbody->body->GetPosition().x, pbody->body->GetPosition().y + 0.4f});
 
 	// TODO load debug menu texture from xml
 	// load debug menu texture
@@ -466,8 +466,8 @@ bool Player::Update(float dt)
 
 	//Update Raycast position
 	raycastTest->rayStart = pbody->body->GetPosition();
-	float32 rotatedX = pbody->body->GetPosition().x + 1.0f * SDL_cos(pbody->body->GetAngle() + DEGTORAD * 90);
-	float32 rotatedY = pbody->body->GetPosition().y + 1.0f * SDL_sin(pbody->body->GetAngle() + DEGTORAD * 90);
+	float32 rotatedX = pbody->body->GetPosition().x + 0.4f * SDL_cos(pbody->body->GetAngle() + DEGTORAD * 90);
+	float32 rotatedY = pbody->body->GetPosition().y + 0.4f * SDL_sin(pbody->body->GetAngle() + DEGTORAD * 90);
 	raycastTest->rayEnd = { rotatedX, rotatedY };
 
 	// Update player sensors
@@ -483,6 +483,11 @@ bool Player::Update(float dt)
 	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
 
 	currentAnimation->Update(dt);
+
+	//REMOVE
+	app->render->DrawRectangle({METERS_TO_PIXELS(pointTest.x) - 1, METERS_TO_PIXELS(pointTest.y) - 1, 2,2}, 0, 0, 255);
+	app->render->DrawLine(METERS_TO_PIXELS(pointTest.x), METERS_TO_PIXELS(pointTest.y), METERS_TO_PIXELS(pointTest.x + (normalTest.x * 10)), METERS_TO_PIXELS(pointTest.y + (normalTest.y * 10)), 255, 255, 0);
+
 	return true;
 }
 
@@ -670,4 +675,8 @@ void Player::OnRaycastHit(b2Fixture* fixture, const b2Vec2& point, const b2Vec2&
     std::cout << "Point: " << point.x << ", " << point.y << std::endl;
     std::cout << "Normal: " << normal.x << ", " << normal.y << std::endl;
     std::cout << "Fraction: " << fraction << std::endl;
+
+	//REMOVE
+	pointTest = point;
+	normalTest = normal;
 }

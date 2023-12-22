@@ -6,6 +6,8 @@
 #include "FurBall.h"
 #include "Physics.h"
 #include "Point.h"
+#include <Box2D/Common/b2Math.h>
+#include <Box2D/Dynamics/b2Fixture.h>
 #ifdef __linux__
 #include <SDL.h>
 #elif _MSC_VER
@@ -111,6 +113,10 @@ public:
 
 	// debug textures
 	SDL_Texture* debugMenuTexture;
+
+	//REMOVE
+	b2Vec2 pointTest;
+	b2Vec2 normalTest;
 };
 
 #endif // __PLAYER_H__
