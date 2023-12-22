@@ -550,7 +550,7 @@ b2WeldJoint* Physics::CreateWeldJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, 
 	return (b2WeldJoint*)world->CreateJoint(&weldJointDef);
 }
 
-PhysBody* Physics::CreateRope(int x, int y, int length){
+PhysBody* Physics::CreateRope(int x, int y, int length, float segmentWidth, float segmentHeight){
 
 	b2Body** segments = new b2Body*[length];
 	b2RevoluteJoint** joints = new b2RevoluteJoint*[length - 1];
@@ -561,7 +561,7 @@ PhysBody* Physics::CreateRope(int x, int y, int length){
 	bodyDef->type = b2_dynamicBody;
 	//bodyDef->position.Set(x, y);
 
-	float width = 0.1f, height = 0.25f;
+	float width = segmentWidth, height = segmentHeight;
 
 	b2PolygonShape* shape = new b2PolygonShape();
 	shape->SetAsBox(width / 2, height / 2);
@@ -607,7 +607,7 @@ PhysBody* Physics::CreateRope(int x, int y, int length){
 	return bodies;
 }
 
-PhysBody* Physics::CreateRope(b2Vec2 startPos, int length) {
+PhysBody* Physics::CreateRope(b2Vec2 startPos, int length, float segmentWidth, float segmentHeight) {
 	b2Body** segments = new b2Body*[length];
     b2RevoluteJoint** joints = new b2RevoluteJoint*[length + 1];
     b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
@@ -617,7 +617,7 @@ PhysBody* Physics::CreateRope(b2Vec2 startPos, int length) {
     bodyDef->type = b2_dynamicBody;
 	//bodyDef->position.Set(startPos.x, startPos.y);
 
-    float width = 0.1f, height = height = 0.25f;
+    float width = segmentWidth, height = height = segmentHeight;
 
     b2PolygonShape* shape = new b2PolygonShape();
     shape->SetAsBox(width / 2, height / 2);
@@ -672,7 +672,7 @@ PhysBody* Physics::CreateRope(b2Vec2 startPos, int length) {
     return bodies;
 }
 
-PhysBody* Physics::CreateRope(b2Vec2 startPos, b2Vec2 endPos, int length)
+PhysBody* Physics::CreateRope(b2Vec2 startPos, b2Vec2 endPos, int length, float segmentWidth)
 {
     b2Body** segments = new b2Body*[length];
     b2RevoluteJoint** joints = new b2RevoluteJoint*[length + 1];

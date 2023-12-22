@@ -42,6 +42,10 @@ private:
 	b2Vec2 endPos;
 
 	int ropeLength;
+	int segmentWidth;
+	int segmentHeight;
+
+	int tmp;
 };
 
 #endif // __ROPEENTITY_H__

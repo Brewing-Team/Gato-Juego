@@ -29,6 +29,10 @@ bool RopeEntity::Awake() {
 	endPos.x = parameters.attribute("endPosX").as_float();
 	endPos.y = parameters.attribute("endPosY").as_float();
 	ropeLength = parameters.attribute("length").as_int();
+	
+	segmentWidth = parameters.attribute("segmentWidth").as_int();
+	segmentHeight = parameters.attribute("segmentHeight").as_int();
+
 	texturePath = parameters.attribute("texturepath").as_string();
 
 	return true;
