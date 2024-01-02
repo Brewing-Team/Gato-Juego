@@ -112,7 +112,7 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
-	LOG("%d", lives);
+	//LOG("%d", lives);
 
 	debugTools();
 
@@ -424,7 +424,7 @@ EntityState Player::StateMachine(float dt) {
 
 	case EntityState::IDLE:
 
-		angle = std::lerp(angle, 0, dt * 32 / 1000);;
+		angle = std::lerp(angle, 0, dt * 32 / 1000);
 
 		setIdleAnimation();
 

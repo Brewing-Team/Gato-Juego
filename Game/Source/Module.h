@@ -13,6 +13,7 @@
 
 
 class App;
+class GuiControl;
 
 class Module
 {
@@ -72,6 +73,11 @@ public:
 
 	// Called when we want to save data from XML
 	virtual bool SaveState(pugi::xml_node node)
+	{
+		return true;
+	}
+
+	virtual bool OnGuiMouseClickEvent(GuiControl* control)
 	{
 		return true;
 	}

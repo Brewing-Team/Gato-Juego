@@ -9,6 +9,8 @@
 
 #include "Defs.h"
 #include "Log.h"
+#include "GuiControl.h"
+#include "GuiManager.h"
 
 #ifdef __linux__
 #include "External/Optick/include/optick.h"
@@ -106,6 +108,9 @@ bool Scene::Start()
 		app->map->mapData.tileHeight,
 		app->map->mapData.tilesets.Count());
 
+	SDL_Rect btPos = { static_cast<int>(windowW / 2 - 60), static_cast<int>(windowH / 2 - 10), 120,20};
+	gcButton = (GuiControlButton*) app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "MyButton", btPos, this);
+
 	return true;
 }
 
@@ -165,6 +170,14 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
+
+	return true;
+}
+
+bool Scene::OnGuiMouseClickEvent(GuiControl* control)
+{
+	// L15: DONE 5: Implement the OnGuiMouseClickEvent method
+	LOG("Press Gui Control: %d", control->id);
 
 	return true;
 }

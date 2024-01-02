@@ -41,16 +41,17 @@ file (APPEND SOURCES "${SOURCE_DIR}/External/Optick/include/optick.h")
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
 find_package(pugixml REQUIRED)
 
 add_executable(Gato-Juego ${SOURCES})
 
-include_directories(Gato-Juego ${SDL2_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${PUGIXML_INCLUDE_DIRS})
+include_directories(Gato-Juego ${SDL2_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} ${PUGIXML_INCLUDE_DIRS})
 
 #target_compile_options(${PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
 #target_compile_options(${PROJECT_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror>)
 add_compile_options(-Winconsistent-missing-override)
-target_link_libraries(Gato-Juego PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer pugixml::pugixml ${CMAKE_SOURCE_DIR}/Output_Linux/lib/libOptickCore.so)
+target_link_libraries(Gato-Juego PRIVATE SDL2::SDL2 SDL2_image::SDL2_image SDL2_mixer::SDL2_mixer SDL2_ttf::SDL2_ttf pugixml::pugixml ${CMAKE_SOURCE_DIR}/Output_Linux/lib/libOptickCore.so)
 #target_link_libraries(Gato-Juego /usr/lib/libSDL2main.a /usr/lib/libSDL2-2.0.so /usr/lib/libSDL2_mixer.so /usr/lib/libSDL2_image.so pugixml::pugixml)
 
 #target_compile_definitions(Gato-Juego PRIVATE uint32=unsigned\ __int32 uint64=unsigned\ __int64)

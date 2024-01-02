@@ -169,7 +169,7 @@ bool OwlEnemy::LoadState(pugi::xml_node& node)
 
 EntityState OwlEnemy::StateMachine(float dt) {
 	// TODO state machine logic
-	LOG("%f", PIXEL_TO_METERS(player->position.DistanceTo(this->position)));
+	//LOG("%f", PIXEL_TO_METERS(player->position.DistanceTo(this->position)));
 	switch (this->state) {
 	case EntityState::IDLE:
 		currentAnimation = &idleAnim;

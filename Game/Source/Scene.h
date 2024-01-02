@@ -6,6 +6,8 @@
 #include "OwlEnemy.h"
 #include "DogEnemy.h"
 #include "Item.h"
+#include "GuiControl.h"
+#include "GuiControlButton.h"
 
 struct SDL_Texture;
 
@@ -36,6 +38,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	// Handles multiple Gui Event methods
+	bool OnGuiMouseClickEvent(GuiControl* control);
+
 public:
 	bool winCondition = false;
 	Player* player;
@@ -45,6 +50,7 @@ private:
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;
+	GuiControlButton* gcButton;
 };
 
 #endif // __SCENE_H__
