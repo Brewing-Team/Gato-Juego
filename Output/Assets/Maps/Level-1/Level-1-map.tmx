@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="164" height="176" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="241">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="164" height="176" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="241">
  <properties>
   <property name="Draw" type="bool" value="false"/>
  </properties>
@@ -160217,7 +160217,7 @@
    <tile gid="1393"/>
    <tile gid="1394"/>
    <tile gid="951"/>
-   <tile gid="1018"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -160381,8 +160381,8 @@
    <tile gid="1458"/>
    <tile gid="1459"/>
    <tile gid="695"/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -160546,8 +160546,8 @@
    <tile gid="758"/>
    <tile gid="759"/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -160711,8 +160711,8 @@
    <tile gid="823"/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -160876,8 +160876,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -161041,8 +161041,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -161206,8 +161206,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -161371,8 +161371,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -161536,8 +161536,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -161701,8 +161701,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -161866,8 +161866,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -162031,8 +162031,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -162196,8 +162196,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
-   <tile gid="1018"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -162361,7 +162361,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -162525,7 +162525,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="1082"/>
+   <tile/>
    <tile gid="1329"/>
    <tile gid="1330"/>
    <tile gid="1331"/>
@@ -202324,19 +202324,6 @@
   <object id="179" type="rectangle" x="803.756" y="1523.1" width="23.1818" height="27.9091"/>
   <object id="180" type="rectangle" x="867.846" y="1491.11" width="23.6363" height="27.7272"/>
   <object id="181" type="rectangle" x="996.07" y="1522.8" width="71.5" height="44.25"/>
-  <object id="182" type="rectangle" x="1072.19" y="1537.99" width="15.75" height="14.125"/>
-  <object id="229" type="rectangle" x="1088.13" y="1553.99" width="15.75" height="14.125"/>
-  <object id="230" type="rectangle" x="1104.25" y="1569.86" width="15.75" height="14.125"/>
-  <object id="231" type="rectangle" x="1120.44" y="1585.86" width="15.75" height="14.125"/>
-  <object id="232" type="rectangle" x="1136.32" y="1602.17" width="15.75" height="14.125"/>
-  <object id="233" type="rectangle" x="1152.19" y="1617.99" width="15.75" height="14.125"/>
-  <object id="234" type="rectangle" x="1168.32" y="1634.05" width="15.75" height="14.125"/>
-  <object id="235" type="rectangle" x="1184.13" y="1650.11" width="15.75" height="14.125"/>
-  <object id="236" type="rectangle" x="1200.32" y="1666.05" width="15.75" height="14.125"/>
-  <object id="237" type="rectangle" x="1216.38" y="1681.99" width="15.75" height="14.125"/>
-  <object id="238" type="rectangle" x="1232.25" y="1697.99" width="15.75" height="14.125"/>
-  <object id="239" type="rectangle" x="1248.19" y="1713.92" width="15.75" height="14.125"/>
-  <object id="240" type="rectangle" x="1264.25" y="1729.99" width="15.75" height="32.5625"/>
   <object id="196" type="rectangle" x="1268.54" y="1762.42" width="389.576" height="350.167"/>
   <object id="197" type="rectangle" x="1445.39" y="1634.67" width="212.795" height="127.5"/>
   <object id="198" type="rectangle" x="1522.82" y="1552.92" width="24.875" height="29.875"/>
