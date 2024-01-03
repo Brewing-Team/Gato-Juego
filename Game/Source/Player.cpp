@@ -13,8 +13,6 @@
 #include "FurBall.h"
 
 #include "Window.h"
-#include <Box2D/Common/b2Settings.h>
-#include <SDL_stdinc.h>
 #include <cmath>
 #include <iostream>
 
