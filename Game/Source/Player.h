@@ -4,7 +4,10 @@
 #include "Animation.h"
 #include "Entity.h"
 #include "FurBall.h"
+#include "Physics.h"
 #include "Point.h"
+#include <Box2D/Common/b2Math.h>
+#include <Box2D/Dynamics/b2Fixture.h>
 #ifdef __linux__
 #include <SDL.h>
 #elif _MSC_VER
@@ -32,19 +35,22 @@ public:
 	
 	virtual ~Player();
 
-	bool Awake();
+	bool Awake() override;
 
-	bool Start();
+	bool Start() override;
 
-	bool Update(float dt);
+	bool Update(float dt) override;
 
 	void debugTools();
 
-	bool CleanUp();
+	bool CleanUp() override;
 
-	void OnCollision(PhysBody* physA, PhysBody* physB);
+	void OnCollision(PhysBody* physA, PhysBody* physB) override;
 
-	void EndCollision(PhysBody* physA, PhysBody* physB);
+	void EndCollision(PhysBody* physA, PhysBody* physB) override;
+
+	void OnRaycastHit(b2Fixture* fixture, const b2Vec2& point,
+                       const b2Vec2& normal, float32 fraction) override;
 
 	// Set animations
 	void setIdleAnimation();
@@ -99,6 +105,8 @@ public:
 	int playerWin;
 	int pickItem;
 
+	Raycast* raycastTest;
+
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 
 	//Movement
@@ -119,6 +127,10 @@ public:
 
 	// debug textures
 	SDL_Texture* debugMenuTexture;
+
+	//REMOVE
+	b2Vec2 pointTest;
+	b2Vec2 normalTest;
 };
 
 #endif // __PLAYER_H__

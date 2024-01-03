@@ -13,6 +13,8 @@
 #include "FurBall.h"
 
 #include "Window.h"
+#include <Box2D/Common/b2Settings.h>
+#include <SDL_stdinc.h>
 #include <cmath>
 #include <iostream>
 
@@ -94,18 +96,11 @@ bool Player::Start() {
 	playerWin = app->audio->LoadFx("Assets/Audio/Fx/Win.ogg");
 	pickItem = app->audio->LoadFx("Assets/Audio/Fx/PickItem.wav");
 
+	raycastTest = app->physics->CreateRaycast(this, pbody->body->GetPosition(), {pbody->body->GetPosition().x, pbody->body->GetPosition().y + 0.4f});
+
 	// TODO load debug menu texture from xml
 	// load debug menu texture
 	debugMenuTexture = app->tex->Load("Assets/Textures/debug_menu.png");
-
-
-	// TODO test ropes
-	/*
-	app->physics->CreateRope(20, {21,28}, {25, 32});
-	//app->physics->CreateRope(20, {5,0}, {10, 0});
-	app->physics->CreateRope(20);
-	app->physics->CreateRope(20, {0,0});
-	*/
 
 	return true;
 }
@@ -163,6 +158,12 @@ bool Player::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
+	//Update Raycast position
+	raycastTest->rayStart = pbody->body->GetPosition();
+	float32 rotatedX = pbody->body->GetPosition().x + 0.4f * SDL_cos(pbody->body->GetAngle() + DEGTORAD * 90);
+	float32 rotatedY = pbody->body->GetPosition().y + 0.4f * SDL_sin(pbody->body->GetAngle() + DEGTORAD * 90);
+	raycastTest->rayEnd = { rotatedX, rotatedY };
+
 	// Update player sensors
 	CopyParentRotation(pbody, groundSensor, -12, -2, 270);
 
@@ -176,6 +177,11 @@ bool Player::Update(float dt)
 	app->render->DrawTexture(currentAnimation->texture, position.x - 9, position.y - 9, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
 
 	currentAnimation->Update(dt);
+
+	//REMOVE
+	app->render->DrawRectangle({METERS_TO_PIXELS(pointTest.x) - 1, METERS_TO_PIXELS(pointTest.y) - 1, 2,2}, 0, 0, 255);
+	app->render->DrawLine(METERS_TO_PIXELS(pointTest.x), METERS_TO_PIXELS(pointTest.y), METERS_TO_PIXELS(pointTest.x + (normalTest.x * 10)), METERS_TO_PIXELS(pointTest.y + (normalTest.y * 10)), 255, 255, 0);
+
 	return true;
 }
 
@@ -745,4 +751,23 @@ void Player::EndCollision(PhysBody* physA, PhysBody* physB){
 		}
 	}
 	
+}
+
+void Player::OnRaycastHit(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction){
+	LOG("Raycast hit");
+    std::cout << "Point: " << point.x << ", " << point.y << std::endl;
+    std::cout << "Normal: " << normal.x << ", " << normal.y << std::endl;
+    std::cout << "Fraction: " << fraction << std::endl;
+
+	//REMOVE
+	pointTest = point;
+	normalTest = normal;
+
+/* 	if (state == EntityState::IDLE){
+	
+	} */
+
+	float32 dot = b2Dot(normal, { 0,-1 });
+	float32 det = b2Cross(normal, { 0,-1 });
+	angle = -b2Atan2(det, dot) * RADTODEG;
 }

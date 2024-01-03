@@ -8,6 +8,7 @@
 #include "Render.h"
 #include "Player.h"
 #include "Window.h"
+#include <Box2D/Common/b2Math.h>
 
 #ifdef __linux__
 #include <SDL_keycode.h>
@@ -84,6 +85,12 @@ bool Physics::PreUpdate()
 			if (pb1 && pb2 && pb1->listener)
 				pb1->listener->OnCollision(pb1, pb2);
 		}
+	}
+
+	//Update Raycasts
+	for (int i = 0; i < raycasts.Count(); i++)
+	{
+		world->RayCast(raycasts[i]->callback, raycasts[i]->rayStart, raycasts[i]->rayEnd);
 	}
 
 	return ret;
@@ -387,6 +394,12 @@ bool Physics::PostUpdate()
 				mouseBody = nullptr;
 			}
 		}
+
+		// Draw all raycasts
+		for (int i = 0; i < raycasts.Count(); i++)
+		{
+			app->render->DrawLine(METERS_TO_PIXELS(raycasts[i]->rayStart.x), METERS_TO_PIXELS(raycasts[i]->rayStart.y), METERS_TO_PIXELS(raycasts[i]->rayEnd.x), METERS_TO_PIXELS(raycasts[i]->rayEnd.y), 255, 0, 0);
+		}
 	}
 
 
@@ -549,24 +562,32 @@ b2WeldJoint* Physics::CreateWeldJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, 
 	return (b2WeldJoint*)world->CreateJoint(&weldJointDef);
 }
 
-b2Body** Physics::CreateRope(int length){
+PhysBody* Physics::CreateRope(int x, int y, int length, float segmentWidth, float segmentHeight){
 
 	b2Body** segments = new b2Body*[length];
 	b2RevoluteJoint** joints = new b2RevoluteJoint*[length - 1];
 	b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
+	PhysBody* bodies = new PhysBody[length];
 
 	b2BodyDef* bodyDef = new b2BodyDef();
 	bodyDef->type = b2_dynamicBody;
+	//bodyDef->position.Set(x, y);
 
-	float width = 0.1f, height = 0.25f;
+	float width = segmentWidth, height = segmentHeight;
 
 	b2PolygonShape* shape = new b2PolygonShape();
 	shape->SetAsBox(width / 2, height / 2);
 
 	for (int i = 0; i < length; i++)
 	{
+		bodyDef->position.Set(x + height * i, y);
 		segments[i] = world->CreateBody(bodyDef);
 		segments[i]->CreateFixture(shape, 1.0f);
+
+		bodies[i].body = segments[i];
+		segments[i]->SetUserData(&bodies[i]);
+		bodies[i].width = METERS_TO_PIXELS(width);
+		bodies[i].height = METERS_TO_PIXELS(height);
 	}
 
 	delete shape;
@@ -595,28 +616,35 @@ b2Body** Physics::CreateRope(int length){
 		ropeJoints[i] = (b2RopeJoint*)world->CreateJoint(ropeJointDef);
 	}
 
-	return segments;
+	return bodies;
 }
 
-b2Body** Physics::CreateRope(int length, b2Vec2 startPos){
-	    b2Body** segments = new b2Body*[length];
+PhysBody* Physics::CreateRope(b2Vec2 startPos, int length, float segmentWidth, float segmentHeight) {
+	b2Body** segments = new b2Body*[length];
     b2RevoluteJoint** joints = new b2RevoluteJoint*[length + 1];
     b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
+	PhysBody* bodies = new PhysBody[length];
 
     b2BodyDef* bodyDef = new b2BodyDef();
     bodyDef->type = b2_dynamicBody;
+	//bodyDef->position.Set(startPos.x, startPos.y);
 
-    float width = 0.1f, height = height = 0.25f;
+    float width = segmentWidth, height = height = segmentHeight;
 
     b2PolygonShape* shape = new b2PolygonShape();
     shape->SetAsBox(width / 2, height / 2);
 
     for (int i = 0; i < length; i++)
     {
+		bodyDef->position = {startPos.x + width * i, startPos.y + height * i};
         segments[i] = world->CreateBody(bodyDef);
         segments[i]->CreateFixture(shape, 1.0f);
-    }
 
+		bodies[i].body = segments[i];
+		segments[i]->SetUserData(&bodies[i]);
+		bodies[i].width = METERS_TO_PIXELS(width);
+		bodies[i].height = METERS_TO_PIXELS(height);
+	}
     delete shape;
     shape = nullptr;
 
@@ -653,36 +681,42 @@ b2Body** Physics::CreateRope(int length, b2Vec2 startPos){
         ropeJoints[i] = (b2RopeJoint*)world->CreateJoint(ropeJointDef);
     }
 
-    return segments;
+    return bodies;
 }
 
-b2Body** Physics::CreateRope(int length, b2Vec2 startPos, b2Vec2 endPos)
+PhysBody* Physics::CreateRope(b2Vec2 startPos, b2Vec2 endPos, int length, float segmentWidth)
 {
     b2Body** segments = new b2Body*[length];
     b2RevoluteJoint** joints = new b2RevoluteJoint*[length + 1];
     b2RopeJoint** ropeJoints = new b2RopeJoint*[length - 1];
+	PhysBody* bodies = new PhysBody[length];
 
     b2BodyDef* bodyDef = new b2BodyDef();
     bodyDef->type = b2_dynamicBody;
 
+
     float width = 0.1f, height = (endPos - startPos).Length() / length;
 
-    b2PolygonShape* shape = new b2PolygonShape();
-    shape->SetAsBox(width / 2, height / 2);
+b2PolygonShape* shape = new b2PolygonShape();
+shape->SetAsBox(width / 2, height / 2);
 
-    for (int i = 0; i < length; i++)
-    {
+for (int i = 0; i < length; i++)
+{
+	bodyDef->position = {startPos.x + (endPos.x - startPos.x) * i / length, startPos.y + (endPos.y - startPos.y) * i / length};
+	//bodyDef->position = {startPos.x + width * i, startPos.y + height * i};
+	segments[i] = world->CreateBody(bodyDef);
+	segments[i]->CreateFixture(shape, 1.0f);
 
-        bodyDef->position = startPos + (endPos - startPos);
-		bodyDef->position *= (i / (float)length);
-        segments[i] = world->CreateBody(bodyDef);
-        segments[i]->CreateFixture(shape, 1.0f);
-    }
+	bodies[i].body = segments[i];
+	segments[i]->SetUserData(&bodies[i]);
+	bodies[i].width = METERS_TO_PIXELS(width);
+	bodies[i].height = METERS_TO_PIXELS(height);
+}
 
-    delete shape;
-    shape = nullptr;
+delete shape;
+shape = nullptr;
 
-    b2BodyDef anchorBodyDef;
+b2BodyDef anchorBodyDef;
     anchorBodyDef.type = b2_staticBody;
 
     anchorBodyDef.position = startPos;
@@ -722,5 +756,24 @@ b2Body** Physics::CreateRope(int length, b2Vec2 startPos, b2Vec2 endPos)
         ropeJoints[i] = (b2RopeJoint*)world->CreateJoint(ropeJointDef);
     }
 
-    return segments;
+    return bodies;
+}
+
+Raycast* Physics::CreateRaycast(Entity* listener, b2Vec2 rayStart, b2Vec2 rayEnd){
+	RaycastCallback* callback = new RaycastCallback();
+	callback->listener = listener;
+
+	Raycast* raycast = new Raycast();
+	raycast->callback = callback;
+	raycast->rayStart = rayStart;
+	raycast->rayEnd = rayEnd;
+	raycasts.PushBack(raycast);
+
+	return raycast;
+}
+
+float32 RaycastCallback::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction){
+        
+	listener->OnRaycastHit(fixture, point, normal, fraction);
+	return float32();
 }

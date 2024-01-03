@@ -2,6 +2,7 @@
 #define __SCENE_H__
 
 #include "Module.h"
+#include "Physics.h"
 #include "Player.h"
 #include "OwlEnemy.h"
 #include "DogEnemy.h"

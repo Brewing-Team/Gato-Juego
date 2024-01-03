@@ -33,17 +33,17 @@ public:
 
 	virtual ~OwlEnemy();
 
-	bool Awake();
+	bool Awake() override;
 
-	bool Start();
+	bool Start() override;
 
-	bool Update(float dt);
+	bool Update(float dt) override;
 
-	bool CleanUp();
+	bool CleanUp() override;
 
-	void OnCollision(PhysBody* physA, PhysBody* physB);
+	void OnCollision(PhysBody* physA, PhysBody* physB) override;
 
-	void EndCollision(PhysBody* physA, PhysBody* physB);
+	void EndCollision(PhysBody* physA, PhysBody* physB) override;
 
 	// Set animations
 	void setIdleAnimation();

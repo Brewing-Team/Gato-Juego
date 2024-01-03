@@ -1,6 +1,9 @@
 #pragma once
+#include "DynArray.h"
 #include "Module.h"
 #include "Entity.h"
+#include <Box2D/Common/b2Math.h>
+#include <Box2D/Common/b2Settings.h>
 
 #ifdef __linux__
 //#include <box2d/box2d.h>
@@ -69,6 +72,20 @@ public:
 	ColliderType ctype;
 };
 
+class RaycastCallback : public b2RayCastCallback { //TODO: Hablar con mario de si dejar la definicion aqui o pasarla al cpp
+public:
+    float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point,
+                       const b2Vec2& normal, float32 fraction) override;
+
+	Entity* listener;
+};
+
+struct Raycast {
+    b2RayCastCallback* callback;
+	b2Vec2 rayStart;
+	b2Vec2 rayEnd;
+};
+
 // Module --------------------------------------
 class Physics : public Module, public b2ContactListener // TODO
 {
@@ -92,9 +109,11 @@ public:
 	b2RevoluteJoint* CreateRevoluteJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, float lowerAngle, float upperAngle, float referenceAngle, bool collideConnected, bool enableLimit);
 	b2PrismaticJoint* CreatePrismaticJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, b2Vec2 axys, float maxHeight, bool collideConnected, bool enableLimit);
 	b2WeldJoint* CreateWeldJoint(PhysBody* A, b2Vec2 anchorA, PhysBody* B, b2Vec2 anchorB, float angle, bool collideConnected, bool enableLimit);
-	b2Body** CreateRope(int length);
-	b2Body** CreateRope(int length, b2Vec2 startPos);
-	b2Body** CreateRope(int length, b2Vec2 startPos, b2Vec2 endPos);
+	PhysBody* CreateRope(int x, int y, int length, float segmentWidth = 0.1f, float segmentHeight = 0.25f);
+	PhysBody* CreateRope(b2Vec2 startPos, int length, float segmentWidth = 0.1f, float segmentHeight = 0.25f);
+	PhysBody* CreateRope(b2Vec2 startPos, b2Vec2 endPos, int length, float segmentWidth = 0.1f);
+
+	Raycast* CreateRaycast(Entity* listener, b2Vec2 rayStart, b2Vec2 rayEnd);
 	
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
@@ -111,4 +130,7 @@ private:
 	// Mouse joint
 	b2MouseJoint* mouseJoint;
 	b2Body* mouseBody;
+
+	//Raycast
+	DynArray<Raycast*> raycasts;
 };

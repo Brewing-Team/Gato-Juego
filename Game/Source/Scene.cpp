@@ -1,5 +1,6 @@
 #include "App.h"
 #include "Input.h"
+#include "RopeEntity.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "Render.h"
@@ -14,6 +15,8 @@
 
 #ifdef __linux__
 #include "External/Optick/include/optick.h"
+#include <Box2D/Dynamics/b2Body.h>
+
 #elif _MSC_VER
 #include "Optick/include/optick.h"
 #endif
@@ -39,6 +42,13 @@ bool Scene::Awake(pugi::xml_node& config)
 	{
 		//Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
 		//item->parameters = itemNode;
+	}
+
+	for (pugi::xml_node ropeNode = config.child("rope"); ropeNode; ropeNode = ropeNode.next_sibling("rope"))
+	{
+		RopeEntity* rope = new RopeEntity();
+		app->entityManager->AddEntity(rope);
+		rope->parameters = ropeNode;
 	}
 
 	if (config.child("player")) {
@@ -148,6 +158,11 @@ bool Scene::Update(float dt)
 
 	// Renders the image in the center of the screen 
 	//app->render->DrawTexture(img, (int)textPosX, (int)textPosY);
+
+	/* for (int i = 0; rope1[i + 1] != NULL; i++)
+	{
+		app->render->DrawLine(rope1[i].body->GetPosition().x * 100, rope1[i].body->GetPosition().y * 100, rope1[i + 1].body->GetPosition().x * 100, rope1[i + 1].body->GetPosition().y * 100, 255, 255, 255);
+	}  */
 
 	return true;
 }

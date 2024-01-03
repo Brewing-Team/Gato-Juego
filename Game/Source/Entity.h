@@ -5,8 +5,11 @@
 #include "SString.h"
 #include "Input.h"
 #include "Render.h"
+#include <Box2D/Common/b2Settings.h>
 
 class PhysBody;
+class b2Fixture;
+class b2Vec2;
 
 enum class EntityType
 {
@@ -14,6 +17,7 @@ enum class EntityType
 	ITEM,
 	OWLENEMY,
 	DOGENEMY,
+	ROPE,
 	FURBALL,
 	UNKNOWN
 };
@@ -99,6 +103,11 @@ public:
 	virtual void EndCollision(PhysBody* physA, PhysBody* physB) {
 
 	};
+
+	virtual void OnRaycastHit(b2Fixture* fixture, const b2Vec2& point,
+                       const b2Vec2& normal, float32 fraction) {
+						
+					   };
 
 public:
 
