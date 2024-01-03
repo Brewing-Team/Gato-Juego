@@ -287,7 +287,7 @@ void Player::Move(float dt) {
 		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
-			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
+			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_cos(pbody->body->GetAngle() + DEGTORAD * 180), impulse * (float32)SDL_sin(pbody->body->GetAngle() + DEGTORAD * 180) }, pbody->body->GetWorldCenter(), true);
 		}
 		flip = SDL_FLIP_HORIZONTAL;
 	}
@@ -296,7 +296,7 @@ void Player::Move(float dt) {
 		if (pbody->body->GetLinearVelocity().x <= maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
-			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
+			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_cos(pbody->body->GetAngle()), impulse * (float32)SDL_sin(pbody->body->GetAngle()) }, pbody->body->GetWorldCenter(), true);
 		}
 		flip = SDL_FLIP_NONE;
 
@@ -428,7 +428,7 @@ EntityState Player::StateMachine(float dt) {
 
 	case EntityState::IDLE:
 
-		angle = std::lerp(angle, 0, dt * 32 / 1000);
+		//angle = std::lerp(angle, 0, dt * 32 / 1000); //añadir al enter del state idle
 
 		setIdleAnimation();
 
@@ -458,7 +458,7 @@ EntityState Player::StateMachine(float dt) {
 		break;
 	case EntityState::MOVE:
 
-		angle = std::lerp(angle, 0, dt * 32 / 1000);
+		//angle = std::lerp(angle, 0, dt * 32 / 1000); // añadir al enter del state move
 
 		if (isGrounded)
 		{
@@ -519,6 +519,7 @@ EntityState Player::StateMachine(float dt) {
 
 		if (!isGrounded and !isCollidingLeft and !isCollidingRight) {
 			this->state = EntityState::IDLE;
+			angle = 0; //temporal, esto deberia ir en el enter del state idle 
 		}
 
 		Climb(dt);
