@@ -61,7 +61,10 @@ bool RopeEntity::Start() {
 		pbody = app->physics->CreateRope(spawnPosition.x ,spawnPosition.y, ropeLength);
 	}
 
-	pbody->ctype = ColliderType::UNKNOWN;
+	for (int i = 0; i < ropeLength; i++)
+	{
+		pbody[i].ctype = ColliderType::PLATFORM;
+	}
 
 	return true;
 }

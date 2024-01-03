@@ -42,6 +42,13 @@ bool Scene::Awake(pugi::xml_node& config)
 		//item->parameters = itemNode;
 	}
 
+	for (pugi::xml_node ropeNode = config.child("rope"); ropeNode; ropeNode = ropeNode.next_sibling("rope"))
+	{
+		RopeEntity* rope = new RopeEntity();
+		app->entityManager->AddEntity(rope);
+		rope->parameters = ropeNode;
+	}
+
 	if (config.child("player")) {
 		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 		player->parameters = config.child("player");
@@ -63,13 +70,6 @@ bool Scene::Awake(pugi::xml_node& config)
 		//Get the map name from the config file and assigns the value in the module
 		app->map->name = config.child("map").attribute("name").as_string();
 		app->map->path = config.child("map").attribute("path").as_string();
-	}
-
-	for (pugi::xml_node ropeNode = config.child("rope"); ropeNode; ropeNode = ropeNode.next_sibling("rope"))
-{
-		RopeEntity* rope = new RopeEntity();
-		app->entityManager->AddEntity(rope);
-		rope->parameters = ropeNode;
 	}
 	
 	app->render->camera.target = player;

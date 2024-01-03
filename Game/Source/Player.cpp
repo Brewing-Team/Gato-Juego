@@ -56,7 +56,7 @@ void Player::Move(float dt) {
 		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
-			pbody->body->ApplyLinearImpulse({ -impulse, 0 }, pbody->body->GetWorldCenter(), true);
+			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_cos(pbody->body->GetAngle() + DEGTORAD * 180), impulse * (float32)SDL_sin(pbody->body->GetAngle() + DEGTORAD * 180) }, pbody->body->GetWorldCenter(), true);
 		}
 		flip = SDL_FLIP_HORIZONTAL;
 	}
@@ -65,7 +65,7 @@ void Player::Move(float dt) {
 		if(pbody->body->GetLinearVelocity().x <= maxSpeed)
 		{
 			float impulse = pbody->body->GetMass() * moveForce;
-			pbody->body->ApplyLinearImpulse({ impulse, 0 }, pbody->body->GetWorldCenter(), true);
+			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_cos(pbody->body->GetAngle()), impulse * (float32)SDL_sin(pbody->body->GetAngle()) }, pbody->body->GetWorldCenter(), true);
 		}
 		flip = SDL_FLIP_NONE;
 	}
@@ -182,7 +182,7 @@ EntityState Player::StateMachine(float dt) {
 
 		case EntityState::IDLE:
 
-			angle = std::lerp(angle, 0, dt * 32 / 1000);;
+			//angle = std::lerp(angle, 0, dt * 32 / 1000);;
 
 			setIdleAnimation();
 
@@ -212,7 +212,7 @@ EntityState Player::StateMachine(float dt) {
 			break;
 		case EntityState::MOVE:
 
-			angle = std::lerp(angle, 0, dt * 32 / 1000);
+			//angle = std::lerp(angle, 0, dt * 32 / 1000);
 
 			if(isGrounded)
 			{
@@ -679,4 +679,12 @@ void Player::OnRaycastHit(b2Fixture* fixture, const b2Vec2& point, const b2Vec2&
 	//REMOVE
 	pointTest = point;
 	normalTest = normal;
+
+/* 	if (state == EntityState::IDLE){
+	
+	} */
+
+	float32 dot = b2Dot(normal, { 0,-1 });
+	float32 det = b2Cross(normal, { 0,-1 });
+	angle = -b2Atan2(det, dot) * RADTODEG;
 }
