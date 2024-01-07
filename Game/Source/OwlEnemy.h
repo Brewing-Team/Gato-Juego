@@ -21,7 +21,7 @@ public:
 	Timer timer;
 	Timer movementDelay;
 
-	EntityState StateMachine(float dt) override;
+	//EntityState StateMachine(float dt) override;
 	void Idle(float dt);
 	void Move(float dt) override;
 	void Attack(float dt) override;

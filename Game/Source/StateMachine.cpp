@@ -1,11 +1,12 @@
 #include "StateMachine.h"
 #include "Defs.h"
+#include "Entity.h"
 #include "Log.h"
 #include "SString.h"
 #include <iostream>
 
-StateMachine::StateMachine(){
-    LOG("StateMachine::StateMachine()\n");
+StateMachine::StateMachine(Entity* owner) : owner(owner){
+    LOG("StateMachine::StateMachine(owner)\n");
 }
 
 StateMachine::~StateMachine(){
@@ -17,9 +18,9 @@ void StateMachine::PreUpdate(){
     currentState->PreUpdate();
 }
 
-void StateMachine::Update(){
+void StateMachine::Update(float dt){
     LOG("StateMachine::Update()\n");
-    currentState->Update();
+    currentState->Update(dt);
 }
 
 void StateMachine::PostUpdate(){

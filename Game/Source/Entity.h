@@ -71,8 +71,6 @@ public:
 		return true;
 	}
 
-	virtual EntityState StateMachine(float dt) { return EntityState::NONE; };
-
 	virtual void Move(float dt) {};
 	virtual void Jump(float dt) {};
 	virtual void Climb(float dt) {};

@@ -6,8 +6,8 @@
 #include "FurBall.h"
 #include "Physics.h"
 #include "Point.h"
-#include <Box2D/Common/b2Math.h>
-#include <Box2D/Dynamics/b2Fixture.h>
+#include "State.h"
+#include "StateMachine.h"
 #ifdef __linux__
 #include <SDL.h>
 #elif _MSC_VER
@@ -22,11 +22,6 @@ public:
 
 	bool startTimer = true;
 	Timer timer;
-
-	EntityState StateMachine(float dt) override;
-	void Move(float dt) override;
-	void Jump(float dt) override;
-	void Climb(float dt) override;
 
 	bool SaveState(pugi::xml_node& node) override;
 	bool LoadState(pugi::xml_node& node) override;
@@ -106,6 +101,8 @@ public:
 	int pickItem;
 
 	Raycast* raycastTest;
+
+	StateMachine* stateMachineTest;
 
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 

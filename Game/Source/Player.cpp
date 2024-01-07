@@ -12,6 +12,9 @@
 #include "Physics.h"
 #include "FurBall.h"
 
+//States
+#include "States/Player/IdleState.h"
+
 #include "Window.h"
 #include <cmath>
 #include <iostream>
@@ -46,6 +49,9 @@ bool Player::Start() {
 
 	timer = Timer();
 	shootCooldown = Timer(5);
+
+	stateMachineTest = new StateMachine(this);
+	stateMachineTest->AddState(new IdleState("idle"));
 
 	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)
 	walkAnim = *app->map->GetAnimByName("Cat-1-Walk");
@@ -106,6 +112,7 @@ bool Player::Start() {
 bool Player::Update(float dt)
 {
 	//LOG("%d", lives);
+	stateMachineTest->Update(dt);
 
 	debugTools();
 
@@ -147,7 +154,7 @@ bool Player::Update(float dt)
 		}
 	}
 
-	StateMachine(dt);
+	//StateMachine(dt);
 	//LOG("state: %d", state);
 
 	pbody->body->SetTransform(pbody->body->GetPosition(), angle*DEGTORAD);
@@ -273,132 +280,6 @@ void Player::setWinAnimation()
 	// TODO set win animation
 }
 
-void Player::Move(float dt) {
-
-	// AUDIO DONE player walk
-
-	if (playerWalkSound.ReadMSec() > 245 and isGrounded)
-	{
-		app->audio->PlayFx(playerWalk);
-		playerWalkSound.Start();
-	}
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-
-		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
-		{
-			float impulse = pbody->body->GetMass() * moveForce;
-			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_cos(pbody->body->GetAngle() + DEGTORAD * 180), impulse * (float32)SDL_sin(pbody->body->GetAngle() + DEGTORAD * 180) }, pbody->body->GetWorldCenter(), true);
-		}
-		flip = SDL_FLIP_HORIZONTAL;
-	}
-
-	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		if (pbody->body->GetLinearVelocity().x <= maxSpeed)
-		{
-			float impulse = pbody->body->GetMass() * moveForce;
-			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_cos(pbody->body->GetAngle()), impulse * (float32)SDL_sin(pbody->body->GetAngle()) }, pbody->body->GetWorldCenter(), true);
-		}
-		flip = SDL_FLIP_NONE;
-
-	}
-	else if (isGrounded) {
-		state = EntityState::IDLE;
-	}
-
-}
-
-void Player::Jump(float dt) {
-
-	// AUDIO DONE player jump
-	app->audio->PlayFx(playerJump);
-
-	float impulse = pbody->body->GetMass() * 5;
-	pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
-	isGrounded = false;
-
-}
-
-void Player::Climb(float dt) {
-
-
-	// AUDIO DONE player walk (climb)
-	if (playerWalkSound.ReadMSec() > 245 and isGrounded)
-	{
-		app->audio->PlayFx(playerWalk);
-		playerWalkSound.Start();
-	}
-
-	if (startTimer) {
-		timer.Start();
-		startTimer = false;
-	}
-
-	LOG("TIMER: %d", timer.ReadSec());
-
-	if (timer.ReadSec() <= 5) {
-		if (isCollidingRight) {
-			climbingLeft = false;
-			climbingRight = true;
-			flip = SDL_FLIP_NONE;
-		}
-
-		else if (isCollidingLeft) {
-			climbingRight = false;
-			climbingLeft = true;
-			flip = SDL_FLIP_HORIZONTAL;
-		}
-
-		if (climbingRight) {
-			angle = std::lerp(angle, -90, dt * 32 / 1000);
-			pbody->body->ApplyForceToCenter({ 1, 0 }, true);
-		}
-		else if (climbingLeft) {
-			angle = std::lerp(angle, 90, dt * 32 / 1000);
-			pbody->body->ApplyForceToCenter({ -1, 0 }, true);
-		}
-
-		pbody->body->ApplyForceToCenter({ 0, -2.0f }, true);
-
-		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-
-			if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
-			{
-				float impulse = pbody->body->GetMass() * 1;
-				pbody->body->ApplyLinearImpulse({ 0, -impulse }, pbody->body->GetWorldCenter(), true);
-			}
-
-		}
-
-		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-
-			if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
-			{
-				float impulse = pbody->body->GetMass() * 1;
-				pbody->body->ApplyLinearImpulse({ 0, impulse }, pbody->body->GetWorldCenter(), true);
-			}
-
-		}
-
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-
-			app->audio->PlayFx(playerJump);
-			float impulse = pbody->body->GetMass() * 5;
-			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_sin(DEGTORAD * angle), 0 }, pbody->body->GetWorldCenter(), true);
-
-			flip = (flip == SDL_FLIP_HORIZONTAL) ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
-
-		}
-
-	}
-	else {
-
-		startTimer = true;
-		state = EntityState::IDLE;
-
-	}
-
-}
-
 bool Player::SaveState(pugi::xml_node& node) {
 
 	pugi::xml_node playerAttributes = node.append_child("player");
@@ -420,200 +301,6 @@ bool Player::LoadState(pugi::xml_node& node)
 	pbody->body->SetAwake(true);
 
 	return true;
-}
-
-EntityState Player::StateMachine(float dt) {
-
-	switch (this->state) {
-
-	case EntityState::IDLE:
-
-		//angle = std::lerp(angle, 0, dt * 32 / 1000); //añadir al enter del state idle
-
-		setIdleAnimation();
-
-		if (!isAlive and !godMode) {
-			this->state = EntityState::DEAD;
-		}
-
-		if (app->scene->winCondition) {
-			this->state = EntityState::WIN;
-		}
-
-		if (isGrounded) {
-			if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-				Jump(dt);
-				jumpAnim.Reset();
-			}
-		}
-		else
-		{
-			setJumpAnimation();
-		}
-
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT or app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			this->state = EntityState::MOVE;
-		}
-
-		break;
-	case EntityState::MOVE:
-
-		//angle = std::lerp(angle, 0, dt * 32 / 1000); // añadir al enter del state move
-
-		if (isGrounded)
-		{
-			setMoveAnimation();
-		}
-		else
-		{
-			setJumpAnimation();
-		}
-
-		if (!isAlive and !godMode) {
-			this->state = EntityState::DEAD;
-		}
-
-		if (app->scene->winCondition) {
-			this->state = EntityState::WIN;
-		}
-
-		if (isGrounded && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-
-			Jump(dt);
-			Move(dt);
-
-		}
-		else {
-
-			Move(dt);
-
-		}
-
-		break;
-
-	case EntityState::CLIMB:
-
-		if (isGrounded)
-		{
-			if ((int)pbody->body->GetLinearVelocity().y == 0) //esto rarete pero buenop
-			{
-				setIdleAnimation();
-			}
-			else {
-				setClimbAnimation();
-			}
-		}
-		else
-		{
-			setJumpAnimation();
-		}
-
-
-		if (!isAlive and !godMode) {
-			this->state = EntityState::DEAD;
-		}
-
-		if (app->scene->winCondition) {
-			this->state = EntityState::WIN;
-		}
-
-		if (!isGrounded and !isCollidingLeft and !isCollidingRight) {
-			this->state = EntityState::IDLE;
-			angle = 0; //temporal, esto deberia ir en el enter del state idle 
-		}
-
-		Climb(dt);
-
-
-
-		break;
-
-	case EntityState::HURT:
-
-		currentAnimation = &hurtAnim;
-		if (currentAnimation->HasFinished()) {
-			hurtAnim.Reset();
-			hurtAnim.ResetLoopCount();
-			state = EntityState::IDLE;
-		}
-
-		break;
-
-	case EntityState::WIN:
-
-		// TODO hacer cosa de ganar jugador ole ole
-
-		// AUDIO DONE player win
-		app->audio->PlayFx(playerWin);
-
-		moveToSpawnPoint();
-
-		state = EntityState::IDLE;
-
-		break;
-
-	case EntityState::DEAD:
-
-		setWinAnimation();
-
-		// TODO resetear mundo, restar vidas, etc
-
-		// AUDIO DONE player death
-		app->audio->PlayFx(playerDeath);
-
-		moveToSpawnPoint();
-
-		isAlive = true;
-		lives = 7;
-		state = EntityState::IDLE;
-
-		break;
-
-	case EntityState::NO_CLIP:
-
-		setIdleAnimation();
-
-		if (noClip) {
-			// deactivate physics
-			this->pbody->body->SetAwake(false);
-
-			// Deactivate gravity
-			pbody->body->SetGravityScale(0);
-
-			// debug controls
-			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-				pbody->body->SetLinearVelocity({ -3,0 });
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-				pbody->body->SetLinearVelocity({ 3,0 });
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-				pbody->body->SetLinearVelocity({ 0,-3 });
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-				pbody->body->SetLinearVelocity({ 0,3 });
-			}
-		}
-		else {
-			// activate physics
-			this->pbody->body->GetFixtureList()->SetSensor(false);
-			this->pbody->body->SetAwake(true);
-
-			// Activate Gravity
-			pbody->body->SetGravityScale(1);
-
-			state = EntityState::IDLE;
-		}
-
-		break;
-
-	}
-
-	return this->state;
-
 }
 
 void Player::CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset)

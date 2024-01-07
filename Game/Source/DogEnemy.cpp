@@ -93,7 +93,7 @@ bool DogEnemy::Update(float dt)
 {
 
 	// Update OwlEnemie state
-	StateMachine(dt);
+	//StateMachine(dt);
 
 	//Update OwlEnemie position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 24;
@@ -161,7 +161,7 @@ bool DogEnemy::LoadState(pugi::xml_node& node)
 	return true;
 }
 
-EntityState DogEnemy::StateMachine(float dt) {
+/* EntityState DogEnemy::StateMachine(float dt) {
 	switch (this->state) {
 	case EntityState::IDLE:
 		setIdleAnimation();
@@ -228,7 +228,7 @@ EntityState DogEnemy::StateMachine(float dt) {
 
 	return this->state;
 }
-
+ */
 void DogEnemy::moveToSpawnPoint()
 {
 	position = spawnPosition;

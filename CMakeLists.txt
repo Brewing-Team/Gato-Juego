@@ -36,6 +36,7 @@ file (APPEND SOURCES "${SOURCE_DIR}/External/Optick/include/optick.h")
 #"${SOURCE_DIR}/Window.h"
 #)
 
+add_subdirectory(${SOURCE_DIR}/States)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)

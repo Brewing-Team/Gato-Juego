@@ -89,7 +89,7 @@ bool OwlEnemy::Update(float dt)
 {
 
 	// Update OwlEnemie state
-	StateMachine(dt);
+	//StateMachine(dt);
 	//LOG("state: %d", state);
 
 	//Debug: Render the line between Owl and Player
@@ -167,7 +167,7 @@ bool OwlEnemy::LoadState(pugi::xml_node& node)
 	return true;
 }
 
-EntityState OwlEnemy::StateMachine(float dt) {
+/* EntityState OwlEnemy::StateMachine(float dt) {
 	// TODO state machine logic
 	//LOG("%f", PIXEL_TO_METERS(player->position.DistanceTo(this->position)));
 	switch (this->state) {
@@ -240,7 +240,7 @@ EntityState OwlEnemy::StateMachine(float dt) {
 	}
 	return this->state;
 }
-
+ */
 void OwlEnemy::pathfindingMovement(float dt){
 	iPoint origin = app->map->WorldToMap(newPosition.x, newPosition.y); //añadir el tile size / 2 hace que el owl se acerque mas
 
