@@ -1,11 +1,14 @@
+#ifndef __PLAYERMOVESTATE_H__
+#define __PLAYERMOVESTATE_H__
+
 #include "Player.h"
 #include "State.h"
 #include "SString.h"
 #include "Defs.h"
 
-class IdleState : public State<Player> {
+class PlayerMoveState : public State<Player> {
     public:
-    IdleState(SString name) : State(name) {}
+    PlayerMoveState(SString name) : State(name) {}
     void Enter() override;
     void Update(float dt) override;
     void Exit() override;
@@ -13,3 +16,4 @@ class IdleState : public State<Player> {
     private:
     Player* player;
 };
+#endif // __PLAYERMOVESTATE_H__

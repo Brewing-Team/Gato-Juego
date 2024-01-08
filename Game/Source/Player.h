@@ -24,9 +24,6 @@ public:
 	bool startTimer = true;
 	Timer timer;
 
-	bool SaveState(pugi::xml_node& node) override;
-	bool LoadState(pugi::xml_node& node) override;
-
 	Player();
 	
 	virtual ~Player();
@@ -58,6 +55,13 @@ public:
 	void CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset);
 
 	void moveToSpawnPoint();
+
+	void Move(float dt) override;
+	void Jump(float dt) override;
+	void Climb(float dt) override;
+
+	bool SaveState(pugi::xml_node& node) override;
+	bool LoadState(pugi::xml_node& node) override;
 
 public:
 	//Animations
@@ -115,9 +119,9 @@ public:
 	bool isGrounded = false;
 	bool isCollidingTop = false;
 	bool isCollidingLeft = false;
-	bool climbingLeft = false;
 	bool isCollidingRight = false;
-	bool climbingRight = false;
+    bool climbingLeft = false;
+    bool climbingRight = false;
 
 	float bulletSpeed = 2.0f;
 	int shootCooldownTime = 1000;

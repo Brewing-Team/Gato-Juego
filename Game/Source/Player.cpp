@@ -3,6 +3,10 @@
 #include "Entity.h"
 #include "Map.h"
 #include "StateMachine.h"
+#include "States/Player/PlayerDeadState.h"
+#include "States/Player/PlayerHurtState.h"
+#include "States/Player/PlayerNoClipState.h"
+#include "States/Player/PlayerWinState.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "Input.h"
@@ -14,9 +18,10 @@
 #include "FurBall.h"
 
 //States
-#include "States/Player/IdleState.h"
+#include "States/Player/PlayerIdleState.h"
+#include "States/Player/PlayerMoveState.h"
+#include "States/Player/PlayerClimbState.h"
 
-#include "Window.h"
 #include <cmath>
 #include <iostream>
 
@@ -29,7 +34,6 @@
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name.Create("Player");
-	state = EntityState::IDLE;
 }
 
 Player::~Player() {
@@ -102,7 +106,13 @@ bool Player::Start() {
 
 	// Create player state machine
 	stateMachineTest = new StateMachine<Player>(this);
-	stateMachineTest->AddState(new IdleState("idle"));
+	stateMachineTest->AddState(new PlayerIdleState("idle"));
+	stateMachineTest->AddState(new PlayerMoveState("move"));
+	stateMachineTest->AddState(new PlayerClimbState("climb"));
+	stateMachineTest->AddState(new PlayerHurtState("hurt"));
+	stateMachineTest->AddState(new PlayerDeadState("dead"));
+	stateMachineTest->AddState(new PlayerWinState("win"));
+	stateMachineTest->AddState(new PlayerNoClipState("noclip"));
 
 	// TODO load debug menu texture from xml
 	// load debug menu texture
@@ -150,11 +160,11 @@ bool Player::Update(float dt)
 
 	// Update player state
 
-	if(state == EntityState::MOVE) {
+	/* if(state == EntityState::MOVE) {
 		if (isCollidingLeft or isCollidingRight and !isGrounded) {
 			state = EntityState::CLIMB;
 		}
-	}
+	} */
 
 	//StateMachine(dt);
 	//LOG("state: %d", state);
@@ -243,7 +253,8 @@ void Player::debugTools()
 		// Toggle no-clip mode on/off
 		if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
 			noClip = !noClip;
-			state = EntityState::NO_CLIP;
+			//state = EntityState::NO_CLIP;
+			stateMachineTest->ChangeState("noclip");
 			this->pbody->body->GetFixtureList()->SetSensor(true);
 		}
 
@@ -280,6 +291,133 @@ void Player::setClimbAnimation()
 void Player::setWinAnimation()
 {
 	// TODO set win animation
+}
+
+
+void Player::Move(float dt) {
+
+	// AUDIO DONE player walk
+
+	if (playerWalkSound.ReadMSec() > 245 and isGrounded)
+	{
+		app->audio->PlayFx(playerWalk);
+		playerWalkSound.Start();
+	}
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+
+		if (pbody->body->GetLinearVelocity().x >= -maxSpeed)
+		{
+			float impulse = pbody->body->GetMass() * moveForce;
+			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_cos(pbody->body->GetAngle() + DEGTORAD * 180), impulse * (float32)SDL_sin(pbody->body->GetAngle() + DEGTORAD * 180) }, pbody->body->GetWorldCenter(), true);
+		}
+		flip = SDL_FLIP_HORIZONTAL;
+	}
+
+	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+		if (pbody->body->GetLinearVelocity().x <= maxSpeed)
+		{
+			float impulse = pbody->body->GetMass() * moveForce;
+			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_cos(pbody->body->GetAngle()), impulse * (float32)SDL_sin(pbody->body->GetAngle()) }, pbody->body->GetWorldCenter(), true);
+		}
+		flip = SDL_FLIP_NONE;
+
+	}
+	/* else if (isGrounded) {
+		state = EntityState::IDLE;
+	} */
+
+}
+
+void Player::Jump(float dt) {
+
+	// AUDIO DONE player jump
+	app->audio->PlayFx(playerJump);
+
+	float impulse = pbody->body->GetMass() * 5;
+	pbody->body->ApplyLinearImpulse(b2Vec2(0, -impulse), pbody->body->GetWorldCenter(), true);
+	isGrounded = false;
+
+}
+
+void Player::Climb(float dt) {
+
+
+	// AUDIO DONE player walk (climb)
+	if (playerWalkSound.ReadMSec() > 245 and isGrounded)
+	{
+		app->audio->PlayFx(playerWalk);
+		playerWalkSound.Start();
+	}
+
+	if (startTimer) {
+		timer.Start();
+		startTimer = false;
+	}
+
+	LOG("TIMER: %d", timer.ReadSec());
+
+	if (timer.ReadSec() <= 5) {
+		if (isCollidingRight) {
+			climbingLeft = false;
+			climbingRight = true;
+			flip = SDL_FLIP_NONE;
+		}
+
+		else if (isCollidingLeft) {
+			climbingRight = false;
+			climbingLeft = true;
+			flip = SDL_FLIP_HORIZONTAL;
+		}
+
+		if (climbingRight) {
+			angle = std::lerp(angle, -90, dt * 32 / 1000);
+			pbody->body->ApplyForceToCenter({ 1, 0 }, true);
+		}
+		else if (climbingLeft) {
+			angle = std::lerp(angle, 90, dt * 32 / 1000);
+			pbody->body->ApplyForceToCenter({ -1, 0 }, true);
+		}
+
+		pbody->body->ApplyForceToCenter({ 0, -2.0f }, true);
+
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+
+			if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
+			{
+				float impulse = pbody->body->GetMass() * 1;
+				pbody->body->ApplyLinearImpulse({ 0, -impulse }, pbody->body->GetWorldCenter(), true);
+			}
+
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+
+			if (pbody->body->GetLinearVelocity().y >= -maxSpeed)
+			{
+				float impulse = pbody->body->GetMass() * 1;
+				pbody->body->ApplyLinearImpulse({ 0, impulse }, pbody->body->GetWorldCenter(), true);
+			}
+
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+
+			app->audio->PlayFx(playerJump);
+			float impulse = pbody->body->GetMass() * 5;
+			pbody->body->ApplyLinearImpulse({ impulse * (float32)SDL_sin(DEGTORAD * angle), 0 }, pbody->body->GetWorldCenter(), true);
+
+			flip = (flip == SDL_FLIP_HORIZONTAL) ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+
+		}
+
+	}
+	else {
+
+		startTimer = true;
+		//state = EntityState::IDLE;
+
+	}
+
 }
 
 bool Player::SaveState(pugi::xml_node& node) {
@@ -379,13 +517,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (immunityTimer.ReadSec() >= 1){
 				if (lives <= 1)
 				{
-					state = EntityState::DEAD;
+					//state = EntityState::DEAD;
+					stateMachineTest->ChangeState("dead");
 				}
 				else{
 					// AUDIO DONE player hit
 					app->audio->PlayFx(playerHit);
 					lives--;
-					state = EntityState::HURT;
+					//state = EntityState::HURT;
+					stateMachineTest->ChangeState("hurt");
 					immunityTimer.Start();
 				}
 			}
@@ -409,7 +549,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision LIMITS");
 		break;
 	case ColliderType::WIN:
-		state = EntityState::WIN;
+		//state = EntityState::WIN;
+		stateMachineTest->ChangeState("win");
 		LOG("Collision WIN");
 		break;
 	case ColliderType::UNKNOWN:
@@ -450,10 +591,6 @@ void Player::OnRaycastHit(b2Fixture* fixture, const b2Vec2& point, const b2Vec2&
 	//REMOVE
 	pointTest = point;
 	normalTest = normal;
-
-/* 	if (state == EntityState::IDLE){
-	
-	} */
 
 	float32 dot = b2Dot(normal, { 0,-1 });
 	float32 det = b2Cross(normal, { 0,-1 });

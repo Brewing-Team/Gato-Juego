@@ -40,6 +40,7 @@ public:
         
         if (currentState == nullptr){
             currentState = newState;
+            currentState->Enter();
         }
         states.PushBack(newState);
     }
