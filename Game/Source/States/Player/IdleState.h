@@ -1,8 +1,9 @@
+#include "Player.h"
 #include "State.h"
 #include "SString.h"
 #include "Defs.h"
 
-class IdleState : public State {
+class IdleState : public State<Player> {
     public:
     IdleState(SString name);
     void Enter() override;

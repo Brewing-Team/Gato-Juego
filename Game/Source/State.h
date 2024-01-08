@@ -1,9 +1,9 @@
 #ifndef __STATE_H__
 #define __STATE_H__
 #include "SString.h"
+#include "StateMachine.h"
 
-class StateMachine;
-
+template <typename T>
 class State {
     public:
     State() {}
@@ -15,6 +15,6 @@ class State {
     virtual void Exit() = 0;
 
     SString name;
-    StateMachine* StateMachineReference;
+    StateMachine<T>* StateMachineReference;
 };
 #endif // __STATE_H__

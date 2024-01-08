@@ -2,6 +2,7 @@
 #include "App.h"
 #include "Entity.h"
 #include "Map.h"
+#include "StateMachine.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "Input.h"
@@ -50,7 +51,10 @@ bool Player::Start() {
 	timer = Timer();
 	shootCooldown = Timer(5);
 
-	stateMachineTest = new StateMachine(this);
+	//stateMachineTest = new StateMachine<Player*>();
+	//stateMachineTest->AddState(new IdleState<Player*>("idle"));
+
+	stateMachineTest = new StateMachine<Player>(this);
 	stateMachineTest->AddState(new IdleState("idle"));
 
 	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)

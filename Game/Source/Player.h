@@ -103,7 +103,7 @@ public:
 
 	Raycast* raycastTest;
 
-	StateMachine* stateMachineTest;
+	StateMachine<Player>* stateMachineTest;
 
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 
