@@ -5,10 +5,11 @@
 
 class IdleState : public State<Player> {
     public:
-    IdleState(SString name);
+    IdleState(SString name) : State(name) {}
     void Enter() override;
-    void PreUpdate() override;
     void Update(float dt) override;
-    void PostUpdate() override;
     void Exit() override;
+
+    private:
+    Player* player;
 };

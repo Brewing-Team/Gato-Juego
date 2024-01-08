@@ -51,12 +51,6 @@ bool Player::Start() {
 	timer = Timer();
 	shootCooldown = Timer(5);
 
-	//stateMachineTest = new StateMachine<Player*>();
-	//stateMachineTest->AddState(new IdleState<Player*>("idle"));
-
-	stateMachineTest = new StateMachine<Player>(this);
-	stateMachineTest->AddState(new IdleState("idle"));
-
 	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)
 	walkAnim = *app->map->GetAnimByName("Cat-1-Walk");
 	walkAnim.speed = 8.0f;
@@ -105,6 +99,10 @@ bool Player::Start() {
 	pickItem = app->audio->LoadFx("Assets/Audio/Fx/PickItem.wav");
 
 	raycastTest = app->physics->CreateRaycast(this, pbody->body->GetPosition(), {pbody->body->GetPosition().x, pbody->body->GetPosition().y + 0.4f});
+
+	// Create player state machine
+	stateMachineTest = new StateMachine<Player>(this);
+	stateMachineTest->AddState(new IdleState("idle"));
 
 	// TODO load debug menu texture from xml
 	// load debug menu texture
