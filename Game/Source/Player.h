@@ -6,8 +6,7 @@
 #include "FurBall.h"
 #include "Physics.h"
 #include "Point.h"
-#include <Box2D/Common/b2Math.h>
-#include <Box2D/Dynamics/b2Fixture.h>
+
 #ifdef __linux__
 #include <SDL.h>
 #elif _MSC_VER
@@ -15,6 +14,7 @@
 #endif
 
 struct SDL_Texture;
+struct float32;
 
 class Player : public Entity
 {

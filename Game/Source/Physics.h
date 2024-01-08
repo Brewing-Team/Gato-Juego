@@ -2,8 +2,6 @@
 #include "DynArray.h"
 #include "Module.h"
 #include "Entity.h"
-#include <Box2D/Common/b2Math.h>
-#include <Box2D/Common/b2Settings.h>
 
 #ifdef __linux__
 //#include <box2d/box2d.h>
