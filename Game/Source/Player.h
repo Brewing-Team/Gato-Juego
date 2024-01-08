@@ -10,6 +10,7 @@
 #include "StateMachine.h"
 #ifdef __linux__
 #include <SDL.h>
+#include <Box2D/Common/b2Math.h>
 #elif _MSC_VER
 #include "SDL/include/SDL.h"
 #endif

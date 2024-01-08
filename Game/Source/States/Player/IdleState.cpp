@@ -1,8 +1,8 @@
 #include "IdleState.h"
-#include "../../Log.h"
-#include "../../StateMachine.h"
-#include "../../SString.h"
-#include "../../State.h"
+#include "Log.h"
+#include "StateMachine.h"
+#include "SString.h"
+#include "State.h"
 
 IdleState::IdleState(SString name) : State(name)
 {

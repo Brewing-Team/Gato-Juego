@@ -50,7 +50,7 @@ bool Player::Start() {
 	timer = Timer();
 	shootCooldown = Timer(5);
 
-	stateMachineTest = new StateMachine((Player*)this);
+	stateMachineTest = new StateMachine(this);
 	stateMachineTest->AddState(new IdleState("idle"));
 
 	//load Animations TODO: identify animations by name (en teoria ya esta hecho pero hay que hacer la funcion que te devuelve la animacion por nombre)

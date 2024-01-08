@@ -1,6 +1,6 @@
-#include "../../State.h"
-#include "../../SString.h"
-#include "../../Defs.h"
+#include "State.h"
+#include "SString.h"
+#include "Defs.h"
 
 class IdleState : public State {
     public:
