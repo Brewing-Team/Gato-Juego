@@ -3,11 +3,12 @@
 
 #include "Entity.h"
 #include "Point.h"
-#include <Box2D/Common/b2Math.h>
+
 #ifdef __linux__
 #include <SDL.h>
 #elif _MSC_VER
 #include "SDL/include/SDL.h"
+#include "Box2D/Box2D/Common/b2math.h"
 #endif
 
 struct SDL_Texture;

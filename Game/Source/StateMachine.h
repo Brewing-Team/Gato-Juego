@@ -5,7 +5,7 @@
 #include <vector>
 
 class StateMachine {
-    public:
+public:
     StateMachine(Entity* owner);
     ~StateMachine();
     void PreUpdate();
@@ -13,9 +13,10 @@ class StateMachine {
     void PostUpdate();
     void ChangeState(SString stateName);
     void AddState(State* newState);
+public:
     State* FindState(SString stateName);
-    private:
+    Entity* owner;
+private:
     State* currentState;
     DynArray<State*> states; //ver si tienen que ser punteros o no
-    Entity* owner;
 };
