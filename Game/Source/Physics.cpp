@@ -772,7 +772,9 @@ Raycast* Physics::CreateRaycast(Entity* listener, b2Vec2 rayStart, b2Vec2 rayEnd
 }
 
 float32 RaycastCallback::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction){
-        
+    
 	listener->OnRaycastHit(fixture, point, normal, fraction);
-	return float32();
+
+	//The reasons of returning fraction are explained at: https://www.iforce2d.net/b2dtut/world-querying
+	return fraction;
 }
