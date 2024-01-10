@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\External</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source;$(ProjectDir)Source\External</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -116,8 +116,13 @@
     <ClCompile Include="Source\RopeEntity.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\Render.cpp" />
-    <ClCompile Include="Source\StateMachine.cpp" />
-    <ClCompile Include="Source\States\Player\IdleState.cpp" />
+    <ClCompile Include="Source\States\Player\PlayerClimbState.cpp" />
+    <ClCompile Include="Source\States\Player\PlayerDeadState.cpp" />
+    <ClCompile Include="Source\States\Player\PlayerHurtState.cpp" />
+    <ClCompile Include="Source\States\Player\PlayerIdleState.cpp" />
+    <ClCompile Include="Source\States\Player\PlayerMoveState.cpp" />
+    <ClCompile Include="Source\States\Player\PlayerNoClipState.cpp" />
+    <ClCompile Include="Source\States\Player\PlayerWinState.cpp" />
     <ClCompile Include="Source\Textures.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
     <ClCompile Include="Source\Window.cpp" />
@@ -147,7 +152,13 @@
     <ClInclude Include="Source\Render.h" />
     <ClInclude Include="Source\State.h" />
     <ClInclude Include="Source\StateMachine.h" />
-    <ClInclude Include="Source\States\Player\IdleState.h" />
+    <ClInclude Include="Source\States\Player\PlayerClimbState.h" />
+    <ClInclude Include="Source\States\Player\PlayerDeadState.h" />
+    <ClInclude Include="Source\States\Player\PlayerHurtState.h" />
+    <ClInclude Include="Source\States\Player\PlayerIdleState.h" />
+    <ClInclude Include="Source\States\Player\PlayerMoveState.h" />
+    <ClInclude Include="Source\States\Player\PlayerNoClipState.h" />
+    <ClInclude Include="Source\States\Player\PlayerWinState.h" />
     <ClInclude Include="Source\Textures.h" />
     <ClInclude Include="Source\Timer.h" />
     <ClInclude Include="Source\Window.h" />
