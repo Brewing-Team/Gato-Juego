@@ -1,0 +1,1 @@
+ldd /home/hugo/Documentos/GitHub/GameDevelopment/linux_release_test/bin/Gato-Juego | awk 'NF == 4 { system("cp " $3 " /home/hugo/Documentos/GitHub/GameDevelopment/linux_release_test/lib") }'
