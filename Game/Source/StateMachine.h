@@ -65,6 +65,11 @@ void ChangeState(SString stateName){
     }
     currentState->Enter();
 }
+
+State<T> GetCurrentState(){
+    return *currentState;
+}
+
 public:
     T* owner;
 private:

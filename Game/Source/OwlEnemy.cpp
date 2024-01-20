@@ -154,7 +154,7 @@ bool OwlEnemy::SaveState(pugi::xml_node& node) {
 	owlEnemyAttributes.append_attribute("x").set_value(this->position.x);
 	owlEnemyAttributes.append_attribute("y").set_value(this->position.y);
 	owlEnemyAttributes.append_attribute("angle").set_value(this->angle);
-	owlEnemyAttributes.append_attribute("state").set_value((int)this->state);
+	owlEnemyAttributes.append_attribute("state").set_value(movementStateMachine->GetCurrentState().name.GetString());
 	owlEnemyAttributes.append_attribute("lives").set_value(lives);
 
 	return true;
