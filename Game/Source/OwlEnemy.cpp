@@ -11,10 +11,17 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include "StateMachine.h"
 
 #include "Window.h"
 #include <cmath>
 #include <iostream>
+
+#include "States/OwlEnemy/OwlEnemyIdleState.h"
+#include "States/OwlEnemy/OwlEnemyMoveState.h"
+#include "States/OwlEnemy/OwlEnemyHurtState.h"
+#include "States/OwlEnemy/OwlEnemyAttackState.h"
+#include "States/OwlEnemy/OwlEnemyDeadState.h"
 
 #ifdef __linux__
 #include <Box2D/Common/b2Math.h>
@@ -25,7 +32,6 @@
 OwlEnemy::OwlEnemy() : Entity(EntityType::OWLENEMY)
 {
 	name.Create("OwlEnemy");
-	state = EntityState::IDLE;
 }
 
 OwlEnemy::~OwlEnemy() {
@@ -82,15 +88,19 @@ bool OwlEnemy::Start() {
 	pbody->body->SetFixedRotation(true);
 	pbody->body->SetGravityScale(0);
 
+	movementStateMachine = new StateMachine<OwlEnemy>(this);
+	movementStateMachine->AddState(new OwlEnemyIdleState("idle"));
+	movementStateMachine->AddState(new OwlEnemyMoveState("move"));
+	movementStateMachine->AddState(new OwlEnemyHurtState("hurt"));
+	movementStateMachine->AddState(new OwlEnemyAttackState("attack"));
+	movementStateMachine->AddState(new OwlEnemyDeadState("dead"));
+
 	return true;
 }
 
 bool OwlEnemy::Update(float dt)
 {
-
-	// Update OwlEnemie state
-	//StateMachine(dt);
-	//LOG("state: %d", state);
+	movementStateMachine->Update(dt);
 
 	//Debug: Render the line between Owl and Player
 	if (debug){
@@ -102,8 +112,6 @@ bool OwlEnemy::Update(float dt)
 	//Update OwlEnemie position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 24;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 17;
-
-	// Update OwlEnemie sensors
 
 	// Render OwlEnemie texture
 	app->render->DrawTexture(currentAnimation->texture, position.x, position.y, &currentAnimation->GetCurrentFrame(), 1.0f, pbody->body->GetAngle()*RADTODEG, flip);
@@ -159,7 +167,7 @@ bool OwlEnemy::LoadState(pugi::xml_node& node)
 
 	pbody->body->SetTransform({ PIXEL_TO_METERS(OwlEnemyNode.attribute("x").as_int()), PIXEL_TO_METERS(OwlEnemyNode.attribute("y").as_int()) }, OwlEnemyNode.attribute("angle").as_int());
 	lives = OwlEnemyNode.attribute("lives").as_int();
-	this->state = (EntityState)OwlEnemyNode.attribute("state").as_int();
+	movementStateMachine->ChangeState(OwlEnemyNode.attribute("state").as_string()); 
 	// reset enemy physics
 	//pbody->body->SetAwake(false);
 	//pbody->body->SetAwake(true);
@@ -167,80 +175,6 @@ bool OwlEnemy::LoadState(pugi::xml_node& node)
 	return true;
 }
 
-/* EntityState OwlEnemy::StateMachine(float dt) {
-	// TODO state machine logic
-	//LOG("%f", PIXEL_TO_METERS(player->position.DistanceTo(this->position)));
-	switch (this->state) {
-	case EntityState::IDLE:
-		currentAnimation = &idleAnim;
-		if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
-		{
-			// AUDIO DONE owl idle
- 			app->audio->PlayFx(owlIdle);
-			state = EntityState::MOVE;
-		}
-		break;
-
-	case EntityState::MOVE:
-		currentAnimation = &flyAnim;
-		pathfindingMovement(dt);
-		if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f) {
-			if (attackTimer.ReadSec() >= 2)
-			{
-				state = EntityState::ATTACK;
-			}
-		}
-		else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)) {
-			moveToSpawnPoint();
-			state = EntityState::IDLE;
-		}
-
-		break;
-
-	case EntityState::DEAD:
-		
-		currentAnimation = &sleepingAnim;
-		pbody->body->SetFixedRotation(false);
-		pbody->body->SetGravityScale(1);
-		if (reviveTimer.ReadSec() >= 5)
-		{
-			pbody->body->SetFixedRotation(true);
-			pbody->body->SetGravityScale(0);
-			state = EntityState::IDLE;
-			lives = 3;
-		}
-		break;
-
-	case EntityState::HURT:
-		currentAnimation = &hurtedAnim;
-		invencible = true;
-		if (currentAnimation->HasFinished()) {
-			hurtedAnim.Reset();
-			hurtedAnim.ResetLoopCount();
-			invencible = false;
-			state = EntityState::MOVE;
-		}
-		break;
-
-	case EntityState::ATTACK:
-
-		// AUDIO DONE owl attack
-		app->audio->PlayFx(owlAttack);
-
-		b2Vec2 attackDirection = { (float32)player->position.x - position.x, (float32)player->position.y - position.y };
-		attackDirection.Normalize();
-
-		b2Vec2 attackImpulse = { attackDirection.x, attackDirection.y };
-
-		pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
-
-		attackTimer.Start();
-		state = EntityState::MOVE;
-		break;
-	}
-	return this->state;
-}
- */
 void OwlEnemy::pathfindingMovement(float dt){
 	iPoint origin = app->map->WorldToMap(newPosition.x, newPosition.y); //añadir el tile size / 2 hace que el owl se acerque mas
 
@@ -272,9 +206,6 @@ void OwlEnemy::pathfindingMovement(float dt){
 
 		angle * DEGTORAD
 	);
-	
-	//LOG("%d, %d", pbody->body->GetPosition().x, pbody->body->GetPosition().y);
-
 
 	if (debug)
 	{
@@ -333,32 +264,26 @@ void OwlEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 			{
 				// AUDIO DONE owl death
 				app->audio->PlayFx(owlDeath);
-				state = EntityState::DEAD;
+				movementStateMachine->ChangeState("dead");
 				reviveTimer.Start();
 			}
 			else{
 				// AUDIO DONE owl hit
 				app->audio->PlayFx(owlHit);
-				state = EntityState::HURT;
+				movementStateMachine->ChangeState("hurt");
 				lives--;
 			}
 		}
 		break;
 	case ColliderType::LIMITS:
 		LOG("Collision LIMITS");
-		break;
-	case ColliderType::WIN:
-		state = EntityState::WIN;
-		LOG("Collision WIN");
-		break;
+		break;;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
-
 	}
 
 }
 
 void OwlEnemy::EndCollision(PhysBody* physA, PhysBody* physB) {
-
 }
