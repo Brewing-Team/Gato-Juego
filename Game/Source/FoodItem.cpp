@@ -35,6 +35,7 @@ bool FoodItem::Start() {
 	texture = app->tex->Load(texturePath);
 	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
 	pbody->ctype = ColliderType::FOOD;
+	pbody->listener = this;
 
 	return true;
 }
@@ -53,5 +54,14 @@ bool FoodItem::Update(float dt)
 bool FoodItem::CleanUp()
 {
 	app->tex->UnLoad(texture);
+	app->physics->DestroyBody(pbody);
 	return true;
+}
+
+void FoodItem::OnCollision(PhysBody* physA, PhysBody* physB)
+{
+	if (physB->ctype == ColliderType::PLAYER){
+		if(app->scene->player->lives < 7) app->scene->player->lives++;
+		app->entityManager->DestroyEntity(this);
+	}
 }

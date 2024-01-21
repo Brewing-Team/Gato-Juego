@@ -17,13 +17,15 @@ public:
 	ScoreItem();
 	virtual ~ScoreItem();
 
-	bool Awake();
+	bool Awake() override;
 
-	bool Start();
+	bool Start() override;
 
-	bool Update(float dt);
+	bool Update(float dt) override;
 
-	bool CleanUp();
+	bool CleanUp() override;
+
+	void OnCollision(PhysBody* physA, PhysBody* physB) override;
 
 public:
 

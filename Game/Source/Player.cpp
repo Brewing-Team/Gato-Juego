@@ -504,10 +504,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		}
 	}
 	switch (physB->ctype) {
-	case ColliderType::FOOD:
-		LOG("Collision FOOD");
-		lives++; //TODO: arreglar que al hacer esto no sume 200 vidas.
-		break;
 
 	case ColliderType::SCOREITEM:
 		LOG("Collision SCOREITEM");

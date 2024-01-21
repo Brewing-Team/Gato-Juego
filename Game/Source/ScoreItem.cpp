@@ -35,6 +35,7 @@ bool ScoreItem::Start() {
 	texture = app->tex->Load(texturePath);
 	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
 	pbody->ctype = ColliderType::SCOREITEM;
+	pbody->listener = this;
 
 	return true;
 }
@@ -52,7 +53,14 @@ bool ScoreItem::Update(float dt)
 
 bool ScoreItem::CleanUp()
 {
-
 	app->tex->UnLoad(texture);
+	app->physics->DestroyBody(pbody);
 	return true;
+}
+
+void ScoreItem::OnCollision(PhysBody* physA, PhysBody* physB){
+	if (physB->ctype == ColliderType::PLAYER){
+		app->scene->player->score += 100;
+		app->entityManager->DestroyEntity(this);
+	}
 }
