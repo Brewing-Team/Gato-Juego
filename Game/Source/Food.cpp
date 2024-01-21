@@ -1,4 +1,4 @@
-#include "Item.h"
+#include "Food.h"
 #include "App.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -13,14 +13,14 @@
 #include <Box2D/Dynamics/b2Body.h>
 #endif
 
-Item::Item() : Entity(EntityType::ITEM)
+Food::Food() : Entity(EntityType::FOOD)
 {
-	name.Create("item");
+	name.Create("food");
 }
 
-Item::~Item() {}
+Food::~Food() {}
 
-bool Item::Awake() {
+bool Food::Awake() {
 
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
@@ -29,19 +29,19 @@ bool Item::Awake() {
 	return true;
 }
 
-bool Item::Start() {
+bool Food::Start() {
 
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
-	pbody->ctype = ColliderType::ITEM;
+	pbody->ctype = ColliderType::FOOD;
 
 	return true;
 }
 
-bool Item::Update(float dt)
+bool Food::Update(float dt)
 {
-	// L07 DONE 4: Add a physics to an item - update the position of the object from the physics.  
+	// L07 DONE 4: Add a physics to an food - update the position of the object from the physics.  
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
@@ -50,9 +50,8 @@ bool Item::Update(float dt)
 	return true;
 }
 
-bool Item::CleanUp()
+bool Food::CleanUp()
 {
-
 	app->tex->UnLoad(texture);
 	return true;
 }
