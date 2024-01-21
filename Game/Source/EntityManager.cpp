@@ -7,7 +7,7 @@
 #include "Textures.h"
 #include "Scene.h"
 #include "ScoreItem.h"
-#include "Food.h"
+#include "FoodItem.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -107,8 +107,8 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::SCOREITEM:
 		entity = new ScoreItem();
 		break;
-	case EntityType::FOOD:
-		entity = new Food();
+	case EntityType::FOODITEM:
+		entity = new FoodItem();
 		break;
 	default:
 		break;

@@ -99,7 +99,7 @@
   <ItemGroup>
     <ClCompile Include="Source\DogEnemy.cpp" />
     <ClCompile Include="Source\EntityManager.cpp" />
-    <ClCompile Include="Source\Food.cpp" />
+    <ClCompile Include="Source\FoodItem.cpp" />
     <ClCompile Include="Source\FurBall.cpp" />
     <ClCompile Include="Source\GuiControlButton.cpp" />
     <ClCompile Include="Source\GuiManager.cpp" />
@@ -141,7 +141,7 @@
     <ClInclude Include="Source\DogEnemy.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\EntityManager.h" />
-    <ClInclude Include="Source\Food.h" />
+    <ClInclude Include="Source\FoodItem.h" />
     <ClInclude Include="Source\FurBall.h" />
     <ClInclude Include="Source\GuiControl.h" />
     <ClInclude Include="Source\GuiControlButton.h" />

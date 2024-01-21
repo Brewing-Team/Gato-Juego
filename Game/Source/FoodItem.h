@@ -11,12 +11,12 @@
 
 struct SDL_Texture;
 
-class Food : public Entity
+class FoodItem : public Entity
 {
 public:
 
-	Food();
-	virtual ~Food();
+	FoodItem();
+	virtual ~FoodItem();
 
 	bool Awake();
 
@@ -29,11 +29,11 @@ public:
 public:
 
 	bool isPicked = false;
+	SDL_Texture* texture;
+	const char* texturePath;
 
 private:
 
-	SDL_Texture* texture;
-	const char* texturePath;
 	PhysBody* pbody;
 };
 

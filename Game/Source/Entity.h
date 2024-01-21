@@ -14,7 +14,7 @@ typedef float float32;
 enum class EntityType
 {
 	PLAYER,
-	FOOD,
+	FOODITEM,
 	SCOREITEM,
 	OWLENEMY,
 	DOGENEMY,

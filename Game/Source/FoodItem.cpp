@@ -1,4 +1,4 @@
-#include "Food.h"
+#include "FoodItem.h"
 #include "App.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -13,14 +13,14 @@
 #include <Box2D/Dynamics/b2Body.h>
 #endif
 
-Food::Food() : Entity(EntityType::FOOD)
+FoodItem::FoodItem() : Entity(EntityType::FOODITEM)
 {
 	name.Create("food");
 }
 
-Food::~Food() {}
+FoodItem::~FoodItem() {}
 
-bool Food::Awake() {
+bool FoodItem::Awake() {
 
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
@@ -29,7 +29,7 @@ bool Food::Awake() {
 	return true;
 }
 
-bool Food::Start() {
+bool FoodItem::Start() {
 
 	//initilize textures
 	texture = app->tex->Load(texturePath);
@@ -39,7 +39,7 @@ bool Food::Start() {
 	return true;
 }
 
-bool Food::Update(float dt)
+bool FoodItem::Update(float dt)
 {
 	// L07 DONE 4: Add a physics to an food - update the position of the object from the physics.  
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
@@ -50,7 +50,7 @@ bool Food::Update(float dt)
 	return true;
 }
 
-bool Food::CleanUp()
+bool FoodItem::CleanUp()
 {
 	app->tex->UnLoad(texture);
 	return true;
