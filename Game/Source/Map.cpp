@@ -9,6 +9,7 @@
 #include "Window.h"
 #include "Scene.h"
 #include "ScoreItem.h"
+#include "FoodItem.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -551,6 +552,12 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
                    itemEntity->position.y = item.attribute("y").as_int();
                    itemEntity->texturePath = "Assets/Textures/bridge.png";
                    //itemEntity->parameters = item;
+               } else if (SString(item.attribute("type").as_string()) == "food") {
+                   FoodItem* foodItem = (FoodItem*)app->entityManager->CreateEntity(EntityType::FOODITEM);
+
+                   foodItem->position.x = item.attribute("x").as_int();
+                   foodItem->position.y = item.attribute("y").as_int();
+                   foodItem->texturePath = "Assets/Textures/bridge.png";
                }
                
             }
