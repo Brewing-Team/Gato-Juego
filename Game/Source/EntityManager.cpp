@@ -8,6 +8,7 @@
 #include "Scene.h"
 #include "ScoreItem.h"
 #include "FoodItem.h"
+#include "Checkpoint.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -109,6 +110,9 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	case EntityType::FOODITEM:
 		entity = new FoodItem();
+		break;
+	case EntityType::CHECKPOINT:
+		entity = new Checkpoint();
 		break;
 	default:
 		break;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="164" height="176" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="244">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="164" height="176" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="246">
  <properties>
   <property name="Draw" type="bool" value="false"/>
  </properties>
@@ -202384,5 +202384,11 @@
   <object id="243" name="item" type="coin" x="817" y="2045">
    <point/>
   </object>
+ </objectgroup>
+ <objectgroup id="15" name="Checkpoints" class="checkpoint">
+  <properties>
+   <property name="objectType" value="checkpoint"/>
+  </properties>
+  <object id="245" name="checkpoint" type="checkpoint" x="1072.83" y="1678.75" width="60.3333" height="64"/>
  </objectgroup>
 </map>

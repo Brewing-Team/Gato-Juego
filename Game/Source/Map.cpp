@@ -10,6 +10,7 @@
 #include "Scene.h"
 #include "ScoreItem.h"
 #include "FoodItem.h"
+#include "Checkpoint.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -560,6 +561,20 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
                    foodItem->texturePath = "Assets/Textures/bridge.png";
                }
                
+            }
+        }
+
+        if (objectType == "checkpoint") {
+            pugi::xml_node checkpoint;
+            for (checkpoint = objectGroup.child("object"); checkpoint && ret; checkpoint = checkpoint.next_sibling("object"))
+            {
+                Checkpoint* checkpointEntity = (Checkpoint*)app->entityManager->CreateEntity(EntityType::CHECKPOINT);
+
+                checkpointEntity->position.x = checkpoint.attribute("x").as_int();
+                checkpointEntity->position.y = checkpoint.attribute("y").as_int();
+                checkpointEntity->size.x = checkpoint.attribute("width").as_int();
+                checkpointEntity->size.y = checkpoint.attribute("height").as_int();
+                checkpointEntity->texturePath = "Assets/Textures/bridge.png";
             }
         }
     }
