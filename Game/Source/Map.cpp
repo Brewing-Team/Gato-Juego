@@ -481,56 +481,75 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
 
     //TODO!! check if the objectgroup's class is collider
     pugi::xml_node objectGroup;
-    for(objectGroup = mapFile.child("map").child("objectgroup"); objectGroup && ret; objectGroup = objectGroup.next_sibling("objectgroup"))
-   {
-        pugi::xml_node collider;
-        for(collider = objectGroup.child("object"); collider && ret; collider = collider.next_sibling("object"))
-        {
-            
-            if (SString(collider.attribute("type").as_string()) == "rectangle")
+    for (objectGroup = mapFile.child("map").child("objectgroup"); objectGroup && ret; objectGroup = objectGroup.next_sibling("objectgroup"))
+    {
+        pugi::xml_node properties = objectGroup.child("properties");
+        pugi::xml_node property = properties.child("property");
+        std::string objectType = property.attribute("value").as_string();
+
+        if (objectType == "collider") {
+            pugi::xml_node collider;
+            for (collider = objectGroup.child("object"); collider && ret; collider = collider.next_sibling("object"))
             {
-                Colliders* c = new Colliders();
 
-                c->x = collider.attribute("x").as_int();
-                c->y = collider.attribute("y").as_int();
-                c->width = collider.attribute("width").as_int();
-                c->height = collider.attribute("height").as_int();
+                if (SString(collider.attribute("type").as_string()) == "rectangle")
+                {
+                    Colliders* c = new Colliders();
 
-                PhysBody* c1 = app->physics->CreateRectangle(c->x + c->width / 2, c->y + c->height / 2, c->width, c->height, STATIC);
+                    c->x = collider.attribute("x").as_int();
+                    c->y = collider.attribute("y").as_int();
+                    c->width = collider.attribute("width").as_int();
+                    c->height = collider.attribute("height").as_int();
 
-                if(SString(objectGroup.attribute("class").as_string())  == "platforms") {
-                    c1->ctype = ColliderType::PLATFORM;
+                    PhysBody* c1 = app->physics->CreateRectangle(c->x + c->width / 2, c->y + c->height / 2, c->width, c->height, STATIC);
+
+                    if (SString(objectGroup.attribute("class").as_string()) == "platforms") {
+                        c1->ctype = ColliderType::PLATFORM;
+                    }
+                    else if (SString(objectGroup.attribute("class").as_string()) == "death")
+                    {
+                        c1->ctype = ColliderType::DEATH;
+                        c1->body->GetFixtureList()->SetSensor(true);
+                    }
+                    else if (SString(objectGroup.attribute("class").as_string()) == "limits")
+                    {
+                        c1->ctype = ColliderType::LIMITS;
+                    }
+                    else if (SString(objectGroup.attribute("class").as_string()) == "win")
+                    {
+                        c1->ctype = ColliderType::WIN;
+                    }
+                    else
+                    {
+                        c1->ctype = ColliderType::UNKNOWN;
+                    }
+
                 }
-                else if(SString(objectGroup.attribute("class").as_string())  == "death")
+                else if (SString(collider.attribute("type").as_string()) == "polygon")
                 {
-                    c1->ctype = ColliderType::DEATH;
-                    c1->body->GetFixtureList()->SetSensor(true);
+                    /* int* points = new int[collider.child("polygon").attribute("points").as_int() * sizeof(int)];
+
+                        app->physics->CreateChain(collider.attribute("x").as_int(),
+                                                collider.attribute("y").as_int(),
+                                                points,
+                                                collider.child("polygon").attribute("points").as_int(),
+                                                    STATIC);*/
                 }
-                else if(SString(objectGroup.attribute("class").as_string())  == "limits")
-                {
-                    c1->ctype = ColliderType::LIMITS;
-                }
-                else if (SString(objectGroup.attribute("class").as_string()) == "win")
-                {
-                    c1->ctype = ColliderType::WIN;
-                }
-                else
-                {
-                    c1->ctype = ColliderType::UNKNOWN;
-                }
+            }
+        }
+        
+        if (objectType == "item") {
+            pugi::xml_node item;
+            for (item = objectGroup.child("object"); item && ret; item = item.next_sibling("object"))
+            {
+               item.attribute("x").as_int();
+               item.attribute("y").as_int();
+               item.attribute("type").as_string();
+
+               app->entityManager->CreateEntity();
 
             }
-            else if(SString(collider.attribute("type").as_string()) == "polygon")
-            {
-            /* int* points = new int[collider.child("polygon").attribute("points").as_int() * sizeof(int)];
-
-                app->physics->CreateChain(collider.attribute("x").as_int(),
-                                        collider.attribute("y").as_int(),
-                                        points,
-                                        collider.child("polygon").attribute("points").as_int(),
-                                            STATIC);*/
-            }
-        } 
+        }
     }
 
     return ret;
