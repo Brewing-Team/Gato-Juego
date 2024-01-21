@@ -41,6 +41,8 @@ public:
 	// Handles multiple Gui Event methods
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
+	void RenderGUI();
+
 public:
 	bool winCondition = false;
 	Player* player;
