@@ -58,5 +58,6 @@ void Checkpoint::OnCollision(PhysBody* physA, PhysBody* physB){
 	if (physB->ctype == ColliderType::PLAYER){
 		app->scene->player->spawnPosition = position;
 		app->physics->DestroyBody(pbody);
+		app->SaveRequest();
 	}
 }
