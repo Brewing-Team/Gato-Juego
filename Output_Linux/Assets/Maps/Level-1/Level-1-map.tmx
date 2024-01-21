@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="164" height="176" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="242">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="164" height="176" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="244">
  <properties>
   <property name="Draw" type="bool" value="false"/>
  </properties>
@@ -202309,6 +202309,9 @@
   </data>
  </layer>
  <objectgroup id="4" name="Collisions" class="platforms">
+  <properties>
+   <property name="objectType" value="collider"/>
+  </properties>
   <object id="167" type="rectangle" x="656.063" y="2066.17" width="112" height="29.875"/>
   <object id="168" type="rectangle" x="800.313" y="2066.8" width="31.625" height="29"/>
   <object id="169" type="rectangle" x="863.938" y="2066.8" width="31.875" height="29.25"/>
@@ -202349,6 +202352,9 @@
   <object id="224" type="rectangle" x="1474.13" y="770.489" width="60.1023" height="21.4432"/>
  </objectgroup>
  <objectgroup id="6" name="VoidColliders" class="death">
+  <properties>
+   <property name="objectType" value="collider"/>
+  </properties>
   <object id="94" type="rectangle" x="672" y="2162.67" width="1261.33" height="345.333"/>
   <object id="95" type="rectangle" x="1672" y="1661.33" width="262.667" height="220"/>
   <object id="99" type="rectangle" x="1353.33" y="1115.5" width="225.333" height="30.6667"/>
@@ -202356,11 +202362,27 @@
   <object id="221" type="rectangle" x="1131" y="1921.33" width="138.666" height="209.333"/>
  </objectgroup>
  <objectgroup id="9" name="WinCollider" class="win">
+  <properties>
+   <property name="objectType" value="collider"/>
+  </properties>
   <object id="225" type="rectangle" x="675.667" y="785.667" width="87" height="28"/>
  </objectgroup>
  <objectgroup id="7" name="Limits" class="limits">
+  <properties>
+   <property name="objectType" value="collider"/>
+  </properties>
   <object id="88" type="rectangle" x="610" y="3.0303" width="51.5152" height="2809.09"/>
   <object id="90" type="rectangle" x="1951" y="1" width="17" height="2815"/>
  </objectgroup>
- <objectgroup id="5" name="Object Layer 2"/>
+ <objectgroup id="5" name="ObjectLayer ">
+  <properties>
+   <property name="objectType" value="item"/>
+  </properties>
+  <object id="242" name="item" type="food" x="759.75" y="2044.25">
+   <point/>
+  </object>
+  <object id="243" name="item" type="coin" x="817" y="2045">
+   <point/>
+  </object>
+ </objectgroup>
 </map>

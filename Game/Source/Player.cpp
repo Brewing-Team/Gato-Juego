@@ -123,7 +123,7 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
-	//LOG("%d", lives);
+	LOG("%d", lives);
 	stateMachineTest->Update(dt);
 
 	debugTools();
@@ -544,6 +544,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		if (!godMode) {
 			lives = 0;
 			isAlive = false;
+			stateMachineTest->ChangeState("dead");
 		}
 		break;
 
