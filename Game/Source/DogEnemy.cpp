@@ -11,6 +11,13 @@
 #include "Point.h"
 #include "Physics.h"
 
+// States
+#include "States/DogEnemy/DogEnemyIdleState.h"
+#include "States/DogEnemy/DogEnemyMoveState.h"
+#include "States/DogEnemy/DogEnemyHurtState.h"
+#include "States/DogEnemy/DogEnemyDeadState.h"
+#include "States/DogEnemy/DogEnemyAttackState.h"
+
 #include "Window.h"
 #include <cmath>
 #include <iostream>
@@ -25,7 +32,6 @@
 DogEnemy::DogEnemy() : Entity(EntityType::DOGENEMY)
 {
 	name.Create("DogEnemy");
-	state = EntityState::IDLE;
 }
 
 DogEnemy::~DogEnemy() {
@@ -86,14 +92,21 @@ bool DogEnemy::Start() {
 	groundSensor = app->physics->CreateRectangleSensor(position.x, position.y + pbody->width, 10, 5, bodyType::DYNAMIC);
 	groundSensor->listener = this;
 
+	movementStateMachine = new StateMachine<DogEnemy>(this);
+	movementStateMachine->AddState(new DogEnemyIdleState("idle"));
+	movementStateMachine->AddState(new DogEnemyMoveState("move"));
+	movementStateMachine->AddState(new DogEnemyHurtState("hurt"));
+	movementStateMachine->AddState(new DogEnemyDeadState("die"));
+	movementStateMachine->AddState(new DogEnemyAttackState("attack"));
+
+
 	return true;
 }
 
 bool DogEnemy::Update(float dt)
 {
 
-	// Update OwlEnemie state
-	//StateMachine(dt);
+	movementStateMachine->Update(dt);
 
 	//Update OwlEnemie position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 24;
@@ -140,7 +153,7 @@ bool DogEnemy::SaveState(pugi::xml_node& node) {
 	dogEnemyAttributes.append_attribute("x").set_value(this->position.x);
 	dogEnemyAttributes.append_attribute("y").set_value(this->position.y);
 	dogEnemyAttributes.append_attribute("angle").set_value(this->angle);
-	dogEnemyAttributes.append_attribute("state").set_value((int)this->state);
+	dogEnemyAttributes.append_attribute("state").set_value(movementStateMachine->GetCurrentState().name.GetString());
 	dogEnemyAttributes.append_attribute("lives").set_value(lives);
 
 	return true;
@@ -153,7 +166,7 @@ bool DogEnemy::LoadState(pugi::xml_node& node)
 
 	pbody->body->SetTransform({ PIXEL_TO_METERS(dogEnemyNode.attribute("x").as_int()), PIXEL_TO_METERS(dogEnemyNode.attribute("y").as_int()) }, dogEnemyNode.attribute("angle").as_int());
 	lives = dogEnemyNode.attribute("lives").as_int();
-	this->state = (EntityState)dogEnemyNode.attribute("state").as_int();
+	movementStateMachine->ChangeState(dogEnemyNode.attribute("state").as_string()); 
 	// reset enemy physics
 	//pbody->body->SetAwake(false);
 	//pbody->body->SetAwake(true);
@@ -161,74 +174,6 @@ bool DogEnemy::LoadState(pugi::xml_node& node)
 	return true;
 }
 
-/* EntityState DogEnemy::StateMachine(float dt) {
-	switch (this->state) {
-	case EntityState::IDLE:
-		setIdleAnimation();
-
-		if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 3.0f)
-		{
-			state = EntityState::MOVE;
-			// AUDIO DONE dog idle
-			app->audio->PlayFx(dogBark);
-		}
-		break;
-	case EntityState::MOVE:
-		setMoveAnimation();
-		pathfindingMovement(dt);
-		if (PIXEL_TO_METERS(player->position.DistanceTo(this->position)) < 1.0f) {
-			if (attackTimer.ReadSec() >= 2)
-			{
-				state = EntityState::ATTACK;
-			}
-		}
-		else if ((PIXEL_TO_METERS(player->position.DistanceTo(this->position)) > 5.0f)) {
-			moveToSpawnPoint();
-			state = EntityState::IDLE;
-		}
-		break;
-	case EntityState::DEAD:
-
-		currentAnimation = &dieAnim;
-		if (reviveTimer.ReadSec() >= 5)
-		{
-			state = EntityState::IDLE;
-			lives = 5;
-		}
-		break;
-
-	case EntityState::HURT:
-		currentAnimation = &hurtAnim;
-		invencible = true;
-		if (currentAnimation->HasFinished()) {
-			hurtAnim.Reset();
-			hurtAnim.ResetLoopCount();
-			invencible = false;
-			state = EntityState::IDLE;
-		}
-		break;
-
-	case EntityState::ATTACK:
-
-		// AUDIO DONE dog attack
-		app->audio->PlayFx(dogAttack);
-
-		b2Vec2 attackDirection = { (float32)player->position.x - position.x, (float32)player->position.y - position.y };
-		attackDirection.Normalize();
-
-		b2Vec2 attackImpulse = { attackDirection.x / 4, attackDirection.y / 4 };
-
-		pbody->body->ApplyLinearImpulse(attackImpulse, pbody->body->GetWorldCenter(), true);
-
-		attackTimer.Start();
-
-		state = EntityState::MOVE;
-		break;
-	}
-
-	return this->state;
-}
- */
 void DogEnemy::moveToSpawnPoint()
 {
 	position = spawnPosition;
@@ -361,13 +306,13 @@ void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 			{
 				// AUDIO DONE dog death
 				app->audio->PlayFx(dogDeath);
-				state = EntityState::DEAD;
+				movementStateMachine->ChangeState("dead");
 				reviveTimer.Start();
 			}
 			else{
 				// AUDIO DONE dog hit
 				app->audio->PlayFx(dogHit);
-				state = EntityState::HURT;
+				movementStateMachine->ChangeState("hurt");
 				lives--;
 			}
 		}
@@ -375,10 +320,6 @@ void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::LIMITS:
 		LOG("Collision LIMITS");
-		break;
-	case ColliderType::WIN:
-		state = EntityState::WIN;
-		LOG("Collision WIN");
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

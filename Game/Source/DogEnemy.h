@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Point.h"
 #include "Player.h"
+#include "StateMachine.h"
 #ifdef __linux__
 #include <SDL.h>
 #include <Box2D/Box2D.h>
@@ -91,12 +92,14 @@ public:
 	int currentPathPos;
 
 	Timer attackTimer;
-
-private:
-	Player* player;
 	int lives = 5;
 	bool invencible = false;
 	Timer reviveTimer;
+
+	StateMachine<DogEnemy>* movementStateMachine;
+
+private:
+	Player* player;
 
 };
 
