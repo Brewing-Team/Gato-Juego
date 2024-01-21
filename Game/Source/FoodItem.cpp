@@ -37,11 +37,11 @@ bool FoodItem::Start() {
 	foodTextures = app->map->GetAnimByName("Food");
 
 	// Pick a random texture
-	//int randomIndex = rand() % foodTextures->totalFrames;
-	//foodTextures->currentFrame = randomIndex;
+	int randomIndex = rand() % foodTextures->totalFrames;
+	foodTextures->currentFrame = randomIndex;
 	foodTextures->loop = true;
 
-	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(position.x + 8, position.y + 8, 8, bodyType::STATIC);
 	pbody->ctype = ColliderType::FOOD;
 	pbody->listener = this;
 
@@ -51,11 +51,10 @@ bool FoodItem::Start() {
 bool FoodItem::Update(float dt)
 {
 	// L07 DONE 4: Add a physics to an food - update the position of the object from the physics.  
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 8;
+	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 8;
 
 	app->render->DrawTexture(foodTextures->texture, position.x, position.y, &foodTextures->GetCurrentFrame());
-	foodTextures->Update(dt);
 
 	return true;
 }

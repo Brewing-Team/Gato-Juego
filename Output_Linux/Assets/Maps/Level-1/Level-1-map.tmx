@@ -202395,7 +202395,7 @@
   <properties>
    <property name="objectType" value="item"/>
   </properties>
-  <object id="242" name="item" type="food" x="759.75" y="2044.25">
+  <object id="242" name="item" type="food" x="704" y="2050.25">
    <point/>
   </object>
   <object id="243" name="item" type="coin" x="817" y="2045">
