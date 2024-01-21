@@ -36,16 +36,13 @@ bool Checkpoint::Start() {
 	pbody = app->physics->CreateRectangle(position.x + size.x / 2, position.y + size.y / 2, size.x, size.y, bodyType::STATIC);
 	pbody->ctype = ColliderType::CHECKPOINT;
 	pbody->body->GetFixtureList()->SetSensor(true);
+	pbody->listener = this;
 
 	return true;
 }
 
 bool Checkpoint::Update(float dt)
 {
-	// L07 DONE 4: Add a physics to an food - update the position of the object from the physics.  
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
-
 	app->render->DrawTexture(texture, position.x, position.y);
 
 	return true;
@@ -58,6 +55,8 @@ bool Checkpoint::CleanUp()
 }
 
 void Checkpoint::OnCollision(PhysBody* physA, PhysBody* physB){
-	if (physA->ctype == ColliderType::PLAYER){
+	if (physB->ctype == ColliderType::PLAYER){
+		app->scene->player->spawnPosition = position;
+		app->physics->DestroyBody(pbody);
 	}
 }

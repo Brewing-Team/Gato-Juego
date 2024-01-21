@@ -70,6 +70,14 @@ bool Physics::PreUpdate()
 	// WARNING: WE ARE STEPPING BY CONSTANT 1/60 SECONDS!
 	world->Step(1.0f / 60.0f, 6, 2);
 
+	// Remove all bodies scheduled for deletion
+	for (int i = 0; i < bodiesToBeDeleted.Count(); i++) {
+        world->DestroyBody(bodiesToBeDeleted[i]->body);
+		bodiesToBeDeleted[i]->body = nullptr;
+		bodiesToBeDeleted[i] = nullptr;
+    }
+    bodiesToBeDeleted.Clear();
+
 	// Because Box2D does not automatically broadcast collisions/contacts with sensors, 
 	// we have to manually search for collisions and "call" the equivalent to the ModulePhysics::BeginContact() ourselves...
 	for (b2Contact* c = world->GetContactList(); c; c = c->GetNext())
@@ -423,10 +431,10 @@ void Physics::BeginContact(b2Contact* contact)
 	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 
-	if (physA && physA->listener != NULL)
+	if (physA != nullptr && physA->listener != NULL)
 		physA->listener->OnCollision(physA, physB);
 
-	if (physB && physB->listener != NULL)
+	if (physB != nullptr && physB->listener != NULL)
 		physB->listener->OnCollision(physB, physA);
 }
 
@@ -442,6 +450,12 @@ void Physics::EndContact(b2Contact* contact)
 	if (physB && physB->listener != NULL)
 		physB->listener->EndCollision(physB, physA);
 
+}
+
+bool Physics::DestroyBody(PhysBody* body)
+{
+	bodiesToBeDeleted.PushBack(body);
+	return false;
 }
 
 float Physics::lookAt(b2Vec2 source, b2Vec2 target)

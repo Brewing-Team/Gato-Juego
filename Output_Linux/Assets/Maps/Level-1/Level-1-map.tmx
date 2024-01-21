@@ -202389,6 +202389,6 @@
   <properties>
    <property name="objectType" value="checkpoint"/>
   </properties>
-  <object id="245" type="checkpoint" x="1073.08" y="1665.25" width="60.3333" height="64"/>
+  <object id="245" name="checkpoint" type="checkpoint" x="1072.83" y="1678.75" width="60.3333" height="64"/>
  </objectgroup>
 </map>

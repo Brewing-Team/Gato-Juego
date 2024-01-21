@@ -115,6 +115,9 @@ public:
 	PhysBody* CreateRope(b2Vec2 startPos, b2Vec2 endPos, int length, float segmentWidth = 0.1f);
 
 	Raycast* CreateRaycast(Entity* listener, b2Vec2 rayStart, b2Vec2 rayEnd);
+
+	// Destroy physics objects
+	bool DestroyBody(PhysBody* body);
 	
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
@@ -134,4 +137,6 @@ private:
 
 	//Raycast
 	DynArray<Raycast*> raycasts;
+
+	DynArray<PhysBody*> bodiesToBeDeleted;
 };
