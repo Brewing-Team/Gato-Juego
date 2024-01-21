@@ -504,13 +504,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	}
 	switch (physB->ctype) {
 
-	case ColliderType::ITEM:
-		LOG("Collision ITEM");
-
-		// AUDIO TODO pick item
-		app->audio->PlayFx(pickItem);
-		break;
-
 	case ColliderType::ENEMY:
 		LOG("Collision ENEMY");
 		if (!godMode) {
