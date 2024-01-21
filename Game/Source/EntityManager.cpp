@@ -6,6 +6,8 @@
 #include "App.h"
 #include "Textures.h"
 #include "Scene.h"
+#include "ScoreItem.h"
+#include "Food.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -101,6 +103,13 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	case EntityType::FURBALL:
 		entity = new FurBall();
+		break;
+	case EntityType::SCOREITEM:
+		entity = new ScoreItem();
+		break;
+	case EntityType::FOOD:
+		entity = new Food();
+		break;
 	default:
 		break;
 	}

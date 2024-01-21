@@ -99,10 +99,10 @@
   <ItemGroup>
     <ClCompile Include="Source\DogEnemy.cpp" />
     <ClCompile Include="Source\EntityManager.cpp" />
+    <ClCompile Include="Source\Food.cpp" />
     <ClCompile Include="Source\FurBall.cpp" />
     <ClCompile Include="Source\GuiControlButton.cpp" />
     <ClCompile Include="Source\GuiManager.cpp" />
-    <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\App.cpp" />
     <ClCompile Include="Source\Audio.cpp" />
@@ -116,6 +116,7 @@
     <ClCompile Include="Source\RopeEntity.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\Render.cpp" />
+    <ClCompile Include="Source\ScoreItem.cpp" />
     <ClCompile Include="Source\States\DogEnemy\DogEnemyAttackState.cpp" />
     <ClCompile Include="Source\States\DogEnemy\DogEnemyDeadState.cpp" />
     <ClCompile Include="Source\States\DogEnemy\DogEnemyHurtState.cpp" />
@@ -140,11 +141,11 @@
     <ClInclude Include="Source\DogEnemy.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\EntityManager.h" />
+    <ClInclude Include="Source\Food.h" />
     <ClInclude Include="Source\FurBall.h" />
     <ClInclude Include="Source\GuiControl.h" />
     <ClInclude Include="Source\GuiControlButton.h" />
     <ClInclude Include="Source\GuiManager.h" />
-    <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\OwlEnemy.h" />
     <ClInclude Include="Source\Pathfinding.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Source\App.h" />
     <ClInclude Include="Source\Module.h" />
     <ClInclude Include="Source\Render.h" />
+    <ClInclude Include="Source\ScoreItem.h" />
     <ClInclude Include="Source\State.h" />
     <ClInclude Include="Source\StateMachine.h" />
     <ClInclude Include="Source\States\DogEnemy\DogEnemyAttackState.h" />

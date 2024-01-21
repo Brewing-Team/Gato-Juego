@@ -8,6 +8,7 @@
 #include "Physics.h"
 #include "Window.h"
 #include "Scene.h"
+#include "ScoreItem.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -541,13 +542,17 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
         if (objectType == "item") {
             pugi::xml_node item;
             for (item = objectGroup.child("object"); item && ret; item = item.next_sibling("object"))
-            {
-               item.attribute("x").as_int();
-               item.attribute("y").as_int();
-               item.attribute("type").as_string();
+            { 
 
-               app->entityManager->CreateEntity();
-
+               if (SString(item.attribute("type").as_string()) == "coin") {
+                   ScoreItem* itemEntity = (ScoreItem*)app->entityManager->CreateEntity(EntityType::SCOREITEM);
+                   
+                   itemEntity->position.x = item.attribute("x").as_int();
+                   itemEntity->position.y = item.attribute("y").as_int();
+                   itemEntity->texturePath = "Assets/Textures/bridge.png";
+                   //itemEntity->parameters = item;
+               }
+               
             }
         }
     }

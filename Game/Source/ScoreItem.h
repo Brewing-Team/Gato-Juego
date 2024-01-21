@@ -28,11 +28,11 @@ public:
 public:
 
 	bool isPicked = false;
+	SDL_Texture* texture;
+	const char* texturePath;
 
 private:
 
-	SDL_Texture* texture;
-	const char* texturePath;
 	PhysBody* pbody;
 };
 
