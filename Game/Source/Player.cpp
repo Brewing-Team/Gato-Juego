@@ -485,6 +485,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (physA == groundSensor) {
 				LOG("Ground collision");
 				isGrounded = true;
+				isRotationAllowed = true;
 			}
 			else if (physA == leftSensor) {
 				LOG("Left collision");
@@ -503,6 +504,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		}
 	}
 	switch (physB->ctype) {
+	case ColliderType::FOOD:
+		LOG("Collision FOOD");
+		lives++; //TODO: arreglar que al hacer esto no sume 200 vidas.
+		break;
+
+	case ColliderType::SCOREITEM:
+		LOG("Collision SCOREITEM");
+		score += 100;
+		break;
 
 	case ColliderType::ENEMY:
 		LOG("Collision ENEMY");
@@ -524,7 +534,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			}
 		}
 		break;
-
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 		break;
@@ -561,6 +570,7 @@ void Player::EndCollision(PhysBody* physA, PhysBody* physB){
 			if (physA == groundSensor) {
 				LOG("Ground collision");
 				isGrounded = false;
+				isRotationAllowed = false;
 			}
 			else if (physA == leftSensor) {
 				LOG("Left collision");
@@ -569,6 +579,11 @@ void Player::EndCollision(PhysBody* physA, PhysBody* physB){
 			else if (physA == rightSensor) {
 				LOG("Right collision");
 				isCollidingRight = false;
+			}
+		}
+		else if(physB->ctype == ColliderType::ENEMY or physB->ctype == ColliderType::BULLET){
+			if (physA == groundSensor) {
+				isGrounded = false;
 			}
 		}
 	}
@@ -585,7 +600,9 @@ void Player::OnRaycastHit(b2Fixture* fixture, const b2Vec2& point, const b2Vec2&
 	pointTest = point;
 	normalTest = normal;
 
-	float32 dot = b2Dot(normal, { 0,-1 });
-	float32 det = b2Cross(normal, { 0,-1 });
-	angle = -b2Atan2(det, dot) * RADTODEG;
+	if(isRotationAllowed){
+		float32 dot = b2Dot(normal, { 0,-1 });
+		float32 det = b2Cross(normal, { 0,-1 });
+		angle = -b2Atan2(det, dot) * RADTODEG;
+	}
 }

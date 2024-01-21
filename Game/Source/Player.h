@@ -74,6 +74,7 @@ public:
 	int isAlive = true;
 
 	int lives = 7;
+	int score = 0;
 	Timer immunityTimer;
 
 	// Check if the player has won
@@ -117,6 +118,7 @@ public:
 	int angle = 0;
 	float moveForce = 1.0f;
 	bool isGrounded = false;
+	bool isRotationAllowed = false;
 	bool isCollidingTop = false;
 	bool isCollidingLeft = false;
 	bool isCollidingRight = false;
