@@ -21,7 +21,7 @@ public:
 	Timer timer;
 	Timer movementDelay;
 
-	EntityState StateMachine(float dt) override;
+	//EntityState StateMachine(float dt) override;
 	void Idle(float dt);
 	void Move(float dt) override;
 	void Attack(float dt) override;
@@ -76,6 +76,8 @@ public:
 	SDL_Texture* texture = NULL;
 	PhysBody* pbody;
 
+	StateMachine<OwlEnemy>* movementStateMachine;
+
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 
 	//Movement
@@ -87,12 +89,13 @@ public:
 	//Attack
 	Timer attackTimer;
 
+	bool invencible = false;
+	Timer reviveTimer;
+	int lives = 3;
+
 private:
 
 	Player* player;
-	int lives = 3;
-	bool invencible = false;
-	Timer reviveTimer;
 
 };
 

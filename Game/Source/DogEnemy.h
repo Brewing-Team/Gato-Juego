@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Point.h"
 #include "Player.h"
+#include "StateMachine.h"
 #ifdef __linux__
 #include <SDL.h>
 #include <Box2D/Box2D.h>
@@ -23,7 +24,7 @@ public:
 	Timer timer;
 	Timer movementDelay;
 
-	EntityState StateMachine(float dt) override;
+	//EntityState StateMachine(float dt) override;
 	void Move(float dt) override;
 	void Jump(float dt) override;
 
@@ -91,12 +92,14 @@ public:
 	int currentPathPos;
 
 	Timer attackTimer;
-
-private:
-	Player* player;
 	int lives = 5;
 	bool invencible = false;
 	Timer reviveTimer;
+
+	StateMachine<DogEnemy>* movementStateMachine;
+
+private:
+	Player* player;
 
 };
 

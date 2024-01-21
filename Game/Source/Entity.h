@@ -9,6 +9,7 @@
 class PhysBody;
 class b2Fixture;
 class b2Vec2;
+typedef float float32;
 
 enum class EntityType
 {
@@ -69,8 +70,6 @@ public:
 	{
 		return true;
 	}
-
-	virtual EntityState StateMachine(float dt) { return EntityState::NONE; };
 
 	virtual void Move(float dt) {};
 	virtual void Jump(float dt) {};

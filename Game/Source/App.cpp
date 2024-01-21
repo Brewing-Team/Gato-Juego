@@ -95,7 +95,7 @@ bool App::Awake()
 	{
 		gameTitle = configNode.child("app").child("title").child_value();
 		win->SetTitle(gameTitle.GetString());
-		maxFrameDuration = configFile.child("config").child("app").child("maxFrameDuration").attribute("value").as_int();
+		maxFrameDuration = configFile.child("config").child("app").child("maxFrameDuration").attribute("value").as_float();
 
 		//set camera size
 		render->camera.w = configNode.child("resolution").attribute("width").as_int();
@@ -267,7 +267,7 @@ bool App::PreUpdate()
 	if (fpsLimiter) {
 		maxFrameDuration = 1000 * (1 / maxFps);
 	} else {
-		maxFrameDuration = configFile.child("config").child("app").child("maxFrameDuration").attribute("value").as_int();
+		maxFrameDuration = configFile.child("config").child("app").child("maxFrameDuration").attribute("value").as_float();
 	}
 
 	ListItem<Module*>* item;

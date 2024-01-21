@@ -2,6 +2,11 @@
 #include "App.h"
 #include "Entity.h"
 #include "Map.h"
+#include "StateMachine.h"
+#include "States/Player/PlayerDeadState.h"
+#include "States/Player/PlayerHurtState.h"
+#include "States/Player/PlayerNoClipState.h"
+#include "States/Player/PlayerWinState.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "Input.h"
@@ -12,7 +17,11 @@
 #include "Physics.h"
 #include "FurBall.h"
 
-#include "Window.h"
+//States
+#include "States/Player/PlayerIdleState.h"
+#include "States/Player/PlayerMoveState.h"
+#include "States/Player/PlayerClimbState.h"
+
 #include <cmath>
 #include <iostream>
 
@@ -25,7 +34,6 @@
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name.Create("Player");
-	state = EntityState::IDLE;
 }
 
 Player::~Player() {
@@ -96,6 +104,16 @@ bool Player::Start() {
 
 	raycastTest = app->physics->CreateRaycast(this, pbody->body->GetPosition(), {pbody->body->GetPosition().x, pbody->body->GetPosition().y + 0.4f});
 
+	// Create player state machine
+	stateMachineTest = new StateMachine<Player>(this);
+	stateMachineTest->AddState(new PlayerIdleState("idle"));
+	stateMachineTest->AddState(new PlayerMoveState("move"));
+	stateMachineTest->AddState(new PlayerClimbState("climb"));
+	stateMachineTest->AddState(new PlayerHurtState("hurt"));
+	stateMachineTest->AddState(new PlayerDeadState("dead"));
+	stateMachineTest->AddState(new PlayerWinState("win"));
+	stateMachineTest->AddState(new PlayerNoClipState("noclip"));
+
 	// TODO load debug menu texture from xml
 	// load debug menu texture
 	debugMenuTexture = app->tex->Load("Assets/Textures/debug_menu.png");
@@ -106,6 +124,7 @@ bool Player::Start() {
 bool Player::Update(float dt)
 {
 	//LOG("%d", lives);
+	stateMachineTest->Update(dt);
 
 	debugTools();
 
@@ -141,13 +160,13 @@ bool Player::Update(float dt)
 
 	// Update player state
 
-	if(state == EntityState::MOVE) {
+	/* if(state == EntityState::MOVE) {
 		if (isCollidingLeft or isCollidingRight and !isGrounded) {
 			state = EntityState::CLIMB;
 		}
-	}
+	} */
 
-	StateMachine(dt);
+	//StateMachine(dt);
 	//LOG("state: %d", state);
 
 	pbody->body->SetTransform(pbody->body->GetPosition(), angle*DEGTORAD);
@@ -234,7 +253,8 @@ void Player::debugTools()
 		// Toggle no-clip mode on/off
 		if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
 			noClip = !noClip;
-			state = EntityState::NO_CLIP;
+			//state = EntityState::NO_CLIP;
+			stateMachineTest->ChangeState("noclip");
 			this->pbody->body->GetFixtureList()->SetSensor(true);
 		}
 
@@ -273,6 +293,7 @@ void Player::setWinAnimation()
 	// TODO set win animation
 }
 
+
 void Player::Move(float dt) {
 
 	// AUDIO DONE player walk
@@ -301,9 +322,9 @@ void Player::Move(float dt) {
 		flip = SDL_FLIP_NONE;
 
 	}
-	else if (isGrounded) {
+	/* else if (isGrounded) {
 		state = EntityState::IDLE;
-	}
+	} */
 
 }
 
@@ -393,7 +414,7 @@ void Player::Climb(float dt) {
 	else {
 
 		startTimer = true;
-		state = EntityState::IDLE;
+		//state = EntityState::IDLE;
 
 	}
 
@@ -420,200 +441,6 @@ bool Player::LoadState(pugi::xml_node& node)
 	pbody->body->SetAwake(true);
 
 	return true;
-}
-
-EntityState Player::StateMachine(float dt) {
-
-	switch (this->state) {
-
-	case EntityState::IDLE:
-
-		//angle = std::lerp(angle, 0, dt * 32 / 1000); //añadir al enter del state idle
-
-		setIdleAnimation();
-
-		if (!isAlive and !godMode) {
-			this->state = EntityState::DEAD;
-		}
-
-		if (app->scene->winCondition) {
-			this->state = EntityState::WIN;
-		}
-
-		if (isGrounded) {
-			if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-				Jump(dt);
-				jumpAnim.Reset();
-			}
-		}
-		else
-		{
-			setJumpAnimation();
-		}
-
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT or app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			this->state = EntityState::MOVE;
-		}
-
-		break;
-	case EntityState::MOVE:
-
-		//angle = std::lerp(angle, 0, dt * 32 / 1000); // añadir al enter del state move
-
-		if (isGrounded)
-		{
-			setMoveAnimation();
-		}
-		else
-		{
-			setJumpAnimation();
-		}
-
-		if (!isAlive and !godMode) {
-			this->state = EntityState::DEAD;
-		}
-
-		if (app->scene->winCondition) {
-			this->state = EntityState::WIN;
-		}
-
-		if (isGrounded && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-
-			Jump(dt);
-			Move(dt);
-
-		}
-		else {
-
-			Move(dt);
-
-		}
-
-		break;
-
-	case EntityState::CLIMB:
-
-		if (isGrounded)
-		{
-			if ((int)pbody->body->GetLinearVelocity().y == 0) //esto rarete pero buenop
-			{
-				setIdleAnimation();
-			}
-			else {
-				setClimbAnimation();
-			}
-		}
-		else
-		{
-			setJumpAnimation();
-		}
-
-
-		if (!isAlive and !godMode) {
-			this->state = EntityState::DEAD;
-		}
-
-		if (app->scene->winCondition) {
-			this->state = EntityState::WIN;
-		}
-
-		if (!isGrounded and !isCollidingLeft and !isCollidingRight) {
-			this->state = EntityState::IDLE;
-			angle = 0; //temporal, esto deberia ir en el enter del state idle 
-		}
-
-		Climb(dt);
-
-
-
-		break;
-
-	case EntityState::HURT:
-
-		currentAnimation = &hurtAnim;
-		if (currentAnimation->HasFinished()) {
-			hurtAnim.Reset();
-			hurtAnim.ResetLoopCount();
-			state = EntityState::IDLE;
-		}
-
-		break;
-
-	case EntityState::WIN:
-
-		// TODO hacer cosa de ganar jugador ole ole
-
-		// AUDIO DONE player win
-		app->audio->PlayFx(playerWin);
-
-		moveToSpawnPoint();
-
-		state = EntityState::IDLE;
-
-		break;
-
-	case EntityState::DEAD:
-
-		setWinAnimation();
-
-		// TODO resetear mundo, restar vidas, etc
-
-		// AUDIO DONE player death
-		app->audio->PlayFx(playerDeath);
-
-		moveToSpawnPoint();
-
-		isAlive = true;
-		lives = 7;
-		state = EntityState::IDLE;
-
-		break;
-
-	case EntityState::NO_CLIP:
-
-		setIdleAnimation();
-
-		if (noClip) {
-			// deactivate physics
-			this->pbody->body->SetAwake(false);
-
-			// Deactivate gravity
-			pbody->body->SetGravityScale(0);
-
-			// debug controls
-			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-				pbody->body->SetLinearVelocity({ -3,0 });
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-				pbody->body->SetLinearVelocity({ 3,0 });
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-				pbody->body->SetLinearVelocity({ 0,-3 });
-			}
-
-			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-				pbody->body->SetLinearVelocity({ 0,3 });
-			}
-		}
-		else {
-			// activate physics
-			this->pbody->body->GetFixtureList()->SetSensor(false);
-			this->pbody->body->SetAwake(true);
-
-			// Activate Gravity
-			pbody->body->SetGravityScale(1);
-
-			state = EntityState::IDLE;
-		}
-
-		break;
-
-	}
-
-	return this->state;
-
 }
 
 void Player::CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset)
@@ -690,13 +517,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (immunityTimer.ReadSec() >= 1){
 				if (lives <= 1)
 				{
-					state = EntityState::DEAD;
+					//state = EntityState::DEAD;
+					stateMachineTest->ChangeState("dead");
 				}
 				else{
 					// AUDIO DONE player hit
 					app->audio->PlayFx(playerHit);
 					lives--;
-					state = EntityState::HURT;
+					//state = EntityState::HURT;
+					stateMachineTest->ChangeState("hurt");
 					immunityTimer.Start();
 				}
 			}
@@ -720,7 +549,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision LIMITS");
 		break;
 	case ColliderType::WIN:
-		state = EntityState::WIN;
+		//state = EntityState::WIN;
+		stateMachineTest->ChangeState("win");
 		LOG("Collision WIN");
 		break;
 	case ColliderType::UNKNOWN:
@@ -761,10 +591,6 @@ void Player::OnRaycastHit(b2Fixture* fixture, const b2Vec2& point, const b2Vec2&
 	//REMOVE
 	pointTest = point;
 	normalTest = normal;
-
-/* 	if (state == EntityState::IDLE){
-	
-	} */
 
 	float32 dot = b2Dot(normal, { 0,-1 });
 	float32 det = b2Cross(normal, { 0,-1 });

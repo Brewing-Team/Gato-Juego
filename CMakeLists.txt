@@ -10,32 +10,11 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Output_Linux")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -std=c++2a  -l Box2D")
 
 file(GLOB SOURCES "${SOURCE_DIR}/*.cpp" "${SOURCE_DIR}/*.h")
-file (APPEND SOURCES "${SOURCE_DIR}/External/Optick/include/optick.h")
-#set(SOURCES
-#"${SOURCE_DIR}/Main.cpp"
-#"${SOURCE_DIR}/App.cpp"
-#"${SOURCE_DIR}/App.h"
-#"${SOURCE_DIR}/Audio.cpp"
-#"${SOURCE_DIR}/Audio.h"
-#"${SOURCE_DIR}/Defs.h"
-#"${SOURCE_DIR}/DynArray.h"
-#"${SOURCE_DIR}/Input.cpp"
-#"${SOURCE_DIR}/Input.h"
-#"${SOURCE_DIR}/List.h"
-#"${SOURCE_DIR}/Module.h"
-#"${SOURCE_DIR}/Point.h"
-#"${SOURCE_DIR}/Queue.h"
-#"${SOURCE_DIR}/Render.cpp"
-#"${SOURCE_DIR}/Render.h"
-#"${SOURCE_DIR}/Scene.cpp"
-#"${SOURCE_DIR}/Scene.h"
-#"${SOURCE_DIR}/SString.h"
-#"${SOURCE_DIR}/Textures.cpp"
-#"${SOURCE_DIR}/Textures.h"
-#"${SOURCE_DIR}/Window.cpp"
-#"${SOURCE_DIR}/Window.h"
-#)
+list(APPEND SOURCES "${SOURCE_DIR}/External/Optick/include/optick.h")
+file(GLOB_RECURSE PLAYER_SOURCES "${SOURCE_DIR}/States/*.cpp" "${SOURCE_DIR}/States/*.h")
+list(APPEND SOURCES ${PLAYER_SOURCES})
 
+include_directories(${SOURCE_DIR})
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)

@@ -132,7 +132,7 @@ private:
 	float averageFps = 0.0f;
 	uint32_t secondsSinceStartup = 0;
 
-	uint32_t maxFrameDuration = 16;
+	float maxFrameDuration = 16.666f;
 
 	float maxFps = 30; // TODO hacer esto variable
 

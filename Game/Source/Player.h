@@ -6,15 +6,16 @@
 #include "FurBall.h"
 #include "Physics.h"
 #include "Point.h"
-
+#include "State.h"
+#include "StateMachine.h"
 #ifdef __linux__
 #include <SDL.h>
+#include <Box2D/Common/b2Math.h>
 #elif _MSC_VER
 #include "SDL/include/SDL.h"
 #endif
 
 struct SDL_Texture;
-struct float32;
 
 class Player : public Entity
 {
@@ -22,14 +23,6 @@ public:
 
 	bool startTimer = true;
 	Timer timer;
-
-	EntityState StateMachine(float dt) override;
-	void Move(float dt) override;
-	void Jump(float dt) override;
-	void Climb(float dt) override;
-
-	bool SaveState(pugi::xml_node& node) override;
-	bool LoadState(pugi::xml_node& node) override;
 
 	Player();
 	
@@ -62,6 +55,13 @@ public:
 	void CopyParentRotation(PhysBody* parent, PhysBody* child, float xOffset, float yOffset, float angleOffset);
 
 	void moveToSpawnPoint();
+
+	void Move(float dt) override;
+	void Jump(float dt) override;
+	void Climb(float dt) override;
+
+	bool SaveState(pugi::xml_node& node) override;
+	bool LoadState(pugi::xml_node& node) override;
 
 public:
 	//Animations
@@ -107,6 +107,8 @@ public:
 
 	Raycast* raycastTest;
 
+	StateMachine<Player>* stateMachineTest;
+
 	SDL_RendererFlip flip = SDL_FLIP_NONE;
 
 	//Movement
@@ -117,9 +119,9 @@ public:
 	bool isGrounded = false;
 	bool isCollidingTop = false;
 	bool isCollidingLeft = false;
-	bool climbingLeft = false;
 	bool isCollidingRight = false;
-	bool climbingRight = false;
+    bool climbingLeft = false;
+    bool climbingRight = false;
 
 	float bulletSpeed = 2.0f;
 	int shootCooldownTime = 1000;

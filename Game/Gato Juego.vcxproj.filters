@@ -64,6 +64,21 @@
     <ClCompile Include="Source\FurBall.cpp">
       <Filter>Game\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Source\StateMachine.cpp">
+      <Filter>Game\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GuiControlButton.cpp">
+      <Filter>Game\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GuiManager.cpp">
+      <Filter>Game\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RopeEntity.cpp">
+      <Filter>Game\Entities\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\States\Player\IdleState.cpp">
+      <Filter>Game\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Defs.h">
@@ -159,6 +174,27 @@
     <ClInclude Include="Source\FurBall.h">
       <Filter>Game\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="Source\State.h">
+      <Filter>Game\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StateMachine.h">
+      <Filter>Game\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GuiControl.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GuiControlButton.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GuiManager.h">
+      <Filter>Game\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RopeEntity.h">
+      <Filter>Game\Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\States\Player\IdleState.h">
+      <Filter>Game\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
@@ -196,6 +232,9 @@
     </Filter>
     <Filter Include="Game\Modules\Core">
       <UniqueIdentifier>{ec1b0eb5-db07-471e-ba76-05b273de391a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\States">
+      <UniqueIdentifier>{1d5557e2-b3b6-46bd-8eba-02a1776acbc6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

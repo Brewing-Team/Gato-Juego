@@ -4,7 +4,10 @@
 #include "Defs.h"
 #ifdef __linux__
 #include <cassert>
+#elif _MSC_VER
+#include <assert.h>
 #endif
+
 
 #define DYN_ARRAY_BLOCK_SIZE 16
 
