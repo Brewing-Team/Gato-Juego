@@ -505,11 +505,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	}
 	switch (physB->ctype) {
 
-	case ColliderType::SCOREITEM:
-		LOG("Collision SCOREITEM");
-		score += 100;
-		break;
-
 	case ColliderType::ENEMY:
 		LOG("Collision ENEMY");
 		if (!godMode) {

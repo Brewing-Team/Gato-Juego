@@ -1,6 +1,7 @@
 #ifndef __FOOD_H__
 #define __FOOD_H__
 
+#include "Animation.h"
 #include "Entity.h"
 #include "Point.h"
 #ifdef __linux__
@@ -35,8 +36,9 @@ public:
 	const char* texturePath;
 
 private:
-
 	PhysBody* pbody;
+
+	Animation* foodTextures;
 };
 
 #endif // __FOOD_H__

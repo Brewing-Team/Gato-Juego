@@ -417,7 +417,10 @@ bool Map::LoadAnimation(pugi::xml_node node, TileSet* tileset)
     for (pugi::xml_node frameNode = node.child("animation").child("frame"); frameNode && ret; frameNode = frameNode.next_sibling("frame"))
     {
         int id = frameNode.attribute("tileid").as_int();
-        anim->PushBack({tileset->tileWidth * id,0, tileset->tileWidth, tileset->tileHeight});
+        int tilesPerRow = tileset->columns;
+        int x = (id % tilesPerRow) * tileset->tileWidth;
+        int y = (id / tilesPerRow) * tileset->tileHeight;
+        anim->PushBack({x, y, tileset->tileWidth, tileset->tileHeight});
     }
 
     mapData.animations.Add(anim);
@@ -558,7 +561,6 @@ bool Map::LoadColliders(pugi::xml_node mapFile)
 
                    foodItem->position.x = item.attribute("x").as_int();
                    foodItem->position.y = item.attribute("y").as_int();
-                   foodItem->texturePath = "Assets/Textures/bridge.png";
                }
                
             }

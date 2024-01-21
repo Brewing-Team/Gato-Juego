@@ -8,6 +8,8 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include "Map.h"
+#include <cstdlib>
 
 #ifdef __linux__
 #include <Box2D/Dynamics/b2Body.h>
@@ -31,8 +33,14 @@ bool FoodItem::Awake() {
 
 bool FoodItem::Start() {
 
-	//initilize textures
-	texture = app->tex->Load(texturePath);
+	// Initialize textures
+	foodTextures = app->map->GetAnimByName("Food");
+
+	// Pick a random texture
+	//int randomIndex = rand() % foodTextures->totalFrames;
+	//foodTextures->currentFrame = randomIndex;
+	foodTextures->loop = true;
+
 	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
 	pbody->ctype = ColliderType::FOOD;
 	pbody->listener = this;
@@ -46,7 +54,8 @@ bool FoodItem::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
-	app->render->DrawTexture(texture, position.x, position.y);
+	app->render->DrawTexture(foodTextures->texture, position.x, position.y, &foodTextures->GetCurrentFrame());
+	foodTextures->Update(dt);
 
 	return true;
 }

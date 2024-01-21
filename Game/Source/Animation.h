@@ -24,9 +24,10 @@ public:
 	bool pingpong = false;
 	bool flip = false;
 
-private:
 	float currentFrame = 0.0f;
 	int totalFrames = 0;
+
+private:
 	int loopCount = 0;
 	int pingpongCount = 0;
 	int pingpongDirection = 1;
