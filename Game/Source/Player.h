@@ -8,6 +8,7 @@
 #include "Point.h"
 #include "State.h"
 #include "StateMachine.h"
+#include <Box2D/Dynamics/b2Fixture.h>
 #ifdef __linux__
 #include <SDL.h>
 #include <Box2D/Common/b2Math.h>

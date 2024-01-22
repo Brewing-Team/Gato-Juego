@@ -43,7 +43,6 @@ void PlayerClimbState::Update(float dt)
 		if (!player->isGrounded and !player->isCollidingLeft and !player->isCollidingRight) {
 			//this->state = EntityState::IDLE;
             StateMachineReference->ChangeState("idle");
-			player->angle = 0; //temporal, esto deberia ir en el enter del state idle
 		}
 
 		player->Climb(dt);

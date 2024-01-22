@@ -414,7 +414,7 @@ void Player::Climb(float dt) {
 	else {
 
 		startTimer = true;
-		//state = EntityState::IDLE;
+		stateMachineTest->ChangeState("idle");
 
 	}
 

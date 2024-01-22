@@ -4,6 +4,7 @@
 #include "StateMachine.h"
 #include "SString.h"
 #include "State.h"
+#include <cmath>
 
 void PlayerIdleState::Enter()
 {
@@ -16,6 +17,8 @@ void PlayerIdleState::Update(float dt)
 {
     LOG("PlayerIdleState::Update()\n");
     LOG("player is grounded: %d\n", player->isGrounded);
+
+    if(!player->isGrounded)player->angle = std::lerp(player->angle, 0, dt * 32 / 1000);
 
     if (!player->isAlive and !player->godMode) {
         //hacer la transicion al state muerto con el nuevo sistema
