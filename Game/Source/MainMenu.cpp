@@ -42,8 +42,17 @@ bool MainMenu::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool MainMenu::Start()
 {
-	SDL_Rect btPos = { static_cast<int>(30), static_cast<int>(30), 120,20};
-	gcButton = (GuiControlButton*) app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "MyButton", btPos, this);
+	//Get the size of the window
+	app->win->GetWindowSize(windowW, windowH);
+
+	SDL_Rect playPos = { static_cast<int>(windowW / 2 + 200), static_cast<int>(windowH / 2 - 25), 240,50};
+	playButton = (GuiControlButton*) app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "Play", playPos, this);
+
+	SDL_Rect optionsPos = { static_cast<int>(windowW / 2 + 200), static_cast<int>(windowH / 2 + 50), 240,50};
+	optionsButton = (GuiControlButton*) app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Options", optionsPos, this);
+
+	SDL_Rect exitPos = { static_cast<int>(windowW / 2 + 200), static_cast<int>(windowH / 2 + 125), 240,50};
+	exitButton = (GuiControlButton*) app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "Exit", exitPos, this);
 
 	return true;
 }
@@ -84,7 +93,9 @@ bool MainMenu::PostUpdate()
 bool MainMenu::CleanUp()
 {
 	LOG("Freeing mainmenu");
-	app->guiManager->RemoveGuiControl(gcButton);
+	app->guiManager->RemoveGuiControl(playButton);
+	app->guiManager->RemoveGuiControl(optionsButton);
+	app->guiManager->RemoveGuiControl(exitButton);
 	return true;
 }
 
@@ -93,7 +104,14 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control)
 	// L15: DONE 5: Implement the OnGuiMouseClickEvent method
 	LOG("Press Gui Control: %d", control->id);
 
-	app->fade->Fade(this, (Module*)app->scene, 60);
+	switch (control->id)
+	{
+	case 1:
+		app->fade->Fade(this, (Module*)app->scene, 60);
+		break;
+	case 2:
+		break;
+	}
 
 	return true;
 }

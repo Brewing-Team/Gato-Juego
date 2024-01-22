@@ -231,7 +231,7 @@ bool Map::CleanUp()
     LOG("Unloading map");
 
     //Clean up pathfing class 
-    pathfinding->CleanUp();
+    if(pathfinding != nullptr)pathfinding->CleanUp();
 
     // L05: DONE 2: Make sure you clean up any memory allocated from tilesets/map
     ListItem<TileSet*>* tileset;

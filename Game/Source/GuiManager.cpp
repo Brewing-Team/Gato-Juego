@@ -54,7 +54,7 @@ void GuiManager::RemoveGuiControl(GuiControl* entity)
 	{
 		if (control->data == entity)
 		{
-			guiControlsList.Del(control); //revisar esto porque no esta borrando el boton :(
+			guiControlsList.Del(control);
 			break;
 		}
 		control = control->next;

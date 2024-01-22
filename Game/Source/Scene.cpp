@@ -117,9 +117,6 @@ bool Scene::Start()
 		app->map->mapData.tileHeight,
 		app->map->mapData.tilesets.Count());
 
-	SDL_Rect btPos = { static_cast<int>(30), static_cast<int>(30), 120,20};
-	gcButton = (GuiControlButton*) app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "MyButton", btPos, this);
-
 	return true;
 }
 

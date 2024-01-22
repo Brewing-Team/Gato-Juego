@@ -48,7 +48,9 @@ private:
 	float textPosX, textPosY = 0;
 	uint texW, texH;
 	uint windowW, windowH;
-	GuiControlButton* gcButton;
+	GuiControlButton* playButton;
+	GuiControlButton* optionsButton;
+	GuiControlButton* exitButton;
 };
 
 #endif // __MAINMENU_H__
