@@ -51,6 +51,8 @@ private:
 	GuiControlButton* playButton;
 	GuiControlButton* optionsButton;
 	GuiControlButton* exitButton;
+
+	bool exitPressed = false;
 };
 
 #endif // __MAINMENU_H__

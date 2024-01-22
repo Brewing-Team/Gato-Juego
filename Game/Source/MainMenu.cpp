@@ -86,6 +86,9 @@ bool MainMenu::PostUpdate()
 	if(app->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
 		ret = false;
 
+	if(exitPressed)
+		ret = false;
+
 	return ret;
 }
 
@@ -111,8 +114,11 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control)
 		break;
 	case 2:
 		break;
+	case 3:
+		exitPressed = true;
+		break;
 	}
-
+	
 	return true;
 }
 
