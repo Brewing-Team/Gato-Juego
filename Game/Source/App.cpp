@@ -4,6 +4,8 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Audio.h"
+#include "FadeToBlack.h"
+#include "MainMenu.h"
 #include "Scene.h"
 #include "Map.h"
 #include "Physics.h"
@@ -38,10 +40,12 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	render = new Render(true);
 	tex = new Textures(true);
 	audio = new Audio(true);
-	physics = new Physics(true);
-	scene = new Scene(true);
-	map = new Map(true);
-	entityManager = new EntityManager(true);
+	physics = new Physics(false);
+	fade = new FadeToBlack(true);
+	mainMenu = new MainMenu(true);
+	scene = new Scene(false);
+	map = new Map(false);
+	entityManager = new EntityManager(false);
 	guiManager = new GuiManager(true);
 
 
@@ -52,6 +56,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(tex);
 	AddModule(audio);
 	AddModule(physics);
+	AddModule(fade);
+	AddModule(mainMenu);
 	AddModule(scene);
 	AddModule(map);
 	AddModule(entityManager);
@@ -137,6 +143,11 @@ bool App::Start()
 
 	while(item != NULL && ret == true)
 	{
+		if(item->data->active == false) {
+			item = item->next;
+			continue;
+		}
+
 		ret = item->data->Start();
 		item = item->next;
 	}

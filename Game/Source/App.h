@@ -1,7 +1,9 @@
 #ifndef __APP_H__
 #define __APP_H__
 
+#include "FadeToBlack.h"
 #include "GuiManager.h"
+#include "MainMenu.h"
 #include "Module.h"
 #include "List.h"
 #include "PerfTimer.h"
@@ -20,6 +22,7 @@ class Input;
 class Render;
 class Textures;
 class Audio;
+class MainMenu;
 class Scene;
 class EntityManager;
 class Map;
@@ -97,6 +100,8 @@ public:
 	Render* render;
 	Textures* tex;
 	Audio* audio;
+	FadeToBlack* fade;
+	MainMenu* mainMenu;
 	Scene* scene;
 	EntityManager* entityManager;
 	Map* map;

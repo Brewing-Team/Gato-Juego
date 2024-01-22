@@ -1,5 +1,7 @@
 #include "GuiManager.h"
 #include "App.h"
+#include "GuiControl.h"
+#include "List.h"
 #include "Textures.h"
 
 #include "GuiControlButton.h"
@@ -42,6 +44,22 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char
 	guiControlsList.Add(guiControl);
 
 	return guiControl;
+}
+
+void GuiManager::RemoveGuiControl(GuiControl* entity)
+{
+	ListItem<GuiControl*>* control = guiControlsList.start;
+
+	while (control != nullptr)
+	{
+		if (control->data == entity)
+		{
+			guiControlsList.Del(control);
+			break;
+		}
+		control = control->next;
+	}
+
 }
 
 bool GuiManager::Update(float dt)

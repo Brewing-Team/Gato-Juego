@@ -84,6 +84,25 @@ public:
 		return true;
 	}
 
+	void Enable()
+	{
+		if (!active)
+		{
+			active = true;
+			Start();
+		}
+	}
+
+	void Disable()
+	{
+		// TODO 0: Call CleanUp() when disabling a module
+		if (active)
+		{
+			active = false;
+			CleanUp(); 
+		}
+	}
+
 public:
 
 	SString name;
