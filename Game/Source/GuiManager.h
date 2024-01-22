@@ -13,6 +13,8 @@ public:
 	// Constructor
 	GuiManager();
 
+	GuiManager(bool startEnabled);
+
 	// Destructor
 	virtual ~GuiManager();
 

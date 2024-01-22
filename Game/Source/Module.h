@@ -22,9 +22,11 @@ public:
 	Module() : active(false)
 	{}
 
+	Module(bool startActive) : active(startActive) {}
+
 	void Init()
 	{
-		active = true;
+		//active = true;
 	}
 
 	// Called before render is available

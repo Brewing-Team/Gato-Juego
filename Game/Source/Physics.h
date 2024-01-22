@@ -94,6 +94,9 @@ public:
 
 	// Constructors & Destructors
 	Physics();
+
+	Physics(bool startEnabled);
+
 	~Physics();
 
 	// Main module steps

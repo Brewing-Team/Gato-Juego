@@ -130,6 +130,8 @@ public:
 
 	Map();
 
+	Map(bool startEnabled);
+
 	// Destructor
 	virtual ~Map();
 

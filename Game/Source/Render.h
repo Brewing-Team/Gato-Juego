@@ -22,6 +22,8 @@ public:
 
 	Render();
 
+	Render (bool startEnabled);
+
 	// Destructor
 	virtual ~Render();
 

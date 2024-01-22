@@ -18,6 +18,13 @@ Window::Window() : Module()
 	name.Create("window");
 }
 
+Window::Window(bool startEnabled) : Module(startEnabled)
+{
+	window = NULL;
+	screenSurface = NULL;
+	name.Create("window");
+}
+
 // Destructor
 Window::~Window()
 {

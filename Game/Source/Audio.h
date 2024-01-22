@@ -17,6 +17,8 @@ public:
 
 	Audio();
 
+	Audio(bool startEnabled);
+
 	// Destructor
 	virtual ~Audio();
 

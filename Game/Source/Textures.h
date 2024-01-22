@@ -14,6 +14,8 @@ public:
 
 	Textures();
 
+	Textures(bool startEnabled);
+
 	// Destructor
 	virtual ~Textures();
 

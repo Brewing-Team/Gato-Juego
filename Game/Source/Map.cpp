@@ -31,6 +31,11 @@ Map::Map() : Module(), mapLoaded(false)
     name.Create("map");
 }
 
+Map::Map(bool startEnabled) : Module(startEnabled), mapLoaded(false)
+{
+    name.Create("map");
+}
+
 // Destructor
 Map::~Map()
 {}

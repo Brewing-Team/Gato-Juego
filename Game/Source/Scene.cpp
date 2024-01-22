@@ -26,6 +26,11 @@ Scene::Scene() : Module()
 	name.Create("scene");
 }
 
+Scene::Scene(bool startEnabled) : Module(startEnabled)
+{
+	name.Create("scene");
+}
+
 // Destructor
 Scene::~Scene()
 {}

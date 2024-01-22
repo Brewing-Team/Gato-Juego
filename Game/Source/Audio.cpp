@@ -23,6 +23,12 @@ Audio::Audio() : Module()
 	name.Create("audio");
 }
 
+Audio::Audio(bool startEnabled) : Module(startEnabled)
+{
+	music = NULL;
+	name.Create("audio");
+}
+
 // Destructor
 Audio::~Audio()
 {}

@@ -11,6 +11,8 @@ public:
 
 	EntityManager();
 
+	EntityManager(bool startEnabled);
+
 	// Destructor
 	virtual ~EntityManager();
 

@@ -24,6 +24,15 @@ Input::Input() : Module()
 	memset(mouseButtons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
 }
 
+Input::Input(bool startEnabled) : Module(startEnabled)
+{
+	name.Create("input");
+
+	keyboard = new KeyState[MAX_KEYS];
+	memset(keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
+	memset(mouseButtons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
+}
+
 // Destructor
 Input::~Input()
 {

@@ -10,6 +10,11 @@ GuiManager::GuiManager() :Module()
 	name.Create("guiManager");
 }
 
+GuiManager::GuiManager(bool startEnabled) : Module(startEnabled)
+{
+	name.Create("guiManager");
+}
+
 GuiManager::~GuiManager() {}
 
 bool GuiManager::Start()

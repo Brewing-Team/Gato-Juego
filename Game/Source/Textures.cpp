@@ -18,6 +18,11 @@ Textures::Textures() : Module()
 	name.Create("textures");
 }
 
+Textures::Textures(bool startEnabled) : Module(startEnabled)
+{
+	name.Create("textures");
+}
+
 // Destructor
 Textures::~Textures()
 {}

@@ -33,16 +33,16 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 
 	frames = 0;
 
-	win = new Window();
-	input = new Input();
-	render = new Render();
-	tex = new Textures();
-	audio = new Audio();
-	physics = new Physics();
-	scene = new Scene();
-	map = new Map();
-	entityManager = new EntityManager();
-	guiManager = new GuiManager();
+	win = new Window(true);
+	input = new Input(true);
+	render = new Render(true);
+	tex = new Textures(true);
+	audio = new Audio(true);
+	physics = new Physics(true);
+	scene = new Scene(true);
+	map = new Map(true);
+	entityManager = new EntityManager(true);
+	guiManager = new GuiManager(true);
 
 
 	// Ordered for awake / Start / Update

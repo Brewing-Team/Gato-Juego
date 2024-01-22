@@ -32,6 +32,8 @@ public:
 
 	Input();
 
+	Input(bool startEnabled);
+
 	// Destructor
 	virtual ~Input();
 

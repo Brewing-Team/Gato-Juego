@@ -25,6 +25,15 @@ Render::Render() : Module()
 	background.a = 0;
 }
 
+Render::Render(bool startEnabled) : Module(startEnabled)
+{
+	name.Create("renderer");
+	background.r = 0;
+	background.g = 0;
+	background.b = 0;
+	background.a = 0;
+}
+
 // Destructor
 Render::~Render()
 {}

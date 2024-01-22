@@ -12,6 +12,8 @@ public:
 
 	Window();
 
+	Window(bool startEnabled);
+
 	// Destructor
 	virtual ~Window();
 

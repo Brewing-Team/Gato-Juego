@@ -24,6 +24,11 @@ EntityManager::EntityManager() : Module()
 	name.Create("entitymanager");
 }
 
+EntityManager::EntityManager(bool startEnabled) : Module(startEnabled)
+{
+	name.Create("entitymanager");
+}
+
 // Destructor
 EntityManager::~EntityManager()
 {}

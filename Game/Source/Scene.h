@@ -17,6 +17,8 @@ public:
 
 	Scene();
 
+	Scene(bool startEnabled);
+
 	// Destructor
 	virtual ~Scene();
 
