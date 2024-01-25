@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "App.h"
 #include "Entity.h"
+#include "FadeToBlack.h"
 #include "Map.h"
 #include "StateMachine.h"
 #include "States/Player/PlayerDeadState.h"
@@ -544,7 +545,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::WIN:
 		//state = EntityState::WIN;
-		stateMachineTest->ChangeState("win");
+		//stateMachineTest->ChangeState("win");
+		app->fade->Fade(app->scene, (Module*)app->finalScene, 60);
 		LOG("Collision WIN");
 		break;
 	case ColliderType::UNKNOWN:

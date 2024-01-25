@@ -302,7 +302,7 @@ void DogEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 			{
 				// AUDIO DONE dog death
 				app->audio->PlayFx(dogDeath);
-				movementStateMachine->ChangeState("dead");
+				movementStateMachine->ChangeState("die");
 				reviveTimer.Start();
 			}
 			else{

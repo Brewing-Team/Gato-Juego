@@ -5,7 +5,7 @@
 #include "Audio.h"
 #include "Render.h"
 #include "Window.h"
-#include "Scene.h"
+#include "FinalScene.h"
 #include "Map.h"
 
 #include "Defs.h"
@@ -21,30 +21,30 @@
 #include "Optick/include/optick.h"
 #endif
 
-Scene::Scene() : Module()
+FinalScene::FinalScene() : Module()
 {
-	name.Create("scene");
+	name.Create("finalscene");
 }
 
-Scene::Scene(bool startEnabled) : Module(startEnabled)
+FinalScene::FinalScene(bool startEnabled) : Module(startEnabled)
 {
-	name.Create("scene");
+	name.Create("finalscene");
 }
 
 // Destructor
-Scene::~Scene()
+FinalScene::~FinalScene()
 {}
 
 // Called before render is available
-bool Scene::Awake(pugi::xml_node& config)
+bool FinalScene::Awake(pugi::xml_node& config)
 {
-	LOG("Loading Scene");
+	LOG("Loading FinalScene");
 	bool ret = true;
 
-	// iterate all objects in the scene
+	// iterate all objects in the finalscene
 	// Check https://pugixml.org/docs/quickstart.html#access
 
-	for (pugi::xml_node ropeNode = config.child("rope"); ropeNode; ropeNode = ropeNode.next_sibling("rope"))
+/* 	for (pugi::xml_node ropeNode = config.child("rope"); ropeNode; ropeNode = ropeNode.next_sibling("rope"))
 	{
 		RopeEntity* rope = new RopeEntity();
 		app->entityManager->AddEntity(rope);
@@ -82,15 +82,14 @@ bool Scene::Awake(pugi::xml_node& config)
 		//Get the map name from the config file and assigns the value in the module
 		app->render->camera.x = config.child("camera").attribute("x").as_int();
 		app->render->camera.y = config.child("camera").attribute("y").as_int();
-	}
+	} */
 	
-	//app->LoadRequest(); Mario, de momento lo dejo comentado porque rompe cosas
 
 	return ret;
 }
 
 // Called before the first frame
-bool Scene::Start()
+bool FinalScene::Start()
 {
 	app->physics->Enable();
 	app->map->Enable();
@@ -122,7 +121,7 @@ bool Scene::Start()
 }
 
 // Called each loop iteration
-bool Scene::PreUpdate()
+bool FinalScene::PreUpdate()
 {
 	// OPTICK PROFILIN
 	OPTICK_EVENT();
@@ -131,7 +130,7 @@ bool Scene::PreUpdate()
 }
 
 // Called each loop iteration
-bool Scene::Update(float dt)
+bool FinalScene::Update(float dt)
 {
 	// OPTICK PROFILIN
 	OPTICK_EVENT();
@@ -165,7 +164,7 @@ bool Scene::Update(float dt)
 }
 
 // Called each loop iteration
-bool Scene::PostUpdate()
+bool FinalScene::PostUpdate()
 {
 	// OPTICK PROFILIN
 	OPTICK_EVENT();
@@ -179,14 +178,14 @@ bool Scene::PostUpdate()
 }
 
 // Called before quitting
-bool Scene::CleanUp()
+bool FinalScene::CleanUp()
 {
-	LOG("Freeing scene");
+	LOG("Freeing finalscene");
 
 	return true;
 }
 
-bool Scene::OnGuiMouseClickEvent(GuiControl* control)
+bool FinalScene::OnGuiMouseClickEvent(GuiControl* control)
 {
 	// L15: DONE 5: Implement the OnGuiMouseClickEvent method
 	LOG("Press Gui Control: %d", control->id);
@@ -194,7 +193,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 	return true;
 }
 
-void Scene::RenderGUI()
+void FinalScene::RenderGUI()
 {
 	
 }

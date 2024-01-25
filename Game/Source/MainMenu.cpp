@@ -1,4 +1,5 @@
 #include "App.h"
+#include "FadeToBlack.h"
 #include "Textures.h"
 #include "Audio.h"
 #include "Render.h"
