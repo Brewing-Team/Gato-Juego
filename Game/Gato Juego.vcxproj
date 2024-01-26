@@ -97,16 +97,21 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Checkpoint.cpp" />
     <ClCompile Include="Source\DogEnemy.cpp" />
     <ClCompile Include="Source\EntityManager.cpp" />
+    <ClCompile Include="Source\FadeToBlack.cpp" />
+    <ClCompile Include="Source\FinalScene.cpp" />
     <ClCompile Include="Source\FoodItem.cpp" />
     <ClCompile Include="Source\FurBall.cpp" />
     <ClCompile Include="Source\GuiControlButton.cpp" />
+    <ClCompile Include="Source\GuiControlLabel.cpp" />
     <ClCompile Include="Source\GuiManager.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\App.cpp" />
     <ClCompile Include="Source\Audio.cpp" />
     <ClCompile Include="Source\Input.cpp" />
+    <ClCompile Include="Source\MainMenu.cpp" />
     <ClCompile Include="Source\Map.cpp" />
     <ClCompile Include="Source\OwlEnemy.cpp" />
     <ClCompile Include="Source\Pathfinding.cpp" />
@@ -138,14 +143,19 @@
     <ClCompile Include="Source\Timer.cpp" />
     <ClCompile Include="Source\Window.cpp" />
     <ClInclude Include="Source\Animation.h" />
+    <ClInclude Include="Source\Checkpoint.h" />
     <ClInclude Include="Source\DogEnemy.h" />
     <ClInclude Include="Source\Entity.h" />
     <ClInclude Include="Source\EntityManager.h" />
+    <ClInclude Include="Source\FadeToBlack.h" />
+    <ClInclude Include="Source\FinalScene.h" />
     <ClInclude Include="Source\FoodItem.h" />
     <ClInclude Include="Source\FurBall.h" />
     <ClInclude Include="Source\GuiControl.h" />
     <ClInclude Include="Source\GuiControlButton.h" />
+    <ClInclude Include="Source\GuiControlLabel.h" />
     <ClInclude Include="Source\GuiManager.h" />
+    <ClInclude Include="Source\MainMenu.h" />
     <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\OwlEnemy.h" />
     <ClInclude Include="Source\Pathfinding.h" />
