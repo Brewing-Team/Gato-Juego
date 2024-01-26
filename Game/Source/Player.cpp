@@ -551,6 +551,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			lives = 0;
 			isAlive = false;
 			if(stateMachineTest != nullptr)stateMachineTest->ChangeState("dead");
+			app->map->GetAnimByName("livesAnimation")->currentFrame = 0;
 		}
 		break;
 
