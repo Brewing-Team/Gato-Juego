@@ -2,6 +2,7 @@
 #define __FINALSCENE_H__
 
 #include "Defs.h"
+#include "Map.h"
 #include "Module.h"
 #include "Physics.h"
 #include "Player.h"
@@ -46,18 +47,18 @@ public:
 
 	void RenderGUI();
 
-public:
-	bool winCondition = false;
-	Player* player;
+	public:
+		bool winCondition = false;
+		Player* player;
 
-private:
-	SDL_Texture* img;
-	float textPosX, textPosY = 0;
-	uint texW, texH;
-	uint windowW, windowH;
-	GuiControlButton* gcButton;
+	private:
+		SDL_Texture* img;
+		float textPosX, textPosY = 0;
+		uint texW, texH;
+		uint windowW, windowH;
+		GuiControlButton* gcButton;
 
-	//pugi::xml_node& config;
+		pugi::xml_node config;
 };
 
 #endif // __FINALSCENE_H__

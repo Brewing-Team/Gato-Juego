@@ -34,12 +34,12 @@ bool ScoreItem::Start() {
 
 	//initilize textures
 
-	starAnim = app->map->GetAnimByName("star");
-	starAnim->speed = 8.0f;
-	starAnim->loop = true;
-	starAnim->pingpong = true;
+	starAnim = *app->map->GetAnimByName("star");
+	starAnim.speed = 8.0f;
+	starAnim.loop = true;
+	starAnim.pingpong = true;
 
-	texture = starAnim->texture;
+	texture = starAnim.texture;
 	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::STATIC);
 	pbody->ctype = ColliderType::SCOREITEM;
 	pbody->listener = this;
@@ -53,16 +53,15 @@ bool ScoreItem::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
-	app->render->DrawTexture(texture, position.x, position.y, &starAnim->GetCurrentFrame());
+	app->render->DrawTexture(texture, position.x, position.y, &starAnim.GetCurrentFrame());
 
-	starAnim->Update(dt);
+	starAnim.Update(dt);
 
 	return true;
 }
 
 bool ScoreItem::CleanUp()
 {
-	app->tex->UnLoad(texture);
 	app->physics->DestroyBody(pbody);
 	return true;
 }

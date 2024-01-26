@@ -34,7 +34,7 @@ public:
 	bool isPicked = false;
 	SDL_Texture* texture;
 	const char* texturePath;
-	Animation* statesAnimation;
+	Animation statesAnimation;
 	iPoint size;
 
 private:

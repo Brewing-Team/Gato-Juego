@@ -41,7 +41,7 @@ bool FinalScene::Awake(pugi::xml_node& config)
 	LOG("Loading FinalScene");
 	bool ret = true;
 
-	//this->config = config;
+	this->config = config;
 
 	return ret;
 }
@@ -51,13 +51,18 @@ bool FinalScene::Start()
 {
 	// iterate all objects in the finalscene
 	// Check https://pugixml.org/docs/quickstart.html#access
-	
-	/* if (config.child("player")) {
+
+	app->entityManager->Enable();
+	app->map->Enable();
+
+
+	if (config.child("player")) {
 		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 		player->parameters = config.child("player");
-	} */
+		player->Start();
+	}
 
-	/* if (config.child("enemies"))
+	if (config.child("enemies"))
 	{
 		pugi::xml_node enemies = config.child("enemies");
 		for (pugi::xml_node enemyNode = enemies.child("owl_enemy"); enemyNode; enemyNode = enemyNode.next_sibling("owl_enemy"))
@@ -72,8 +77,8 @@ bool FinalScene::Start()
 			dogEnemy->parameters = enemyNode;
 		}
 	}
- 	*/
-	/* if (config.child("map")) {
+ 	
+	if (config.child("map")) {
 		//Get the map name from the config file and assigns the value in the module
 		app->map->name = config.child("map").attribute("name").as_string();
 		app->map->path = config.child("map").attribute("path").as_string();
@@ -83,7 +88,7 @@ bool FinalScene::Start()
 		//Get the map name from the config file and assigns the value in the module
 		app->render->camera.x = config.child("camera").attribute("x").as_int();
 		app->render->camera.y = config.child("camera").attribute("y").as_int();
-	} */
+	} 
 
 	app->render->camera.target = player;
 	app->render->camera.useInterpolation = true;

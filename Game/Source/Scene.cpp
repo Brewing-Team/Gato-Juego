@@ -85,8 +85,6 @@ bool Scene::Awake(pugi::xml_node& config)
 		app->render->camera.x = config.child("camera").attribute("x").as_int();
 		app->render->camera.y = config.child("camera").attribute("y").as_int();
 	}
-	
-	//app->LoadRequest(); Mario, de momento lo dejo comentado porque rompe cosas
 
 	return ret;
 }

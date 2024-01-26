@@ -34,12 +34,12 @@ bool FoodItem::Awake() {
 bool FoodItem::Start() {
 
 	// Initialize textures
-	foodTextures = app->map->GetAnimByName("Food");
+	foodTextures = *app->map->GetAnimByName("Food");
 
 	// Pick a random texture
-	int randomIndex = rand() % foodTextures->totalFrames;
-	foodTextures->currentFrame = randomIndex;
-	foodTextures->loop = true;
+	int randomIndex = rand() % foodTextures.totalFrames;
+	foodTextures.currentFrame = randomIndex;
+	foodTextures.loop = true;
 
 	pbody = app->physics->CreateCircle(position.x + 8, position.y + 8, 8, bodyType::STATIC);
 	pbody->ctype = ColliderType::FOOD;
@@ -54,14 +54,13 @@ bool FoodItem::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 8;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 8;
 
-	app->render->DrawTexture(foodTextures->texture, position.x, position.y, &foodTextures->GetCurrentFrame());
+	app->render->DrawTexture(foodTextures.texture, position.x, position.y, &foodTextures.GetCurrentFrame());
 
 	return true;
 }
 
 bool FoodItem::CleanUp()
 {
-	app->tex->UnLoad(texture);
 	app->physics->DestroyBody(pbody);
 	return true;
 }

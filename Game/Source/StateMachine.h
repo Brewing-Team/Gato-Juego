@@ -35,6 +35,15 @@ public:
         currentState->PostUpdate();
     }
 
+    void CleanUp(){
+        LOG("StateMachine::CleanUp()\n");
+        for (int i = 0; i < states.Count(); i++){
+            states[i]->Exit();
+            delete states[i];
+        }
+        states.Clear();
+    }
+
     void AddState(State<T>* newState){
         newState->StateMachineReference = this;
         

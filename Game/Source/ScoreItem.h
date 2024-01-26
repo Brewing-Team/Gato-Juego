@@ -1,6 +1,7 @@
 #ifndef __SCOREITEM_H__
 #define __SCOREITEM_H__
 
+#include "Animation.h"
 #include "Entity.h"
 #ifdef __linux__
 #include <SDL.h>
@@ -9,7 +10,6 @@
 #endif
 
 struct SDL_Texture;
-class Animation;
 
 class ScoreItem : public Entity
 {
@@ -38,7 +38,7 @@ private:
 
 	PhysBody* pbody;
 
-	Animation* starAnim;
+	Animation starAnim;
 };
 
 #endif // __SCOREITEM_H__

@@ -428,6 +428,7 @@ bool Player::SaveState(pugi::xml_node& node) {
 	playerAttributes.append_attribute("y").set_value(this->position.y);
 	playerAttributes.append_attribute("angle").set_value(this->angle);
 	playerAttributes.append_attribute("lives").set_value(lives);
+	playerAttributes.append_attribute("score").set_value(score);
 
 	return true;
 
@@ -437,6 +438,7 @@ bool Player::LoadState(pugi::xml_node& node)
 {
 	pbody->body->SetTransform({ PIXEL_TO_METERS(node.child("player").attribute("x").as_int()), PIXEL_TO_METERS(node.child("player").attribute("y").as_int()) }, node.child("player").attribute("angle").as_int());
 	lives = node.child("player").attribute("lives").as_int();
+	score = node.child("player").attribute("score").as_int();
 	// reset player physics
 	pbody->body->SetAwake(false);
 	pbody->body->SetAwake(true);
@@ -473,6 +475,16 @@ bool Player::CleanUp() {
 
 	app->tex->UnLoad(debugMenuTexture);
 	app->tex->UnLoad(texture);
+
+	stateMachineTest->CleanUp();
+	delete stateMachineTest;
+	stateMachineTest = nullptr;
+
+	app->physics->DestroyBody(pbody);
+	app->physics->DestroyBody(groundSensor);
+	app->physics->DestroyBody(topSensor);
+	app->physics->DestroyBody(leftSensor);
+	app->physics->DestroyBody(rightSensor);
 
 	// Theres no need to unload audio fx because they are unloaded when te audio module is cleaned up
 
@@ -538,7 +550,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		if (!godMode) {
 			lives = 0;
 			isAlive = false;
-			stateMachineTest->ChangeState("dead");
+			if(stateMachineTest != nullptr)stateMachineTest->ChangeState("dead");
 		}
 		break;
 
@@ -549,6 +561,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		//state = EntityState::WIN;
 		//stateMachineTest->ChangeState("win");
 		app->fade->Fade(app->scene, (Module*)app->finalScene, 60);
+		app->entityManager->Disable();
+		//app->map->Disable(); deberia de estar activado pero sino crashea :(
 		LOG("Collision WIN");
 		break;
 	case ColliderType::UNKNOWN:

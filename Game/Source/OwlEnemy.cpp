@@ -238,6 +238,10 @@ bool OwlEnemy::CleanUp() {
 
 	app->tex->UnLoad(texture);
 
+	movementStateMachine->CleanUp();
+	delete movementStateMachine;
+	movementStateMachine = nullptr;
+
 	return true;
 }
 

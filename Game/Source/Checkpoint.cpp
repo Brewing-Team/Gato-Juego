@@ -33,8 +33,8 @@ bool Checkpoint::Awake() {
 bool Checkpoint::Start() {
 
 	//initilize textures
-	statesAnimation = app->map->GetAnimByName("VendingMachine_animation");
-	texture = statesAnimation->texture;
+	statesAnimation = *app->map->GetAnimByName("VendingMachine_animation");
+	texture = statesAnimation.texture;
 
 	pbody = app->physics->CreateRectangle(position.x + size.x / 2, position.y + size.y / 2, size.x, size.y, bodyType::STATIC);
 	pbody->ctype = ColliderType::CHECKPOINT;
@@ -46,18 +46,17 @@ bool Checkpoint::Start() {
 
 bool Checkpoint::Update(float dt)
 {
-	int textureWidth = statesAnimation->GetCurrentFrame().w;
-	int textureHeight = statesAnimation->GetCurrentFrame().h;
+	int textureWidth = statesAnimation.GetCurrentFrame().w;
+	int textureHeight = statesAnimation.GetCurrentFrame().h;
 	int posX = position.x + (size.x - textureWidth) / 2;
 	int posY = position.y + size.y - textureHeight;
-	app->render->DrawTexture(texture, posX, posY, &statesAnimation->GetCurrentFrame());
+	app->render->DrawTexture(texture, posX, posY, &statesAnimation.GetCurrentFrame());
 
 	return true;
 }
 
 bool Checkpoint::CleanUp()
 {
-	app->tex->UnLoad(texture);
 	return true;
 }
 
@@ -67,6 +66,6 @@ void Checkpoint::OnCollision(PhysBody* physA, PhysBody* physB){
 		app->physics->DestroyBody(pbody);
 		app->SaveRequest();
 		
-		statesAnimation->currentFrame +=1;
+		statesAnimation.currentFrame +=1;
 	}
 }

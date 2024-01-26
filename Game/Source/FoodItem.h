@@ -38,7 +38,7 @@ public:
 private:
 	PhysBody* pbody;
 
-	Animation* foodTextures;
+	Animation foodTextures;
 };
 
 #endif // __FOOD_H__
