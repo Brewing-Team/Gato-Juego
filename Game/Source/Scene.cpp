@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "Audio.h"
 #include "Render.h"
+#include "Timer.h"
 #include "Window.h"
 #include "Scene.h"
 #include "Map.h"
@@ -102,6 +103,8 @@ bool Scene::Start()
 	app->render->camera.lerpSpeed = 4.0f;
 	app->render->camera.offset = { 0,0 };
 
+	playingTime = new Timer();
+
 	//Get the size of the window
 	app->win->GetWindowSize(windowW, windowH);
 
@@ -113,11 +116,14 @@ bool Scene::Start()
 
 	//Create a Label
 	std::string scoreString = std::to_string(player->score);
-	gcScore = (GuiControlLabel*)app->guiManager->CreateGuiControl(GuiControlType::LABEL, 4, scoreString.c_str(), { (int)windowW - 100,20,50,25 }, this);
+	gcScore = (GuiControlLabel*)app->guiManager->CreateGuiControl(GuiControlType::LABEL, 4, scoreString.c_str(), { (int)windowW - 200,20,150,25 }, this);
 
 	gcLives = (GuiControlLabel*)app->guiManager->CreateGuiControl(GuiControlType::LABEL, 5, "", { 5,5,50,25 }, this);
 	gcLives->SetTexture(app->map->GetAnimByName("livesAnimation")->texture);
 	gcLives->section = app->map->GetAnimByName("livesAnimation")->GetCurrentFrame();
+
+	std::string timeString = std::to_string(playingTime->ReadSec());
+	gcTime = (GuiControlLabel*)app->guiManager->CreateGuiControl(GuiControlType::LABEL, 4, scoreString.c_str(), { (int)windowW / 2 + 100,20,50,25 }, this);
 
 	//Pause Menu UI
 	gcResume = (GuiControlButton*)app->guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, "Resume", { (int)windowW / 2 - 50, (int)windowH / 2 - 100, 150, 50 }, this);
@@ -268,9 +274,11 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
 void Scene::RenderGUI()
 {
-	std::string scoreString = std::to_string(player->score);
+	std::string scoreString = "Points:" + std::to_string(player->score);
 	gcScore->text = scoreString.c_str();
 
 	gcLives->section = app->map->GetAnimByName("livesAnimation")->GetCurrentFrame();
 	app->map->GetAnimByName("livesAnimation")->loop = true;
+
+	gcTime->text = std::to_string(playingTime->ReadSec()).c_str();
 }

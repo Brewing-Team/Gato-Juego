@@ -202432,52 +202432,52 @@
   <object id="242" name="item" type="food" x="704" y="2050.25">
    <point/>
   </object>
-  <object id="243" name="item" type="coin" x="815.75" y="2045">
+  <object id="243" name="item" type="coin" x="800.75" y="2035.33">
    <point/>
   </object>
-  <object id="246" name="item" type="coin" x="879.273" y="2045.27">
+  <object id="246" name="item" type="coin" x="865.273" y="2035.27">
    <point/>
   </object>
-  <object id="247" name="item" type="coin" x="942.909" y="2045.64">
+  <object id="247" name="item" type="coin" x="930.576" y="2036.3">
    <point/>
   </object>
-  <object id="248" name="item" type="food" x="1055.5" y="1939">
+  <object id="248" name="item" type="food" x="1040.83" y="1929.33">
    <point/>
   </object>
-  <object id="249" name="item" type="coin" x="1006.5" y="1724.5">
+  <object id="249" name="item" type="coin" x="993.167" y="1721.5">
    <point/>
   </object>
-  <object id="250" name="item" type="coin" x="944.5" y="1648">
+  <object id="250" name="item" type="coin" x="929.167" y="1646.67">
    <point/>
   </object>
-  <object id="251" name="item" type="coin" x="929" y="1520.5">
+  <object id="251" name="item" type="coin" x="913.333" y="1517.17">
    <point/>
   </object>
-  <object id="252" name="item" type="food" x="1040" y="1503.5">
+  <object id="252" name="item" type="food" x="1025.67" y="1503.83">
    <point/>
   </object>
-  <object id="253" name="item" type="coin" x="1536.33" y="1538.67">
+  <object id="253" name="item" type="coin" x="1522.33" y="1536">
    <point/>
   </object>
-  <object id="254" name="item" type="coin" x="1584.33" y="1443.67">
+  <object id="254" name="item" type="coin" x="1569.33" y="1443.33">
    <point/>
   </object>
-  <object id="255" name="item" type="coin" x="1503.67" y="1284">
+  <object id="255" name="item" type="coin" x="1490" y="1281.33">
    <point/>
   </object>
-  <object id="256" name="item" type="coin" x="1600" y="815.333">
+  <object id="256" name="item" type="coin" x="1584.33" y="815.667">
    <point/>
   </object>
-  <object id="257" name="item" type="coin" x="1503.67" y="752.667">
+  <object id="257" name="item" type="coin" x="1487.67" y="750.667">
    <point/>
   </object>
-  <object id="258" name="item" type="food" x="1606.67" y="1618">
+  <object id="258" name="item" type="food" x="1601" y="1616.67">
    <point/>
   </object>
-  <object id="260" name="item" type="food" x="1106" y="880">
+  <object id="260" name="item" type="food" x="1088.33" y="879.667">
    <point/>
   </object>
-  <object id="261" name="item" type="food" x="912.667" y="944">
+  <object id="261" name="item" type="food" x="896.667" y="936.667">
    <point/>
   </object>
  </objectgroup>

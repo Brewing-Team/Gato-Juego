@@ -58,6 +58,7 @@ private:
 	GuiControlButton* gcButton;
 	GuiControlLabel* gcScore;
 	GuiControlLabel* gcLives;
+	GuiControlLabel* gcTime;
 
 	GuiControlButton* gcResume;
 	GuiControlButton* gcSettings;
@@ -66,6 +67,8 @@ private:
 
 	bool paused = false;
 	bool exitPressed = false;
+
+	Timer* playingTime;
 };
 
 #endif // __SCENE_H__
