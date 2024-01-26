@@ -227,6 +227,15 @@
    </animation>
   </tile>
  </tileset>
+ <tileset firstgid="7261" name="VendingMachine_animation" tilewidth="33" tileheight="48" tilecount="2" columns="2">
+  <image source="VendingMachine_animation.png" width="66" height="48"/>
+  <tile id="0">
+   <animation>
+    <frame tileid="0" duration="100"/>
+    <frame tileid="1" duration="100"/>
+   </animation>
+  </tile>
+ </tileset>
  <layer id="1" name="BackgroundLayer1" width="164" height="176" parallaxx="0.5" parallaxy="0.5">
   <properties>
    <property name="Draw" type="bool" value="true"/>

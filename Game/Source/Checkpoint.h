@@ -1,6 +1,7 @@
 #ifndef __CHECKPOINT_H__
 #define __CHECKPOINT_H__
 
+#include "Animation.h"
 #include "Entity.h"
 #include "Point.h"
 #ifdef __linux__
@@ -33,6 +34,7 @@ public:
 	bool isPicked = false;
 	SDL_Texture* texture;
 	const char* texturePath;
+	Animation* statesAnimation;
 	iPoint size;
 
 private:

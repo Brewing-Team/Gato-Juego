@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Point.h"
+#include "Map.h"
 #include "Physics.h"
 
 #ifdef __linux__
@@ -32,7 +33,9 @@ bool Checkpoint::Awake() {
 bool Checkpoint::Start() {
 
 	//initilize textures
-	texture = app->tex->Load(texturePath);
+	statesAnimation = app->map->GetAnimByName("VendingMachine_animation");
+	texture = statesAnimation->texture;
+
 	pbody = app->physics->CreateRectangle(position.x + size.x / 2, position.y + size.y / 2, size.x, size.y, bodyType::STATIC);
 	pbody->ctype = ColliderType::CHECKPOINT;
 	pbody->body->GetFixtureList()->SetSensor(true);
@@ -43,7 +46,11 @@ bool Checkpoint::Start() {
 
 bool Checkpoint::Update(float dt)
 {
-	app->render->DrawTexture(texture, position.x, position.y);
+	int textureWidth = statesAnimation->GetCurrentFrame().w;
+	int textureHeight = statesAnimation->GetCurrentFrame().h;
+	int posX = position.x + (size.x - textureWidth) / 2;
+	int posY = position.y + size.y - textureHeight;
+	app->render->DrawTexture(texture, posX, posY, &statesAnimation->GetCurrentFrame());
 
 	return true;
 }
@@ -59,5 +66,7 @@ void Checkpoint::OnCollision(PhysBody* physA, PhysBody* physB){
 		app->scene->player->spawnPosition = position;
 		app->physics->DestroyBody(pbody);
 		app->SaveRequest();
+		
+		statesAnimation->currentFrame +=1;
 	}
 }
