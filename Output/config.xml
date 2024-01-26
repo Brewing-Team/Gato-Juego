@@ -15,7 +15,7 @@
     <borderless value="false"/>
     <resizable value="false"/>
     <fullscreen_window value="false"/>
-    <screen value="1"/>
+    <screen value="0"/>
   </window>
 
   <audio>

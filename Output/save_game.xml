@@ -11,14 +11,14 @@
 	<finalscene />
 	<:anonymous />
 	<entitymanager>
-		<player x="1717" y="1287" angle="0" lives="5" score="700" />
-		<owlenemy x="726" y="1883" angle="0" state="idle" lives="3" />
-		<owlenemy x="1650" y="1246" angle="0" state="move" lives="3" />
-		<dogenemy x="1320" y="1737" angle="0" state="idle" lives="5" />
+		<player x="1052" y="1733" angle="-90" lives="7" score="100" />
+		<owlenemy x="967" y="1977" angle="-249602443" state="dead" lives="1" />
+		<owlenemy x="1766" y="1270" angle="-473292456" state="idle" lives="3" />
+		<dogenemy x="1320" y="1737" angle="-2147454976" state="idle" lives="5" />
 		<dogenemy x="861" y="1722" angle="0" state="idle" lives="5" />
 	</entitymanager>
 	<guiManager />
 	<renderer>
-		<camera x="-1576" y="-1193" />
+		<camera x="-926" y="-1666" />
 	</renderer>
 </game_state>
