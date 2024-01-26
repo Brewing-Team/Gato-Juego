@@ -41,22 +41,23 @@ bool FinalScene::Awake(pugi::xml_node& config)
 	LOG("Loading FinalScene");
 	bool ret = true;
 
+	//this->config = config;
+
+	return ret;
+}
+
+// Called before the first frame
+bool FinalScene::Start()
+{
 	// iterate all objects in the finalscene
 	// Check https://pugixml.org/docs/quickstart.html#access
-
-/* 	for (pugi::xml_node ropeNode = config.child("rope"); ropeNode; ropeNode = ropeNode.next_sibling("rope"))
-	{
-		RopeEntity* rope = new RopeEntity();
-		app->entityManager->AddEntity(rope);
-		rope->parameters = ropeNode;
-	}
-
-	if (config.child("player")) {
+	
+	/* if (config.child("player")) {
 		player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 		player->parameters = config.child("player");
-	}
-	
-	if (config.child("enemies"))
+	} */
+
+	/* if (config.child("enemies"))
 	{
 		pugi::xml_node enemies = config.child("enemies");
 		for (pugi::xml_node enemyNode = enemies.child("owl_enemy"); enemyNode; enemyNode = enemyNode.next_sibling("owl_enemy"))
@@ -71,8 +72,8 @@ bool FinalScene::Awake(pugi::xml_node& config)
 			dogEnemy->parameters = enemyNode;
 		}
 	}
-	
-	if (config.child("map")) {
+ 	*/
+	/* if (config.child("map")) {
 		//Get the map name from the config file and assigns the value in the module
 		app->map->name = config.child("map").attribute("name").as_string();
 		app->map->path = config.child("map").attribute("path").as_string();
@@ -83,18 +84,6 @@ bool FinalScene::Awake(pugi::xml_node& config)
 		app->render->camera.x = config.child("camera").attribute("x").as_int();
 		app->render->camera.y = config.child("camera").attribute("y").as_int();
 	} */
-	
-
-	return ret;
-}
-
-// Called before the first frame
-bool FinalScene::Start()
-{
-	app->physics->Enable();
-	app->map->Enable();
-	app->entityManager->Enable();
-	app->guiManager->Enable();
 
 	app->render->camera.target = player;
 	app->render->camera.useInterpolation = true;

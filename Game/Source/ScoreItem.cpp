@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "ScoreItem.h"
+#include "Map.h"
 #include "Physics.h"
 
 #ifdef __linux__
@@ -32,8 +33,14 @@ bool ScoreItem::Awake() {
 bool ScoreItem::Start() {
 
 	//initilize textures
-	texture = app->tex->Load(texturePath);
-	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
+
+	starAnim = app->map->GetAnimByName("star");
+	starAnim->speed = 8.0f;
+	starAnim->loop = true;
+	starAnim->pingpong = true;
+
+	texture = starAnim->texture;
+	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::STATIC);
 	pbody->ctype = ColliderType::SCOREITEM;
 	pbody->listener = this;
 
@@ -46,7 +53,9 @@ bool ScoreItem::Update(float dt)
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
-	app->render->DrawTexture(texture, position.x, position.y);
+	app->render->DrawTexture(texture, position.x, position.y, &starAnim->GetCurrentFrame());
+
+	starAnim->Update(dt);
 
 	return true;
 }

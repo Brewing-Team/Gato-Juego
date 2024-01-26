@@ -35,5 +35,12 @@
 	  </enemies>
     <rope startPosX="21.4" startPosY="30.5" endPosX="25.5" endPosY="35" length="25" texturepath="Assets/Textures/bridge.png"/>
   </scene>
+  <finalscene>
+    <map path="Assets/Maps/Final-Level/" name="Final-Level-map.tmx"/>
+	  <camera x="-530" y="-1949" />
+    <player x="672" y="2032" texturepath="Assets/Textures/Cat-1-Walk.png"/>
+	  <enemies>
+	  </enemies>
+  </finalscene>
   
 </config>

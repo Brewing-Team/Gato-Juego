@@ -1,6 +1,7 @@
 #ifndef __SCENE_H__
 #define __SCENE_H__
 
+#include "GuiControlLabel.h"
 #include "Module.h"
 #include "Physics.h"
 #include "Player.h"
@@ -55,6 +56,16 @@ private:
 	uint texW, texH;
 	uint windowW, windowH;
 	GuiControlButton* gcButton;
+	GuiControlLabel* gcScore;
+	GuiControlLabel* gcLives;
+
+	GuiControlButton* gcResume;
+	GuiControlButton* gcSettings;
+	GuiControlButton* gcBackToTitle;
+	GuiControlButton* gcExit;
+
+	bool paused = false;
+	bool exitPressed = false;
 };
 
 #endif // __SCENE_H__

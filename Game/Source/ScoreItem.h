@@ -9,6 +9,7 @@
 #endif
 
 struct SDL_Texture;
+class Animation;
 
 class ScoreItem : public Entity
 {
@@ -36,6 +37,8 @@ public:
 private:
 
 	PhysBody* pbody;
+
+	Animation* starAnim;
 };
 
 #endif // __SCOREITEM_H__

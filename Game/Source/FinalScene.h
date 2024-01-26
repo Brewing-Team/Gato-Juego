@@ -1,6 +1,7 @@
 #ifndef __FINALSCENE_H__
 #define __FINALSCENE_H__
 
+#include "Defs.h"
 #include "Module.h"
 #include "Physics.h"
 #include "Player.h"
@@ -55,6 +56,8 @@ private:
 	uint texW, texH;
 	uint windowW, windowH;
 	GuiControlButton* gcButton;
+
+	//pugi::xml_node& config;
 };
 
 #endif // __FINALSCENE_H__

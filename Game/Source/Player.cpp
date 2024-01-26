@@ -124,7 +124,7 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
-	LOG("%d", lives);
+	LOG("%d", score);
 	stateMachineTest->Update(dt);
 
 	debugTools();
@@ -514,11 +514,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				{
 					//state = EntityState::DEAD;
 					stateMachineTest->ChangeState("dead");
+					app->map->GetAnimByName("livesAnimation")->currentFrame = 0;
 				}
 				else{
 					// AUDIO DONE player hit
 					app->audio->PlayFx(playerHit);
 					lives--;
+					app->map->GetAnimByName("livesAnimation")->currentFrame++;
 					//state = EntityState::HURT;
 					stateMachineTest->ChangeState("hurt");
 					immunityTimer.Start();

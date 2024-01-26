@@ -5,6 +5,7 @@
 #include "Textures.h"
 
 #include "GuiControlButton.h"
+#include "GuiControlLabel.h"
 #include "Audio.h"
 
 GuiManager::GuiManager() :Module()
@@ -35,8 +36,11 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, int id, const char
 	case GuiControlType::BUTTON:
 		guiControl = new GuiControlButton(id, bounds, text);
 		break;
+	case GuiControlType::LABEL:
+		guiControl = new GuiControlLabel(id, bounds, text);
+		break;
 	}
-
+	
 	//Set the observer
 	guiControl->observer = observer;
 
